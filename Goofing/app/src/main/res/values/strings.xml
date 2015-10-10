@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">Goofing</string>
+    <string name="regionalTextView">Select U.S. area</string>
+    <string name="nationality_textView">Select your nationality</string>
+    <string name="select_occupation_textView">Select Occupation</string>
+    <string name="insert_name_textField">Name</string>
+    <string name="create_user_buttonName">Create</string>
+    <string name="different_username">Insert a different Name</string>
+    <string name="error_dialog_title">Error</string>
+    <string name="ok_text">OK</string>
+    <string-array name="reagional_area">
+        <item>North</item>
+        <item>East</item>
+        <item>South</item>
+        <item>Mid-West</item>
+        <item>West</item>
+    </string-array>
+    <string-array name="nationality">
+        <item>Italian</item>
+        <item>Chinese</item>
+        <item>French</item>
+        <item>German</item>
+        <item>Indian</item>
+    </string-array>
+    <string-array name="occupation">
+        <item>Student</item>
+        <item>Researcher</item>
+        <item>Doctor</item>
+        <item>Teacher</item>
+        <item>Football Player</item>
+    </string-array>
+</resources>
