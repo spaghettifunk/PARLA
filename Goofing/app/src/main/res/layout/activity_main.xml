@@ -20,12 +20,28 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/regionalTextView"
-        android:id="@+id/regionTextView"
-        android:layout_marginTop="23dp"
-        android:layout_gravity="left|right|bottom|center|top"
+        android:text="@string/gender"
+        android:id="@+id/genderTextView"
         android:layout_below="@+id/nameText"
         android:layout_alignParentStart="true" />
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/genderSpinner"
+        android:spinnerMode="dropdown"
+        android:layout_below="@+id/genderTextView"
+        android:layout_alignParentStart="true"
+        android:entries="@array/gender" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/regionalTextView"
+        android:id="@+id/regionTextView"
+        android:layout_gravity="left|right|bottom|center|top"
+        android:layout_below="@+id/genderSpinner"
+        android:layout_alignParentEnd="true" />
 
     <Spinner
         android:layout_width="match_parent"
@@ -54,7 +70,7 @@
         android:spinnerMode="dropdown"
         android:layout_gravity="left|right|bottom|center|top"
         android:layout_below="@+id/nationalityTextView"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="match_parent"
@@ -63,7 +79,7 @@
         android:id="@+id/occupationTextView"
         android:layout_gravity="left|right|bottom|center|top"
         android:layout_below="@+id/nationality_spinner"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentStart="true" />
 
     <Spinner
         android:layout_width="match_parent"

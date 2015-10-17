@@ -26,6 +26,9 @@ public class MainActivity extends AppCompatActivity{
             EditText nameTextField = (EditText) findViewById(R.id.nameText);
             String name_text = nameTextField.getText().toString();
 
+            Spinner genderSpinner = (Spinner) findViewById(R.id.genderSpinner);
+            String gender_text = genderSpinner.getSelectedItem().toString();
+
             Spinner areaSpinner = (Spinner) findViewById(R.id.regional_area_spinner);
             String regional_text = areaSpinner.getSelectedItem().toString();
 
@@ -50,7 +53,7 @@ public class MainActivity extends AppCompatActivity{
             } else {
 
                 // create the actual user - singleton instance
-                User.createUser(name_text, regional_text, nationality_text, occupation_text);
+                User.createUser(name_text, gender_text, regional_text, nationality_text, occupation_text);
                 // throw exceptions - should never happen :)
                 if (User.getUser() != null) {
                     // start a new activity here
