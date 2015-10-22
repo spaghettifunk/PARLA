@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="davideberdin.goofing.RegistrationActivity">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/registrationFieldsHolder">
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/etUsernameReg"
+            android:hint="Username"
+            android:layout_marginBottom="10dp" />
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:ems="10"
+            android:id="@+id/etPasswordReg"
+            android:hint="@string/etPasswordReg"
+            android:layout_marginBottom="10dp" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/tvGender"
+            android:id="@+id/tvGender" />
+
+        <Spinner
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/spGender"
+            android:entries="@array/spGender" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/tvNationality"
+            android:id="@+id/textView2" />
+
+        <Spinner
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/spNationality"
+            android:entries="@array/spNationality" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/tvOccupation"
+            android:id="@+id/tvOccupation" />
+
+        <Spinner
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/spOccupation"
+            android:entries="@array/spOccupation" />
+
+        <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/registerButtonReg"
+            android:id="@+id/registerButtonReg"
+            android:layout_marginTop="50dp" />
+
+    </LinearLayout>
+</RelativeLayout>

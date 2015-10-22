@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">Goofing</string>
+    <string name="etUsername">Username</string>
+    <string name="etPassword">Password</string>
+    <string name="loginButton">Login</string>
+    <string name="registerButton">Register</string>
+    <string name="title_activity_registration">RegistrationActivity</string>
+    <string name="tvUsername">Username</string>
+    <string name="tvOccupation">Occupation</string>
+    <string name="registerButtonReg">Register</string>
+    <string name="tvNationality">Nationality</string>
+    <string name="tvGender">Gender</string>
+    <string name="etPasswordReg">Password</string>
+    <string name="emptyFields">One or more fields are empty</string>
+    <string name="errorDialogTitle">Error in Registration</string>
+    <string name="okText">OK</string>
+    <string-array name="spGender">
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+    <string-array name="spNationality">
+        <item>Italian</item>
+        <item>Spanish</item>
+        <item>German</item>
+        <item>Chinese</item>
+        <item>Indian</item>
+    </string-array>
+    <string-array name="spOccupation">
+        <item>Student</item>
+        <item>Researcher</item>
+        <item>Teacher</item>
+        <item>Nurse</item>
+    </string-array>
+</resources>
