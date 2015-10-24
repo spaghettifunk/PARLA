@@ -13,7 +13,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import davideberdin.goofing.controllers.User;
-import davideberdin.goofing.networking.Networking;
+import davideberdin.goofing.networking.NetworkingTask;
 import davideberdin.goofing.utilities.Constants;
 import davideberdin.goofing.utilities.Logger;
 
@@ -83,7 +83,7 @@ public class RegistrationActivity extends AppCompatActivity
                 // throw exceptions - should never happen :)
                 if (User.getUser() != null) {
                     // register here
-                    Networking n = new Networking();
+                    NetworkingTask n = new NetworkingTask(RegistrationActivity.this);
                     n.execute(Constants.NETWORKING_REGISTER_STATE);
 
                 } else {

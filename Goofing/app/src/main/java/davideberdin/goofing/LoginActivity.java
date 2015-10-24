@@ -1,10 +1,8 @@
 package davideberdin.goofing;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -12,7 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 // my imports
-import davideberdin.goofing.networking.Networking;
+import davideberdin.goofing.networking.NetworkingTask;
 import davideberdin.goofing.utilities.Constants;
 import davideberdin.goofing.utilities.Logger;
 
@@ -56,7 +54,7 @@ public class LoginActivity extends AppCompatActivity
                 }
 
                 // Networking stuff here
-                Networking net = new Networking();
+                NetworkingTask net = new NetworkingTask(LoginActivity.this);
                 net.execute(Constants.NETWORKING_LOGIN_STATE, username, password);
             }
         });
