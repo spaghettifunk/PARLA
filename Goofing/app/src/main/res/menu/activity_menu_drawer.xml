@@ -2,23 +2,23 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
-        <item android:id="@+id/nav_camara" android:icon="@android:drawable/ic_menu_camera"
-            android:title="Import" />
-        <item android:id="@+id/nav_gallery" android:icon="@android:drawable/ic_menu_gallery"
-            android:title="Gallery" />
-        <item android:id="@+id/nav_slideshow" android:icon="@android:drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
-        <item android:id="@+id/nav_manage" android:icon="@android:drawable/ic_menu_manage"
-            android:title="Tools" />
+        <item android:id="@+id/test_pronunciation" android:icon="@android:drawable/ic_btn_speak_now"
+            android:title="Test Pronunciation" />
+        <item android:id="@+id/critical_listening" android:icon="@android:drawable/ic_lock_silent_mode_off"
+            android:title="Critical Listening" />
+        <item android:id="@+id/score" android:icon="@android:drawable/btn_star_big_on"
+            android:title="Show Score" />
+        <item android:id="@+id/new_words" android:icon="@android:drawable/ic_menu_send"
+            android:title="New Words" />
     </group>
 
-    <item android:title="Communicate">
-        <menu>
-            <item android:id="@+id/nav_share" android:icon="@android:drawable/ic_menu_share"
-                android:title="Share" />
-            <item android:id="@+id/nav_send" android:icon="@android:drawable/ic_menu_send"
-                android:title="Send" />
-        </menu>
-    </item>
+    <!--<item android:title="Communicate">-->
+        <!--<menu>-->
+            <!--<item android:id="@+id/nav_share" android:icon="@android:drawable/ic_menu_share"-->
+                <!--android:title="Share" />-->
+            <!--<item android:id="@+id/nav_send" android:icon="@android:drawable/ic_menu_send"-->
+                <!--android:title="Send" />-->
+        <!--</menu>-->
+    <!--</item>-->
 
 </menu>

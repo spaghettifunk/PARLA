@@ -12,9 +12,14 @@ public class Constants
     public static final String LOGIN_URL = "login/";
     public static final String REGISTRATION_URL = "register/";
 
+    // Network states
     public static final int NETWORKING_LOGIN_STATE = 0;
     public static final int NETWORKING_REGISTER_STATE = 1;
 
-    // other strings
+    // POST strings
     public static final String SUCCESS_POST = "SUCCESS";
+    public static final String FAILED_POST = "FAILED";
+
+    // debugging and Toast strings
+    public static final String TOAST_ERROR_LOGIN_ERROR = "Authentication failed";
 }

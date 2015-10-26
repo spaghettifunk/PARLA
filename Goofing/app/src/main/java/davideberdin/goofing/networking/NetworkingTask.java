@@ -68,7 +68,7 @@ public class NetworkingTask extends AsyncTask
                     break;
             }
         } catch (Exception ex) {
-            Logger.Log(Constants.CONNECTION_ACTIVITY, "Error in NETWROKING!");
+            Logger.Log(Constants.CONNECTION_ACTIVITY, "Error in NETWORKING!");
         }
         return null;
     }
@@ -78,6 +78,13 @@ public class NetworkingTask extends AsyncTask
     {
         assert result != null;
         if (!(result instanceof String)) throw new AssertionError();
+
+        String response = (String)result;
+        if (response.equals(Constants.FAILED_POST) || response.isEmpty()) {
+            Logger.Log(Constants.CONNECTION_ACTIVITY, Constants.TOAST_ERROR_LOGIN_ERROR);
+            Toast.makeText(currentActivity, Constants.TOAST_ERROR_LOGIN_ERROR, Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         currentActivity.startActivity(new Intent(currentActivity, MenuActivity.class));
     }
