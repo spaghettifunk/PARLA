@@ -3,7 +3,7 @@ package davideberdin.goofing.utilities;
 public class Constants
 {
     // Activities Name
-    public static final String LOGIN_ACTIVITY_NAME = "LoginActivity";
+    public static final String LOGIN_ACTIVITY = "LoginActivity";
     public static final String CONNECTION_ACTIVITY = "ConnectionActivity";
     public static final String REGISTRATION_ACTIVITY = "RegistrationActivity";
 
@@ -31,6 +31,7 @@ public class Constants
 
     // Username json keys
     public static final String GET_USERNAME_POST = "Username";
+    public static final String GET_PASSWORD_POST = "Password";
     public static final String GET_GENDER_POST = "Gender";
     public static final String GET_NATIONALITY_POST = "Nationality";
     public static final String GET_OCCUPATION_POST = "Occupation";

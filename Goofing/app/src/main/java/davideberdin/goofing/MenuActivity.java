@@ -1,7 +1,7 @@
 package davideberdin.goofing;
 
-import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,10 +16,13 @@ import davideberdin.goofing.controllers.CriticalListeningFragment;
 import davideberdin.goofing.controllers.NewWordsFragment;
 import davideberdin.goofing.controllers.ScoreFragment;
 import davideberdin.goofing.controllers.TestPronunciationFragment;
+import davideberdin.goofing.controllers.User;
+import davideberdin.goofing.utilities.UserLocalStore;
 
 public class MenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
 {
     private FragmentManager fragmentManager;
+    private UserLocalStore userLocalStore = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -30,17 +33,30 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        this.userLocalStore = new UserLocalStore(this);
+
         fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_menu, new TestPronunciationFragment()).commit();
     }
+
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+        if (authenticate() == false){
+            Intent newIntent = new Intent(MenuActivity.this, LoginActivity.class);
+            startActivity(newIntent);
+        }
+    }
+
+    private boolean authenticate(){ return this.userLocalStore.getUserLoggedIn(); }
 
     @Override
     public void onBackPressed() {
@@ -88,6 +104,13 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
             this.fragmentManager.beginTransaction().replace(R.id.content_menu, new ScoreFragment()).commit();
         } else if (id == R.id.new_words) {
             this.fragmentManager.beginTransaction().replace(R.id.content_menu, new NewWordsFragment()).commit();
+        } else if (id == R.id.logout) {
+
+            this.userLocalStore.clearUserData();
+            this.userLocalStore.setUserLoggedIn(false);
+
+            Intent newIntent = new Intent(MenuActivity.this, LoginActivity.class);
+            startActivity(newIntent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

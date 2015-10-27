@@ -1,12 +1,7 @@
 package davideberdin.goofing.networking;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
-import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,12 +9,9 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileOutputStream;
 import java.io.InputStreamReader;
-import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -31,19 +23,25 @@ import java.util.Map;
 import javax.net.ssl.HttpsURLConnection;
 
 // My imports
-import davideberdin.goofing.MenuActivity;
 import davideberdin.goofing.controllers.User;
 import davideberdin.goofing.utilities.Constants;
 import davideberdin.goofing.utilities.Logger;
 
 public class NetworkingTask extends AsyncTask
 {
-    private Activity currentActivity = null;
+    private User user;
+    private GetCallback userCallback;
+    private ProgressDialog progressDialog;
+
     private int currentNetworkingState;
 
-    public NetworkingTask(Activity activity) {
-        this.currentActivity = activity;
+    public NetworkingTask(User u, GetCallback userCallback, ProgressDialog progressDialog)
+    {
         this.currentNetworkingState = -1;
+
+        this.user = u;
+        this.userCallback = userCallback;
+        this.progressDialog = progressDialog;
     }
 
     @Override
@@ -54,30 +52,29 @@ public class NetworkingTask extends AsyncTask
 
             switch ((int)params[0]) {
                 case Constants.NETWORKING_LOGIN_STATE:
+
                     this.currentNetworkingState = Constants.NETWORKING_LOGIN_STATE;
 
-                    postParams.put("Username", (String)params[1]);
-                    postParams.put("Password", (String)params[2]);
+                    User loggedUser = (User)params[1];
+
+                    postParams.put("Username", loggedUser.GetUsername());
+                    postParams.put("Password", loggedUser.GetPassword());
 
                     return performPostCall(Constants.SERVER_URL + Constants.LOGIN_URL, postParams);
+
                 case Constants.NETWORKING_REGISTER_STATE:
 
-                    assert User.getUser() != null;
                     this.currentNetworkingState = Constants.NETWORKING_REGISTER_STATE;
 
-                    // we should have a User created at this point
-                    postParams.put("Username", User.getUser().GetUsername());
-                    postParams.put("Password", User.getUser().GetPassword());
-                    postParams.put("Gender", User.getUser().GetGender());
-                    postParams.put("Nationality", User.getUser().GetNationality());
-                    postParams.put("Occupation", User.getUser().GetOccupation());
+                    User registeredUser = (User)params[1];
+
+                    postParams.put("Username", registeredUser.GetUsername());
+                    postParams.put("Password", registeredUser.GetPassword());
+                    postParams.put("Gender", registeredUser.GetGender());
+                    postParams.put("Nationality", registeredUser.GetNationality());
+                    postParams.put("Occupation", registeredUser.GetOccupation());
 
                     return performPostCall(Constants.SERVER_URL + Constants.REGISTRATION_URL, postParams);
-                case Constants.NETWORKING_GET_SENTENCE:
-                    this.currentNetworkingState = Constants.NETWORKING_GET_SENTENCE;
-
-                    // no parameters
-                    return performPostCall(Constants.SERVER_URL + Constants.GET_SENTENCE_URL, postParams);
 
                 default:
                     Logger.Log(Constants.CONNECTION_ACTIVITY, Constants.GENERAL_ERROR_REQUEST);
@@ -92,6 +89,8 @@ public class NetworkingTask extends AsyncTask
     @Override
     protected void onPostExecute(Object result)
     {
+        this.progressDialog.dismiss();
+
         // Handle every response here
         try {
 
@@ -103,39 +102,45 @@ public class NetworkingTask extends AsyncTask
             String response = "";
             response = jsonObject.getString("Response");
 
-            if (response.equals(Constants.FAILED_POST) || response.isEmpty()) {
-                Logger.Log(Constants.CONNECTION_ACTIVITY, Constants.TOAST_ERROR_LOGIN_ERROR);
-                Toast.makeText(currentActivity, Constants.TOAST_ERROR_LOGIN_ERROR, Toast.LENGTH_SHORT).show();
-                return;
+            if (response.equals(Constants.FAILED_POST) || response.isEmpty()){
+                this.userCallback.done(jsonObject);
             }
+            else
+            {
+                assert response.equals(Constants.SUCCESS_POST);
 
-            assert response.equals(Constants.SUCCESS_POST);
+                HashMap<String, Object> responseObject = (HashMap<String, Object>) jsonToMap(jsonObject);
 
-            User u = User.getUser();
-            HashMap<String, Object> responseObject = (HashMap<String, Object>) jsonToMap(jsonObject);
-
-            switch (this.currentNetworkingState) {
+                switch (this.currentNetworkingState) {
                     case Constants.NETWORKING_LOGIN_STATE:
-                    case Constants.NETWORKING_REGISTER_STATE:
-                        u.SetUsername((String) responseObject.get(Constants.GET_USERNAME_POST));
-                        u.SetGender((String) responseObject.get(Constants.GET_GENDER_POST));
-                        u.SetNationality((String) responseObject.get(Constants.GET_NATIONALITY_POST));
-                        u.SetOccupation((String) responseObject.get(Constants.GET_OCCUPATION_POST));
+                        Logger.Log(Constants.CONNECTION_ACTIVITY, Constants.LOGIN_ACTIVITY);
 
-                        currentActivity.startActivity(new Intent(currentActivity, MenuActivity.class));
+                        String username = ((String) responseObject.get(Constants.GET_USERNAME_POST));
+                        String password = ((String) responseObject.get(Constants.GET_PASSWORD_POST));
+                        String gender = ((String) responseObject.get(Constants.GET_GENDER_POST));
+                        String nationality = ((String) responseObject.get(Constants.GET_NATIONALITY_POST));
+                        String occupation = ((String) responseObject.get(Constants.GET_OCCUPATION_POST));
+                        String sentence = (String) responseObject.get(Constants.GET_SENTENCE_POST);
+                        String phonetic = (String) responseObject.get(Constants.GET_PHONETIC_POST);
+
+                        User loggedUser = new User(username, password, gender, nationality, occupation, sentence, phonetic);
+
+                        this.userCallback.done(loggedUser);
                         break;
-                    case Constants.NETWORKING_GET_SENTENCE:
-                        // assume that the user has been either loaded or previously created
-                        String sentence = (String)responseObject.get(Constants.GET_SENTENCE_POST);
-                        u.SetCurrentSentence(sentence);
 
-                        String phonetic = (String)responseObject.get(Constants.GET_PHONETIC_POST);
-                        u.SetCurrentPhonetic(phonetic);
+                    case Constants.NETWORKING_REGISTER_STATE:
+                        Logger.Log(Constants.CONNECTION_ACTIVITY, Constants.REGISTRATION_ACTIVITY);
+
+                        String sentenceReg = (String) responseObject.get(Constants.GET_SENTENCE_POST);
+                        String phoneticReg = (String) responseObject.get(Constants.GET_PHONETIC_POST);
+
+                        this.userCallback.done(sentenceReg, phoneticReg);
 
                         break;
                     default:
                         Logger.Log(Constants.CONNECTION_ACTIVITY, Constants.GENERAL_ERROR_RESPONSE);
                         break;
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();

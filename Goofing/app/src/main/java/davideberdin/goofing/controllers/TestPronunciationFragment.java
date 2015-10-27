@@ -1,6 +1,7 @@
 package davideberdin.goofing.controllers;
 
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -25,9 +26,10 @@ import java.io.InputStream;
 import davideberdin.goofing.R;
 import davideberdin.goofing.networking.NetworkingTask;
 import davideberdin.goofing.utilities.Constants;
+import davideberdin.goofing.utilities.UserLocalStore;
 
 
-public class TestPronunciationFragment extends Fragment
+public class TestPronunciationFragment extends Fragment implements View.OnClickListener
 {
     // The number of buffer frames to keep around (for a nice fade-out visualization).
     private static final int HISTORY_SIZE = 6;
@@ -53,6 +55,8 @@ public class TestPronunciationFragment extends Fragment
     private TextView tvSentence = null;
     private TextView tvPhonemes = null;
 
+    private UserLocalStore userLocalStore = null;
+
     public TestPronunciationFragment() {
     }
 
@@ -68,47 +72,46 @@ public class TestPronunciationFragment extends Fragment
             File dirs = this.getActivity().getFilesDir();
             this.mFileName += dirs.getAbsolutePath() + "test.wav";
 
-            // Compute the minimum required audio buffer size and allocate the buffer.
-            // mBufferSize = AudioRecord.getMinBufferSize(SAMPLING_RATE, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT);
-            // mAudioBuffer = new short[mBufferSize / 2];
-
             SurfaceView waveForm = (SurfaceView) testPronunciationView.findViewById(R.id.waveformView);
 
             this.startButton = (Button) testPronunciationView.findViewById(R.id.tpStartButton);
-            this.startButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onRecord(true);
-                }
-            });
-
             this.stopButton = (Button) testPronunciationView.findViewById(R.id.tpStopButton);
-            this.stopButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onRecord(false);
-                    analyzeAudioFile();
-                }
-            });
 
-            // load random sentence from DB
-            NetworkingTask n = new NetworkingTask(this.getActivity());
-            Object result = n.execute(Constants.NETWORKING_GET_SENTENCE).get();
+            // register listener
+            this.startButton.setOnClickListener(this);
+            this.stopButton.setOnClickListener(this);
+
+            this.userLocalStore = new UserLocalStore(this.getActivity());
+            User loggedUser = this.userLocalStore.getLoggedUser();
 
             this.tvSentence = (TextView) testPronunciationView.findViewById(R.id.tpSentence);
-            String tmp = User.getUser().GetCurrentSentence();
+            String tmp = loggedUser.GetCurrentSentence();
             this.tvSentence.setText(tmp);
 
             // create phoneme sentence
             this.tvPhonemes = (TextView) testPronunciationView.findViewById(R.id.tpPhoneticSentence);
-            tmp = User.getUser().GetCurrentPhonemese();
-            this.tvPhonemes.setText(tmp);
+            tmp = loggedUser.GetCurrentPhonetic();
+            this.tvPhonemes.setText("/ " + tmp + " /");
 
         } catch (Exception ex){
             int x = 0;
         }
 
         return this.testPronunciationView;
+    }
+
+    @Override
+    public void onClick(View v)
+    {
+        switch (v.getId()){
+            case R.id.tpStartButton:
+                onRecord(true);
+                break;
+            case R.id.tpStopButton:
+                onRecord(false);
+                analyzeAudioFile();
+                break;
+        }
     }
 
     /* Checks if external storage is available for read and write */

@@ -1,7 +1,7 @@
 package davideberdin.goofing;
 
+import android.app.AlertDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,15 +9,21 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 // my imports
-import davideberdin.goofing.networking.NetworkingTask;
-import davideberdin.goofing.utilities.Constants;
-import davideberdin.goofing.utilities.Logger;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-public class LoginActivity extends AppCompatActivity
+import davideberdin.goofing.controllers.User;
+import davideberdin.goofing.networking.GetCallback;
+import davideberdin.goofing.networking.ServerRequest;
+import davideberdin.goofing.utilities.Constants;
+import davideberdin.goofing.utilities.ErrorManager;
+import davideberdin.goofing.utilities.Logger;
+import davideberdin.goofing.utilities.UserLocalStore;
+
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener
 {
     private EditText etUsername;
     private EditText etPassword;
@@ -28,8 +34,8 @@ public class LoginActivity extends AppCompatActivity
     private Button loginButton;
     private Button registerButton;
 
-    private ProgressBar mProgress;
-    
+    private UserLocalStore userLocalStore = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -40,19 +46,26 @@ public class LoginActivity extends AppCompatActivity
 
         setContentView(R.layout.activity_login);
 
-        this.mProgress = (ProgressBar) findViewById(R.id.loginProgressBar);
-        //this.mProgress.setVisibility(View.INVISIBLE);
+        this.userLocalStore = new UserLocalStore(this);
 
         this.etUsername = (EditText) findViewById(R.id.etUsername);
         this.etPassword = (EditText) findViewById(R.id.etPassword);
 
         this.loginButton = (Button) findViewById(R.id.loginButton);
-        this.loginButton.setOnClickListener(new View.OnClickListener()
+        this.registerButton = (Button) findViewById(R.id.registerButton);
+
+        this.loginButton.setOnClickListener(this);
+        this.registerButton.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View v)
+    {
+        switch (v.getId())
         {
-            @Override
-            public void onClick(View v)
-            {
-                Logger.Log(Constants.LOGIN_ACTIVITY_NAME, "Clicked Login");
+            case R.id.loginButton:
+
+                Logger.Log(Constants.LOGIN_ACTIVITY, "Clicked Login");
                 username = etUsername.getText().toString();
                 password = etPassword.getText().toString();
 
@@ -62,20 +75,40 @@ public class LoginActivity extends AppCompatActivity
                 }
 
                 // Networking stuff here
-                NetworkingTask net = new NetworkingTask(LoginActivity.this);
-                net.execute(Constants.NETWORKING_LOGIN_STATE, username, password);
-            }
-        });
+                User user = new User(username, password);
+                ServerRequest request = new ServerRequest(this);
+                request.fetchUserDataInBackgroud(user, new GetCallback()
+                {
+                    @Override
+                    public void done(Object... params) {
+                        if (params[0] instanceof JSONObject) {
+                            JSONObject obj = (JSONObject) params[0];
+                            try {
+                                ErrorManager.showErrorMessage(LoginActivity.this, obj.getString("Reason"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            User u = (User) params[0];
+                            if (u == null) {
+                                ErrorManager.showErrorMessage(LoginActivity.this, Constants.TOAST_ERROR_LOGIN_ERROR);
+                            } else {
+                                userLocalStore.storeUserData(u);
+                                userLocalStore.setUserLoggedIn(true);
+                                startActivity(new Intent(LoginActivity.this, MenuActivity.class));
+                            }
+                        }
+                    }
+                });
+                break;
+            case R.id.registerButton:
 
-        registerButton = (Button) findViewById(R.id.registerButton);
-        registerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Logger.Log(Constants.LOGIN_ACTIVITY_NAME, "Clicked Register");
+                Logger.Log(Constants.LOGIN_ACTIVITY, "Clicked Register");
 
                 Intent inent = new Intent(LoginActivity.this, RegistrationActivity.class);
                 startActivity(inent);
-            }
-        });
+
+                break;
+        }
     }
 }

@@ -5,12 +5,12 @@ package davideberdin.goofing.controllers;
  */
 public class User
 {
-    private static User singletonUser = new User();
-    public static User getUser() { return singletonUser; }
-
-    public static void createUser(String n, String p, String g, String nat, String occ) {
-        singletonUser = new User(n, p, g, nat, occ);
-    }
+//    private static User singletonUser = new User();
+//    public static User getUser() { return singletonUser; }
+//
+//    public static void createUser(String n, String p, String g, String nat, String occ) {
+//        singletonUser = new User(n, p, g, nat, occ);
+//    }
 
     private String currentSentence = "";
     private String currentePhonetic = "";
@@ -21,14 +21,20 @@ public class User
     private String nationality = "";
     private String occupation = "";
 
-    private User() { }
+    public User(String n, String p)
+    {
+        this.username = n;
+        this.password = p;
+    }
 
-    private User(String n, String p, String g, String nat, String occ) {
+    public User(String n, String p, String g, String nat, String occ, String s, String ph) {
         this.username = n;
         this.password = p;
         this.nationality = nat;
         this.occupation = occ;
         this.gender = g;
+        this.currentSentence = s;
+        this.currentePhonetic = ph;
     }
 
     // Some public methods related to user paramentes
@@ -45,7 +51,7 @@ public class User
 
     // sentence singleton
     public String GetCurrentSentence() { return this.currentSentence; }
-    public String GetCurrentPhonemese() { return this.currentePhonetic; }
+    public String GetCurrentPhonetic() { return this.currentePhonetic; }
     public void SetCurrentSentence(String cs){ this.currentSentence = cs; }
     public void SetCurrentPhonetic(String cp){ this.currentePhonetic = cp; }
 }

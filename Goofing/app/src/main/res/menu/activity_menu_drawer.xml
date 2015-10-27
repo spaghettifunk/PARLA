@@ -12,13 +12,11 @@
             android:title="New Words" />
     </group>
 
-    <!--<item android:title="Communicate">-->
-        <!--<menu>-->
-            <!--<item android:id="@+id/nav_share" android:icon="@android:drawable/ic_menu_share"-->
-                <!--android:title="Share" />-->
-            <!--<item android:id="@+id/nav_send" android:icon="@android:drawable/ic_menu_send"-->
-                <!--android:title="Send" />-->
-        <!--</menu>-->
-    <!--</item>-->
+    <item android:title="Extra">
+        <menu>
+            <item android:id="@+id/logout" android:icon="@android:drawable/ic_menu_revert"
+                android:title="Logout" />
+        </menu>
+    </item>
 
 </menu>
