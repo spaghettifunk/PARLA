@@ -12,6 +12,9 @@ public class User
         singletonUser = new User(n, p, g, nat, occ);
     }
 
+    private String currentSentence = "";
+    private String currentePhonetic = "";
+
     private String gender = "";
     private String username = "";
     private String password = "";
@@ -28,12 +31,21 @@ public class User
         this.gender = g;
     }
 
-    /*
-     * Some public methods related to user paramentes
-    */
+    // Some public methods related to user paramentes
     public String GetUsername() { return this.username; }
     public String GetPassword() { return this.password; }
     public String GetGender() { return this.gender; }
     public String GetNationality() { return this.nationality; }
     public String GetOccupation() { return this.occupation; }
+
+    public void SetUsername(String u) { this.username = u; }
+    public void SetGender(String g) { this.gender = g; }
+    public void SetNationality(String n) { this.nationality = n; }
+    public void SetOccupation(String o) { this.occupation = o; }
+
+    // sentence singleton
+    public String GetCurrentSentence() { return this.currentSentence; }
+    public String GetCurrentPhonemese() { return this.currentePhonetic; }
+    public void SetCurrentSentence(String cs){ this.currentSentence = cs; }
+    public void SetCurrentPhonetic(String cp){ this.currentePhonetic = cp; }
 }

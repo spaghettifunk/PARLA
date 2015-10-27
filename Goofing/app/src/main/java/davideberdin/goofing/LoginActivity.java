@@ -1,12 +1,15 @@
 package davideberdin.goofing;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 // my imports
@@ -25,6 +28,8 @@ public class LoginActivity extends AppCompatActivity
     private Button loginButton;
     private Button registerButton;
 
+    private ProgressBar mProgress;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -35,11 +40,14 @@ public class LoginActivity extends AppCompatActivity
 
         setContentView(R.layout.activity_login);
 
-        etUsername = (EditText) findViewById(R.id.etUsername);
-        etPassword = (EditText) findViewById(R.id.etPassword);
+        this.mProgress = (ProgressBar) findViewById(R.id.loginProgressBar);
+        //this.mProgress.setVisibility(View.INVISIBLE);
 
-        loginButton = (Button) findViewById(R.id.loginButton);
-        loginButton.setOnClickListener(new View.OnClickListener()
+        this.etUsername = (EditText) findViewById(R.id.etUsername);
+        this.etPassword = (EditText) findViewById(R.id.etPassword);
+
+        this.loginButton = (Button) findViewById(R.id.loginButton);
+        this.loginButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)

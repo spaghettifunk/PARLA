@@ -1,8 +1,11 @@
 package davideberdin.goofing.networking;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -11,9 +14,12 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileOutputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -23,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
-import javax.xml.transform.Result;
 
 // My imports
 import davideberdin.goofing.MenuActivity;
@@ -34,9 +39,11 @@ import davideberdin.goofing.utilities.Logger;
 public class NetworkingTask extends AsyncTask
 {
     private Activity currentActivity = null;
+    private int currentNetworkingState;
 
     public NetworkingTask(Activity activity) {
         this.currentActivity = activity;
+        this.currentNetworkingState = -1;
     }
 
     @Override
@@ -47,6 +54,8 @@ public class NetworkingTask extends AsyncTask
 
             switch ((int)params[0]) {
                 case Constants.NETWORKING_LOGIN_STATE:
+                    this.currentNetworkingState = Constants.NETWORKING_LOGIN_STATE;
+
                     postParams.put("Username", (String)params[1]);
                     postParams.put("Password", (String)params[2]);
 
@@ -54,6 +63,7 @@ public class NetworkingTask extends AsyncTask
                 case Constants.NETWORKING_REGISTER_STATE:
 
                     assert User.getUser() != null;
+                    this.currentNetworkingState = Constants.NETWORKING_REGISTER_STATE;
 
                     // we should have a User created at this point
                     postParams.put("Username", User.getUser().GetUsername());
@@ -63,8 +73,14 @@ public class NetworkingTask extends AsyncTask
                     postParams.put("Occupation", User.getUser().GetOccupation());
 
                     return performPostCall(Constants.SERVER_URL + Constants.REGISTRATION_URL, postParams);
+                case Constants.NETWORKING_GET_SENTENCE:
+                    this.currentNetworkingState = Constants.NETWORKING_GET_SENTENCE;
+
+                    // no parameters
+                    return performPostCall(Constants.SERVER_URL + Constants.GET_SENTENCE_URL, postParams);
+
                 default:
-                    Logger.Log(Constants.LOGIN_ACTIVITY_NAME, "Unknown behaviour during getJSON!");
+                    Logger.Log(Constants.CONNECTION_ACTIVITY, Constants.GENERAL_ERROR_REQUEST);
                     break;
             }
         } catch (Exception ex) {
@@ -76,17 +92,54 @@ public class NetworkingTask extends AsyncTask
     @Override
     protected void onPostExecute(Object result)
     {
-        assert result != null;
-        if (!(result instanceof String)) throw new AssertionError();
+        // Handle every response here
+        try {
 
-        String response = (String)result;
-        if (response.equals(Constants.FAILED_POST) || response.isEmpty()) {
-            Logger.Log(Constants.CONNECTION_ACTIVITY, Constants.TOAST_ERROR_LOGIN_ERROR);
-            Toast.makeText(currentActivity, Constants.TOAST_ERROR_LOGIN_ERROR, Toast.LENGTH_SHORT).show();
-            return;
+            assert result != null;
+            if (!(result instanceof String)) throw new AssertionError();
+
+            JSONObject jsonObject = new JSONObject((String)result);
+
+            String response = "";
+            response = jsonObject.getString("Response");
+
+            if (response.equals(Constants.FAILED_POST) || response.isEmpty()) {
+                Logger.Log(Constants.CONNECTION_ACTIVITY, Constants.TOAST_ERROR_LOGIN_ERROR);
+                Toast.makeText(currentActivity, Constants.TOAST_ERROR_LOGIN_ERROR, Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            assert response.equals(Constants.SUCCESS_POST);
+
+            User u = User.getUser();
+            HashMap<String, Object> responseObject = (HashMap<String, Object>) jsonToMap(jsonObject);
+
+            switch (this.currentNetworkingState) {
+                    case Constants.NETWORKING_LOGIN_STATE:
+                    case Constants.NETWORKING_REGISTER_STATE:
+                        u.SetUsername((String) responseObject.get(Constants.GET_USERNAME_POST));
+                        u.SetGender((String) responseObject.get(Constants.GET_GENDER_POST));
+                        u.SetNationality((String) responseObject.get(Constants.GET_NATIONALITY_POST));
+                        u.SetOccupation((String) responseObject.get(Constants.GET_OCCUPATION_POST));
+
+                        currentActivity.startActivity(new Intent(currentActivity, MenuActivity.class));
+                        break;
+                    case Constants.NETWORKING_GET_SENTENCE:
+                        // assume that the user has been either loaded or previously created
+                        String sentence = (String)responseObject.get(Constants.GET_SENTENCE_POST);
+                        u.SetCurrentSentence(sentence);
+
+                        String phonetic = (String)responseObject.get(Constants.GET_PHONETIC_POST);
+                        u.SetCurrentPhonetic(phonetic);
+
+                        break;
+                    default:
+                        Logger.Log(Constants.CONNECTION_ACTIVITY, Constants.GENERAL_ERROR_RESPONSE);
+                        break;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-
-        currentActivity.startActivity(new Intent(currentActivity, MenuActivity.class));
     }
 
     public String performPostCall(String requestURL, HashMap<String, String> postDataParams)

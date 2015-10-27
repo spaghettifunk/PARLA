@@ -14,16 +14,17 @@ import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.util.LinkedList;
+import java.io.InputStream;
 
 import davideberdin.goofing.R;
+import davideberdin.goofing.networking.NetworkingTask;
+import davideberdin.goofing.utilities.Constants;
 
 
 public class TestPronunciationFragment extends Fragment
@@ -46,8 +47,11 @@ public class TestPronunciationFragment extends Fragment
     private static final int SAMPLING_RATE = 11025;
     private static String mFileName = null;
     private WaveformView mWaveformView;
-
     private Paint mPaint;
+
+    // variables related to the view
+    private TextView tvSentence = null;
+    private TextView tvPhonemes = null;
 
     public TestPronunciationFragment() {
     }
@@ -60,8 +64,9 @@ public class TestPronunciationFragment extends Fragment
 
         try
         {
-            this.mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
-            this.mFileName += "/test.wav";
+            //this.mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
+            File dirs = this.getActivity().getFilesDir();
+            this.mFileName += dirs.getAbsolutePath() + "test.wav";
 
             // Compute the minimum required audio buffer size and allocate the buffer.
             // mBufferSize = AudioRecord.getMinBufferSize(SAMPLING_RATE, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT);
@@ -74,7 +79,6 @@ public class TestPronunciationFragment extends Fragment
                 @Override
                 public void onClick(View v) {
                     onRecord(true);
-
                 }
             });
 
@@ -83,17 +87,22 @@ public class TestPronunciationFragment extends Fragment
                 @Override
                 public void onClick(View v) {
                     onRecord(false);
-
-                    // draw waveform
-                    try {
-                        FileInputStream audioFile = testPronunciationView.getContext().openFileInput(mFileName);
-
-
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
+                    analyzeAudioFile();
                 }
             });
+
+            // load random sentence from DB
+            NetworkingTask n = new NetworkingTask(this.getActivity());
+            Object result = n.execute(Constants.NETWORKING_GET_SENTENCE).get();
+
+            this.tvSentence = (TextView) testPronunciationView.findViewById(R.id.tpSentence);
+            String tmp = User.getUser().GetCurrentSentence();
+            this.tvSentence.setText(tmp);
+
+            // create phoneme sentence
+            this.tvPhonemes = (TextView) testPronunciationView.findViewById(R.id.tpPhoneticSentence);
+            tmp = User.getUser().GetCurrentPhonemese();
+            this.tvPhonemes.setText(tmp);
 
         } catch (Exception ex){
             int x = 0;
@@ -102,53 +111,76 @@ public class TestPronunciationFragment extends Fragment
         return this.testPronunciationView;
     }
 
-    private void onRecord(boolean start) {
-        if (start) {
-            startRecording();
-        } else {
-            stopRecording();
+    /* Checks if external storage is available for read and write */
+    private boolean isExternalStorageWritable()
+    {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            return true;
         }
+        return false;
     }
 
-    private void onPlay(boolean start) {
-        if (start) {
-            startPlaying();
-        } else {
-            stopPlaying();
+    /* Checks if external storage is available to at least read */
+    private boolean isExternalStorageReadable()
+    {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state) || Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
+            return true;
         }
+        return false;
     }
 
-    private void startPlaying() {
-        mPlayer = new MediaPlayer();
+    private void analyzeAudioFile()
+    {
+        // draw waveform
         try {
-            mPlayer.setDataSource(mFileName);
+            InputStream inStream = testPronunciationView.getContext().openFileInput(mFileName);
+            byte[] stream = convertStreamToByteArray(inStream);
 
-            byte[] byteInput = {0};
-            short[] input = {0};
-
-            FileInputStream fis = new FileInputStream(mFileName);
-
-            fis.read(byteInput, 44, byteInput.length - 45);
-            ByteBuffer.wrap(byteInput).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(input);
-
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public byte[] convertStreamToByteArray(InputStream is) throws IOException
+    {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        byte[] buff = new byte[11025];
+        int i = Integer.MAX_VALUE;
+        while ((i = is.read(buff, 0, buff.length)) > 0) {
+            baos.write(buff, 0, i);
+        }
+
+        return baos.toByteArray(); // be sure to close InputStream in calling function
+    }
+
+    private void onRecord(boolean start)
+    {
+        try {
+            if (start) {
+                startRecording();
+            } else {
+                stopRecording();
+            }
+        } catch (IOException e){
             int x = 0;
         }
     }
 
-    private void stopPlaying() {
-        mPlayer.release();
-        mPlayer = null;
-    }
-
-    private void startRecording() {
-        mRecorder = new MediaRecorder();
-        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        mRecorder.setOutputFile(mFileName);
-        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-
+    private void startRecording() throws IOException {
         try {
+            //if (isExternalStorageReadable() == false || isExternalStorageWritable() == false)
+            //    throw new IOException();
+
+            mRecorder = new MediaRecorder();
+            mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+            mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+            mRecorder.setOutputFile(mFileName);
+            mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+
             mRecorder.prepare();
         } catch (IOException e) {
             int x = 0;

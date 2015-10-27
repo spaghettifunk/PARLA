@@ -64,4 +64,13 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/loginProgressBar"
+        android:indeterminate="true"
+        android:visibility="invisible" />
+
 </RelativeLayout>
