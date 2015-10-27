@@ -1,6 +1,7 @@
 package davideberdin.goofing.fragments;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,13 +15,15 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-import davideberdin.goofing.ListenNSActivity;
+import davideberdin.goofing.ListeningNativeSpeaker;
 import davideberdin.goofing.R;
 import davideberdin.goofing.utilities.Constants;
 import davideberdin.goofing.utilities.ErrorManager;
 
 public class CriticalListeningFragment extends Fragment implements View.OnClickListener
 {
+    private FragmentManager fragmentManager = null;
+
     private Button listenNSButton = null;
     private Button listenYourselfButton = null;
 
@@ -40,6 +43,8 @@ public class CriticalListeningFragment extends Fragment implements View.OnClickL
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         this.criticalListeningView = inflater.inflate(R.layout.critical_listening_layout, container, false);
+
+        this.fragmentManager = getFragmentManager();
 
         this.listenNSButton = (Button) this.criticalListeningView.findViewById(R.id.listenNSButton);
         this.listenYourselfButton = (Button) this.criticalListeningView.findViewById(R.id.listenYourselfButton);
@@ -95,10 +100,8 @@ public class CriticalListeningFragment extends Fragment implements View.OnClickL
                     ErrorManager.showErrorMessage(this.getActivity(), Constants.ERROR_SELECTING_SENTENCE);
                 }
                 else {
-                    Intent nativeListen = new Intent(this.getActivity(), ListenNSActivity.class);
-                    nativeListen.putExtra("SelectedSentece", selectedNativeSentence);
-
-                    startActivity(nativeListen);
+                    Intent intent = new Intent(this.getActivity(), ListeningNativeSpeaker.class);
+                    startActivity(intent);
                 }
 
                 break;
@@ -107,7 +110,6 @@ public class CriticalListeningFragment extends Fragment implements View.OnClickL
                     ErrorManager.showErrorMessage(this.getActivity(), Constants.ERROR_SELECTING_SENTENCE);
                 }
                 else {
-
                 }
                 break;
         }

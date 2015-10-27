@@ -45,4 +45,6 @@
     <string name="listenNSButton">Listen to Native Speaker</string>
     <string name="title_activity_listen_ns">ListenNSActivity</string>
     <string name="section_format">Hello World from section: %1$d</string>
+    <string name="title_activity_listen_native">Listen Native Speaker</string>
+    <string name="title_activity_listening_native_speaker">Listen to Native Speaker</string>
 </resources>

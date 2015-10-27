@@ -34,16 +34,23 @@
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity
-            android:name=".ListenNSActivity"
-            android:label="@string/title_activity_listen_ns"
-            android:theme="@style/AppTheme.NoActionBar" >
-        </activity>
-        <activity android:name=".SplashScreen"
-                  android:theme="@android:style/Theme.NoTitleBar">
+            android:name=".SplashScreen"
+            android:theme="@android:style/Theme.NoTitleBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".ListenNative"
+            android:label="@string/title_activity_listen_native"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+        <activity
+            android:name=".ListeningNativeSpeaker"
+            android:label="@string/title_activity_listening_native_speaker"
+            android:theme="@style/AppTheme.NoActionBar" >
         </activity>
     </application>
 
