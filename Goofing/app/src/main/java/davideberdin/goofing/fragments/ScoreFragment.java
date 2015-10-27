@@ -1,4 +1,4 @@
-package davideberdin.goofing.controllers;
+package davideberdin.goofing.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -12,14 +12,14 @@ import davideberdin.goofing.R;
 /**
  * Created by dado on 25/10/15.
  */
-public class CriticalListeningFragment extends Fragment
+public class ScoreFragment extends Fragment
 {
-    private View criticalListeningView = null;
+    private View scoreView = null;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.criticalListeningView = inflater.inflate(R.layout.critical_listening_layout, container, false);
-        return this.criticalListeningView;
+        this.scoreView = inflater.inflate(R.layout.score_layout, container, false);
+        return this.scoreView;
     }
 }

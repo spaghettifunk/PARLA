@@ -12,11 +12,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import davideberdin.goofing.controllers.CriticalListeningFragment;
-import davideberdin.goofing.controllers.NewWordsFragment;
-import davideberdin.goofing.controllers.ScoreFragment;
-import davideberdin.goofing.controllers.TestPronunciationFragment;
-import davideberdin.goofing.controllers.User;
+import davideberdin.goofing.fragments.CriticalListeningFragment;
+import davideberdin.goofing.fragments.NewWordsFragment;
+import davideberdin.goofing.fragments.ScoreFragment;
+import davideberdin.goofing.fragments.TestPronunciationFragment;
 import davideberdin.goofing.utilities.UserLocalStore;
 
 public class MenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener

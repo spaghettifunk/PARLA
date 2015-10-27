@@ -28,6 +28,7 @@ public class Constants
     public static final String TOAST_ERROR_LOGIN_ERROR = "Authentication failed";
     public static final String GENERAL_ERROR_REQUEST = "Unknown behaviour during REQUEST";
     public static final String GENERAL_ERROR_RESPONSE = "Unknown behaviour during RESPONSE";
+    public static final String ERROR_SELECTING_SENTENCE = "Select a sentence to listen";
 
     // Username json keys
     public static final String GET_USERNAME_POST = "Username";
@@ -35,4 +36,11 @@ public class Constants
     public static final String GET_GENDER_POST = "Gender";
     public static final String GET_NATIONALITY_POST = "Nationality";
     public static final String GET_OCCUPATION_POST = "Occupation";
+
+    // sentences
+    public static String[] nativeSentences = { "A piece of cake", "Blow a fuse", "Catch some zs", "Down to the wire",
+                                               "Eager beaver", "Fair and square", "Get cold feet", "Mellow out",
+                                               "Pulling your legs", "Thinking out loud" };
+
+    public static String[] userSentences = { "A piece of cake", "Blow a fuse" };
 }

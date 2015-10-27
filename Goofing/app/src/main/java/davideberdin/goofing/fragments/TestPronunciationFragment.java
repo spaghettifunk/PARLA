@@ -1,7 +1,6 @@
-package davideberdin.goofing.controllers;
+package davideberdin.goofing.fragments;
 
 import android.app.Fragment;
-import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -24,8 +23,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import davideberdin.goofing.R;
-import davideberdin.goofing.networking.NetworkingTask;
-import davideberdin.goofing.utilities.Constants;
+import davideberdin.goofing.controllers.User;
+import davideberdin.goofing.controllers.WaveformView;
 import davideberdin.goofing.utilities.UserLocalStore;
 
 
@@ -66,36 +65,30 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
     {
         this.testPronunciationView = inflater.inflate(R.layout.test_pronunciation_layout, container, false);
 
-        try
-        {
-            //this.mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
-            File dirs = this.getActivity().getFilesDir();
-            this.mFileName += dirs.getAbsolutePath() + "test.wav";
+        //this.mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
+        File dirs = this.getActivity().getFilesDir();
+        this.mFileName += dirs.getAbsolutePath() + "test.wav";
 
-            SurfaceView waveForm = (SurfaceView) testPronunciationView.findViewById(R.id.waveformView);
+        SurfaceView waveForm = (SurfaceView) testPronunciationView.findViewById(R.id.waveformView);
 
-            this.startButton = (Button) testPronunciationView.findViewById(R.id.tpStartButton);
-            this.stopButton = (Button) testPronunciationView.findViewById(R.id.tpStopButton);
+        this.startButton = (Button) testPronunciationView.findViewById(R.id.tpStartButton);
+        this.stopButton = (Button) testPronunciationView.findViewById(R.id.tpStopButton);
 
-            // register listener
-            this.startButton.setOnClickListener(this);
-            this.stopButton.setOnClickListener(this);
+        // register listener
+        this.startButton.setOnClickListener(this);
+        this.stopButton.setOnClickListener(this);
 
-            this.userLocalStore = new UserLocalStore(this.getActivity());
-            User loggedUser = this.userLocalStore.getLoggedUser();
+        this.userLocalStore = new UserLocalStore(this.getActivity());
+        User loggedUser = this.userLocalStore.getLoggedUser();
 
-            this.tvSentence = (TextView) testPronunciationView.findViewById(R.id.tpSentence);
-            String tmp = loggedUser.GetCurrentSentence();
-            this.tvSentence.setText(tmp);
+        this.tvSentence = (TextView) testPronunciationView.findViewById(R.id.tpSentence);
+        String tmp = loggedUser.GetCurrentSentence();
+        this.tvSentence.setText(tmp);
 
-            // create phoneme sentence
-            this.tvPhonemes = (TextView) testPronunciationView.findViewById(R.id.tpPhoneticSentence);
-            tmp = loggedUser.GetCurrentPhonetic();
-            this.tvPhonemes.setText("/ " + tmp + " /");
-
-        } catch (Exception ex){
-            int x = 0;
-        }
+        // create phoneme sentence
+        this.tvPhonemes = (TextView) testPronunciationView.findViewById(R.id.tpPhoneticSentence);
+        tmp = loggedUser.GetCurrentPhonetic();
+        this.tvPhonemes.setText("/ " + tmp + " /");
 
         return this.testPronunciationView;
     }

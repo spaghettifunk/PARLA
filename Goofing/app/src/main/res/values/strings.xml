@@ -41,4 +41,8 @@
     <string name="tpPhonetic">Phonetic</string>
     <string name="tpStartButton">Start</string>
     <string name="tpStopButton">Stop</string>
+    <string name="listenYourselfButton">Listen to yourself</string>
+    <string name="listenNSButton">Listen to Native Speaker</string>
+    <string name="title_activity_listen_ns">ListenNSActivity</string>
+    <string name="section_format">Hello World from section: %1$d</string>
 </resources>
