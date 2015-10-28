@@ -16,12 +16,14 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 import davideberdin.goofing.ListeningNativeSpeaker;
+import davideberdin.goofing.ListeningUser;
 import davideberdin.goofing.R;
 import davideberdin.goofing.utilities.Constants;
 import davideberdin.goofing.utilities.ErrorManager;
 
 public class CriticalListeningFragment extends Fragment implements View.OnClickListener
 {
+    //region VARIABLES
     private FragmentManager fragmentManager = null;
 
     private Button listenNSButton = null;
@@ -36,7 +38,11 @@ public class CriticalListeningFragment extends Fragment implements View.OnClickL
     private View criticalListeningView = null;
 
     private String selectedNativeSentence = null;
+    private String selectedNativePhonetic = null;
+
     private String selectedUserSentence = null;
+    private String selectedUserPhonetic = null;
+    //endregion
 
     @Nullable
     @Override
@@ -68,6 +74,7 @@ public class CriticalListeningFragment extends Fragment implements View.OnClickL
                 view.setBackgroundColor(getResources().getColor(android.R.color.holo_orange_dark));
                 previouslyNativeSelectedItem = view;
                 selectedNativeSentence = (String)parent.getItemAtPosition(position);
+                selectedNativePhonetic = Constants.nativePhonetics[position];
             }
         });
 
@@ -101,15 +108,20 @@ public class CriticalListeningFragment extends Fragment implements View.OnClickL
                 }
                 else {
                     Intent intent = new Intent(this.getActivity(), ListeningNativeSpeaker.class);
+                    intent.putExtra("Sentence", selectedNativeSentence);
+                    intent.putExtra("Phonetic", selectedNativePhonetic);
                     startActivity(intent);
                 }
-
                 break;
             case R.id.listenYourselfButton:
                 if (selectedUserSentence == null){
                     ErrorManager.showErrorMessage(this.getActivity(), Constants.ERROR_SELECTING_SENTENCE);
                 }
                 else {
+                    Intent intent = new Intent(this.getActivity(), ListeningUser.class);
+                    intent.putExtra("Sentence", selectedUserSentence);
+                    intent.putExtra("Phonetic", selectedUserPhonetic);
+                    startActivity(intent);
                 }
                 break;
         }

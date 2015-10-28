@@ -10,18 +10,19 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Surface;
-import android.view.SurfaceView;
 import android.view.View;
+import android.view.ViewGroup;
+
 import android.widget.TextView;
 
-import davideberdin.goofing.fragments.NativeGeneralOverviewFragment;
-import davideberdin.goofing.fragments.NativeInformationFragment;
+import davideberdin.goofing.fragments.UserGeneralOverviewFragment;
+import davideberdin.goofing.fragments.UserInformationFragment;
 import davideberdin.goofing.utilities.ErrorManager;
 
-public class ListeningNativeSpeaker extends AppCompatActivity implements View.OnClickListener
+public class ListeningUser extends AppCompatActivity implements View.OnClickListener
 {
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -31,37 +32,35 @@ public class ListeningNativeSpeaker extends AppCompatActivity implements View.On
      * may be best to switch to a
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
-    private NativeSectionsPagerAdapter mNativeSectionsPagerAdapter;
+    private UserSectionsPagerAdapter mSectionsPagerAdapter;
+    private String currentSentence = "";
+    private String currentPhonetic = "";
 
     /**
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
 
-    private String currentSentence = "";
-    private String currentPhonetic = "";
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_listening_native_speaker);
+        setContentView(R.layout.activity_listening_user);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mNativeSectionsPagerAdapter = new NativeSectionsPagerAdapter(getSupportFragmentManager());
+        mSectionsPagerAdapter = new UserSectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mNativeSectionsPagerAdapter);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-        FloatingActionButton listenButton = (FloatingActionButton) findViewById(R.id.fabListenNSButton);
+        FloatingActionButton listenButton = (FloatingActionButton) findViewById(R.id.fabListenUserButton);
         listenButton.setOnClickListener(this);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -71,10 +70,11 @@ public class ListeningNativeSpeaker extends AppCompatActivity implements View.On
         this.currentPhonetic = getIntent().getExtras().getString("Phonetic");
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_listening_native_speaker, menu);
+        getMenuInflater().inflate(R.menu.menu_listening_user, menu);
         return true;
     }
 
@@ -99,7 +99,7 @@ public class ListeningNativeSpeaker extends AppCompatActivity implements View.On
     public void onClick(View v)
     {
         switch (v.getId()){
-            case R.id.fabListenNSButton:
+            case R.id.fabListenUserButton:
                 ErrorManager.showErrorMessage(this, "Such a beautiful voice: " + this.currentSentence);
                 break;
         }
@@ -109,9 +109,9 @@ public class ListeningNativeSpeaker extends AppCompatActivity implements View.On
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
-    public class NativeSectionsPagerAdapter extends FragmentPagerAdapter
+    public class UserSectionsPagerAdapter extends FragmentPagerAdapter
     {
-        public NativeSectionsPagerAdapter(FragmentManager fm) {
+        public UserSectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
@@ -119,23 +119,14 @@ public class ListeningNativeSpeaker extends AppCompatActivity implements View.On
         public Fragment getItem(int position)
         {
             Fragment f;
-            Bundle args = new Bundle();
-            switch (position){
+            switch (position) {
                 case 0:
-                    f = new NativeGeneralOverviewFragment();
-                    args.putString("Sentence", currentSentence);
-                    args.putString("Phonetic", currentPhonetic);
-                    f.setArguments(args);
-
-                    break;
+                    f = new UserGeneralOverviewFragment();
                 case 1:
-                    f = new NativeInformationFragment();
-                    break;
+                    f = new UserInformationFragment();
                 default:
                     f = null;
-                    break;
             }
-
             return f;
         }
 
@@ -149,7 +140,7 @@ public class ListeningNativeSpeaker extends AppCompatActivity implements View.On
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "General overview";
+                    return "General Overview";
                 case 1:
                     return "Information";
             }

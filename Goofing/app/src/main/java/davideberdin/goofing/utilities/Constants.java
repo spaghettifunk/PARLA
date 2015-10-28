@@ -42,5 +42,9 @@ public class Constants
                                                "Eager beaver", "Fair and square", "Get cold feet", "Mellow out",
                                                "Pulling your legs", "Thinking out loud" };
 
+    public static String[] nativePhonetics = { "ɐ pˈiːs ʌv kˈeɪk", "blˈoʊ ɐ fjˈuːz", "kˈætʃ sˌʌm zˌiːˈɛs",
+                                               "dˌaʊn tə ðə wˈaɪɚ", "ˈiːɡɚ bˈiːvɚ", "fˈɛɹ ænd skwˈɛɹ",
+                                               "ɡɛt kˈoʊld fˈiːt", "mˈɛloʊ ˈaʊt", "pˈʊlɪŋ jʊɹ lˈɛɡz", "θˈɪŋkɪŋ ˈaʊt lˈaʊd" };
+
     public static String[] userSentences = { "A piece of cake", "Blow a fuse" };
 }

@@ -47,4 +47,9 @@
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="title_activity_listen_native">Listen Native Speaker</string>
     <string name="title_activity_listening_native_speaker">Listen to Native Speaker</string>
+    <string name="title_activity_listening_user">Listening to Yourself</string>
+    <string name="listenNativeSentence">Sentence</string>
+    <string name="listenNativePhonetic">Phonetic</string>
+    <string name="listenNativeStressTextView">Stress</string>
+    <string name="descriptionNativeTextView">A lot of things related to Stress or whatever we want</string>
 </resources>
