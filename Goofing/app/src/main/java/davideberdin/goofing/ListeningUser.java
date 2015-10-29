@@ -10,17 +10,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-
-import android.widget.TextView;
 
 import davideberdin.goofing.fragments.UserGeneralOverviewFragment;
 import davideberdin.goofing.fragments.UserInformationFragment;
-import davideberdin.goofing.utilities.ErrorManager;
+import davideberdin.goofing.utilities.AppWindowManager;
 
 public class ListeningUser extends AppCompatActivity implements View.OnClickListener
 {
@@ -100,7 +96,7 @@ public class ListeningUser extends AppCompatActivity implements View.OnClickList
     {
         switch (v.getId()){
             case R.id.fabListenUserButton:
-                ErrorManager.showErrorMessage(this, "Such a beautiful voice: " + this.currentSentence);
+                AppWindowManager.showErrorMessage(this, "Such a beautiful voice: " + this.currentSentence);
                 break;
         }
     }

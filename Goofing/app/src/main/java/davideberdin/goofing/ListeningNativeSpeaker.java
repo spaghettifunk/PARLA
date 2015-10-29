@@ -12,14 +12,11 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Surface;
-import android.view.SurfaceView;
 import android.view.View;
-import android.widget.TextView;
 
 import davideberdin.goofing.fragments.NativeGeneralOverviewFragment;
 import davideberdin.goofing.fragments.NativeInformationFragment;
-import davideberdin.goofing.utilities.ErrorManager;
+import davideberdin.goofing.utilities.AppWindowManager;
 
 public class ListeningNativeSpeaker extends AppCompatActivity implements View.OnClickListener
 {
@@ -100,7 +97,7 @@ public class ListeningNativeSpeaker extends AppCompatActivity implements View.On
     {
         switch (v.getId()){
             case R.id.fabListenNSButton:
-                ErrorManager.showErrorMessage(this, "Such a beautiful voice: " + this.currentSentence);
+                AppWindowManager.showErrorMessage(this, "Such a beautiful voice: " + this.currentSentence);
                 break;
         }
     }

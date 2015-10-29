@@ -6,17 +6,18 @@ public class Constants
     public static final String LOGIN_ACTIVITY = "LoginActivity";
     public static final String CONNECTION_ACTIVITY = "ConnectionActivity";
     public static final String REGISTRATION_ACTIVITY = "RegistrationActivity";
+    public static final String PRONUNCIATION_ACTIVITY = "PronunciationActivity";
 
     // Network stuff
     public static final String SERVER_URL = "http://10.0.2.2:8000/goofy/";
     public static final String LOGIN_URL = "login/";
     public static final String REGISTRATION_URL = "register/";
-    public static final String GET_SENTENCE_URL = "get-sentence/";
+    public static final String HANDLE_RECORDING_URL = "pronunciation/";
 
     // Network states
     public static final int NETWORKING_LOGIN_STATE = 0;
     public static final int NETWORKING_REGISTER_STATE = 1;
-    public static final int NETWORKING_GET_SENTENCE = 2;
+    public static final int NETWORKING_HANDLE_RECORDED_VOICE = 2;
 
     // POST strings
     public static final String SUCCESS_POST = "SUCCESS";

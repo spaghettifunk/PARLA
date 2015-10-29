@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -16,8 +15,8 @@ import org.json.JSONObject;
 import davideberdin.goofing.controllers.User;
 import davideberdin.goofing.networking.GetCallback;
 import davideberdin.goofing.networking.ServerRequest;
+import davideberdin.goofing.utilities.AppWindowManager;
 import davideberdin.goofing.utilities.Constants;
-import davideberdin.goofing.utilities.ErrorManager;
 import davideberdin.goofing.utilities.Logger;
 import davideberdin.goofing.utilities.UserLocalStore;
 
@@ -79,14 +78,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         if (params[0] instanceof JSONObject) {
                             JSONObject obj = (JSONObject) params[0];
                             try {
-                                ErrorManager.showErrorMessage(LoginActivity.this, obj.getString("Reason"));
+                                AppWindowManager.showErrorMessage(LoginActivity.this, obj.getString("Reason"));
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
                         } else {
                             User u = (User) params[0];
                             if (u == null) {
-                                ErrorManager.showErrorMessage(LoginActivity.this, Constants.TOAST_ERROR_LOGIN_ERROR);
+                                AppWindowManager.showErrorMessage(LoginActivity.this, Constants.TOAST_ERROR_LOGIN_ERROR);
                             } else {
                                 userLocalStore.storeUserData(u);
                                 userLocalStore.setUserLoggedIn(true);

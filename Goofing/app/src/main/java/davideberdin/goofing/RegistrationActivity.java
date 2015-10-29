@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -18,7 +17,7 @@ import org.json.JSONObject;
 import davideberdin.goofing.controllers.User;
 import davideberdin.goofing.networking.GetCallback;
 import davideberdin.goofing.networking.ServerRequest;
-import davideberdin.goofing.utilities.ErrorManager;
+import davideberdin.goofing.utilities.AppWindowManager;
 import davideberdin.goofing.utilities.UserLocalStore;
 
 public class RegistrationActivity extends AppCompatActivity implements View.OnClickListener
@@ -44,9 +43,6 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
     {
         super.onCreate(savedInstanceState);
 
-        // let's go fullscreen
-        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
         setContentView(R.layout.activity_registration);
 
         this.userLocalStore = new UserLocalStore(this);
@@ -62,7 +58,8 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         switch (item.getItemId()) {
             // Respond to the action bar's Up/Home button
             case android.R.id.home:
@@ -101,7 +98,7 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
                         if(params[0] instanceof JSONObject){
                             JSONObject obj = (JSONObject) params[0];
                             try {
-                                ErrorManager.showErrorMessage(RegistrationActivity.this, obj.getString("Reason"));
+                                AppWindowManager.showErrorMessage(RegistrationActivity.this, obj.getString("Reason"));
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

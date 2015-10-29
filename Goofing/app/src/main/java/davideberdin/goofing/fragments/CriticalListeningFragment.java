@@ -18,8 +18,8 @@ import java.util.ArrayList;
 import davideberdin.goofing.ListeningNativeSpeaker;
 import davideberdin.goofing.ListeningUser;
 import davideberdin.goofing.R;
+import davideberdin.goofing.utilities.AppWindowManager;
 import davideberdin.goofing.utilities.Constants;
-import davideberdin.goofing.utilities.ErrorManager;
 
 public class CriticalListeningFragment extends Fragment implements View.OnClickListener
 {
@@ -104,7 +104,7 @@ public class CriticalListeningFragment extends Fragment implements View.OnClickL
         {
             case R.id.listenNSButton:
                 if (selectedNativeSentence == null){
-                    ErrorManager.showErrorMessage(this.getActivity(), Constants.ERROR_SELECTING_SENTENCE);
+                    AppWindowManager.showErrorMessage(this.getActivity(), Constants.ERROR_SELECTING_SENTENCE);
                 }
                 else {
                     Intent intent = new Intent(this.getActivity(), ListeningNativeSpeaker.class);
@@ -115,7 +115,7 @@ public class CriticalListeningFragment extends Fragment implements View.OnClickL
                 break;
             case R.id.listenYourselfButton:
                 if (selectedUserSentence == null){
-                    ErrorManager.showErrorMessage(this.getActivity(), Constants.ERROR_SELECTING_SENTENCE);
+                    AppWindowManager.showErrorMessage(this.getActivity(), Constants.ERROR_SELECTING_SENTENCE);
                 }
                 else {
                     Intent intent = new Intent(this.getActivity(), ListeningUser.class);

@@ -23,6 +23,7 @@ import java.util.Map;
 import javax.net.ssl.HttpsURLConnection;
 
 // My imports
+import davideberdin.goofing.controllers.Recorder;
 import davideberdin.goofing.controllers.User;
 import davideberdin.goofing.utilities.Constants;
 import davideberdin.goofing.utilities.Logger;
@@ -44,13 +45,22 @@ public class NetworkingTask extends AsyncTask
         this.progressDialog = progressDialog;
     }
 
+    public NetworkingTask(GetCallback userCallback, ProgressDialog progressDialog)
+    {
+        this.currentNetworkingState = -1;
+
+        this.userCallback = userCallback;
+        this.progressDialog = progressDialog;
+    }
+
     @Override
     protected Object doInBackground(Object[] params)
     {
         HashMap<String, String> postParams = new HashMap<>();
         try {
 
-            switch ((int)params[0]) {
+            switch ((int)params[0])
+            {
                 case Constants.NETWORKING_LOGIN_STATE:
 
                     this.currentNetworkingState = Constants.NETWORKING_LOGIN_STATE;
@@ -75,6 +85,21 @@ public class NetworkingTask extends AsyncTask
                     postParams.put("Occupation", registeredUser.GetOccupation());
 
                     return performPostCall(Constants.SERVER_URL + Constants.REGISTRATION_URL, postParams);
+
+                case Constants.NETWORKING_HANDLE_RECORDED_VOICE:
+
+                    this.currentNetworkingState = Constants.NETWORKING_HANDLE_RECORDED_VOICE;
+
+                    // Treat wav file to send to server
+                    Object fileAudio = params[0];
+                    String currentSentence = (String)params[1];
+
+                    String audioFileAsString = "blablablabla";
+
+                    postParams.put("FileAudio", audioFileAsString);
+                    postParams.put("Sentence", currentSentence);
+
+                    return performPostCall(Constants.SERVER_URL + Constants.HANDLE_RECORDING_URL, postParams);
 
                 default:
                     Logger.Log(Constants.CONNECTION_ACTIVITY, Constants.GENERAL_ERROR_REQUEST);
@@ -111,7 +136,8 @@ public class NetworkingTask extends AsyncTask
 
                 HashMap<String, Object> responseObject = (HashMap<String, Object>) jsonToMap(jsonObject);
 
-                switch (this.currentNetworkingState) {
+                switch (this.currentNetworkingState)
+                {
                     case Constants.NETWORKING_LOGIN_STATE:
                         Logger.Log(Constants.CONNECTION_ACTIVITY, Constants.LOGIN_ACTIVITY);
 
@@ -137,6 +163,12 @@ public class NetworkingTask extends AsyncTask
                         this.userCallback.done(sentenceReg, phoneticReg);
 
                         break;
+
+                    case Constants.NETWORKING_HANDLE_RECORDED_VOICE:
+                        Logger.Log(Constants.CONNECTION_ACTIVITY, Constants.PRONUNCIATION_ACTIVITY);
+
+                        // handle response here
+
                     default:
                         Logger.Log(Constants.CONNECTION_ACTIVITY, Constants.GENERAL_ERROR_RESPONSE);
                         break;
