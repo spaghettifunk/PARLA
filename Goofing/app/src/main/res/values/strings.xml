@@ -52,4 +52,7 @@
     <string name="listenNativePhonetic">Phonetic</string>
     <string name="listenNativeStressTextView">Stress</string>
     <string name="descriptionNativeTextView">A lot of things related to Stress or whatever we want</string>
+    <string name="pressAndSpeakTextView">Press and Speak</string>
+    <string name="listenSentenceImageButton">Listen native speaker sentence button</string>
+    <string name="title_activity_listening">Listening</string>
 </resources>

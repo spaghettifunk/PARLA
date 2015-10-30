@@ -12,7 +12,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import davideberdin.goofing.fragments.CriticalListeningFragment;
 import davideberdin.goofing.fragments.NewWordsFragment;
 import davideberdin.goofing.fragments.ScoreFragment;
 import davideberdin.goofing.fragments.TestPronunciationFragment;
@@ -98,7 +97,8 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.test_pronunciation) {
             this.fragmentManager.beginTransaction().replace(R.id.content_menu, new TestPronunciationFragment()).commit();
         } else if (id == R.id.critical_listening) {
-            this.fragmentManager.beginTransaction().replace(R.id.content_menu, new CriticalListeningFragment()).commit();
+            Intent intent = new Intent(MenuActivity.this, Listening.class);
+            startActivity(intent);
         } else if (id == R.id.score) {
             this.fragmentManager.beginTransaction().replace(R.id.content_menu, new ScoreFragment()).commit();
         } else if (id == R.id.new_words) {

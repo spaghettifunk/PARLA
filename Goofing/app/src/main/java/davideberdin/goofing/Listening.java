@@ -1,7 +1,9 @@
 package davideberdin.goofing;
 
-import android.support.design.widget.FloatingActionButton;
+import android.content.Intent;
+import android.media.MediaPlayer;
 import android.support.design.widget.TabLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -14,40 +16,34 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import davideberdin.goofing.fragments.UserGeneralOverviewFragment;
-import davideberdin.goofing.fragments.UserInformationFragment;
-import davideberdin.goofing.utilities.AppWindowManager;
+import davideberdin.goofing.controllers.User;
+import davideberdin.goofing.fragments.ListenNative;
+import davideberdin.goofing.fragments.ListenUser;
+import davideberdin.goofing.utilities.UserLocalStore;
 
-public class ListeningUser extends AppCompatActivity implements View.OnClickListener
+public class Listening extends AppCompatActivity implements View.OnClickListener
 {
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
-    private UserSectionsPagerAdapter mSectionsPagerAdapter;
-    private String currentSentence = "";
-    private String currentPhonetic = "";
+    public static String selectedSentence = "";
+    public static String selectedPhonetic = "";
 
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
+    private UserLocalStore userLocalStore = null;
+    private User loggedUser = null;
+
+    private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_listening_user);
+        setContentView(R.layout.activity_listening);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new UserSectionsPagerAdapter(getSupportFragmentManager());
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
@@ -56,21 +52,19 @@ public class ListeningUser extends AppCompatActivity implements View.OnClickList
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-        FloatingActionButton listenButton = (FloatingActionButton) findViewById(R.id.fabListenUserButton);
-        listenButton.setOnClickListener(this);
+        FloatingActionButton fabListening = (FloatingActionButton) findViewById(R.id.fabListening);
+        fabListening.setOnClickListener(this);
+
+        FloatingActionButton fabTest = (FloatingActionButton) findViewById(R.id.fabTestPronunciation);
+        fabTest.setOnClickListener(this);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        // get selected sentence
-        this.currentSentence = getIntent().getExtras().getString("Sentence");
-        this.currentPhonetic = getIntent().getExtras().getString("Phonetic");
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_listening_user, menu);
+        getMenuInflater().inflate(R.menu.menu_listening, menu);
         return true;
     }
 
@@ -81,6 +75,7 @@ public class ListeningUser extends AppCompatActivity implements View.OnClickList
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
+
         switch (id) {
             case android.R.id.home:
                 // app icon in action bar clicked; goto parent activity.
@@ -95,8 +90,28 @@ public class ListeningUser extends AppCompatActivity implements View.OnClickList
     public void onClick(View v)
     {
         switch (v.getId()){
-            case R.id.fabListenUserButton:
-                AppWindowManager.showErrorMessage(this, "Such a beautiful voice: " + this.currentSentence);
+            case R.id.fabListening:
+                // play audio
+                try {
+                    // TODO: mapping between R.raw.xxx to sentence
+                    int resID = this.getResources().getIdentifier("test_audio", "raw", this.getPackageName());
+
+                    MediaPlayer mediaPlayer = MediaPlayer.create(this.getApplicationContext(), resID);
+                    mediaPlayer.start();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+                break;
+            case R.id.fabTestPronunciation:
+                this.userLocalStore = new UserLocalStore(this);
+                this.loggedUser = this.userLocalStore.getLoggedUser();
+                this.loggedUser.SetCurrentSentence(selectedSentence);
+                this.loggedUser.SetCurrentPhonetic(selectedPhonetic);
+                this.userLocalStore.storeUserData(this.loggedUser);
+
+                Intent intent = new Intent(this, MenuActivity.class);
+                startActivity(intent);
+
                 break;
         }
     }
@@ -105,9 +120,9 @@ public class ListeningUser extends AppCompatActivity implements View.OnClickList
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
      * one of the sections/tabs/pages.
      */
-    public class UserSectionsPagerAdapter extends FragmentPagerAdapter
-    {
-        public UserSectionsPagerAdapter(FragmentManager fm) {
+    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+
+        public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
 
@@ -115,11 +130,13 @@ public class ListeningUser extends AppCompatActivity implements View.OnClickList
         public Fragment getItem(int position)
         {
             Fragment f;
-            switch (position) {
+            switch (position){
                 case 0:
-                    f = new UserGeneralOverviewFragment();
+                    f = new ListenNative();
+                    break;
                 case 1:
-                    f = new UserInformationFragment();
+                    f = new ListenUser();
+                break;
                 default:
                     f = null;
             }
@@ -136,9 +153,9 @@ public class ListeningUser extends AppCompatActivity implements View.OnClickList
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "General Overview";
+                    return "Listen Native";
                 case 1:
-                    return "Information";
+                    return "Listen Yourself";
             }
             return null;
         }

@@ -2,8 +2,10 @@ package davideberdin.goofing.utilities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.view.View;
 
@@ -16,10 +18,6 @@ import davideberdin.goofing.networking.NetworkingTask;
 
 public class AppWindowManager
 {
-    private static Activity currentActivity = null;
-    private static Executor currentTask;
-    private GetCallback userCallback = null;
-
     private static AppWindowManager ourInstance = new AppWindowManager();
 
     public static AppWindowManager getInstance() {

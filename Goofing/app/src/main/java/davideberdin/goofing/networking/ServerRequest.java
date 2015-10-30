@@ -78,12 +78,12 @@ public class ServerRequest
         this.progressDialog.show();
     }
 
-    public void sendRecordedAudioToServer(Object fileAudio, String currentSentence, GetCallback callback)
+    public void sendRecordedAudioToServer(User loggedUser, byte[] fileAudioByte, String currentSentence, GetCallback callback)
     {
         this.progressDialog.show();
 
-        //NetworkingTask networkingTask = new NetworkingTask(callback, this.progressDialog);
-        //networkingTask.execute(fileAudio, currentSentence);
+        NetworkingTask networkingTask = new NetworkingTask(callback, this.progressDialog);
+        networkingTask.execute(Constants.NETWORKING_HANDLE_RECORDED_VOICE, loggedUser, fileAudioByte, currentSentence);
 
         this.progressDialog.dismiss();
         callback.done();

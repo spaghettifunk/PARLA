@@ -1,19 +1,15 @@
 package davideberdin.goofing.fragments;
 
-import android.app.ActionBar;
 import android.app.Fragment;
-import android.graphics.Paint;
-import android.graphics.Rect;
-import android.media.audiofx.Visualizer;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.text.Layout;
+import android.util.Base64;
 import android.view.LayoutInflater;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -26,23 +22,14 @@ import davideberdin.goofing.networking.GetCallback;
 import davideberdin.goofing.networking.ServerRequest;
 import davideberdin.goofing.utilities.IOUtilities;
 import davideberdin.goofing.utilities.UserLocalStore;
-import davideberdin.goofing.utilities.VisualizerView;
 
 
 public class TestPronunciationFragment extends Fragment implements View.OnClickListener
 {
-    // related to the draw
-    private byte[] mBytes;
-    private float[] mPoints;
-    private Rect mRect = new Rect();
-
-    private Paint mForePaint = new Paint();
-    private LinearLayout waveFormLayout = null;
-    private Visualizer mVisualizer;
-    private VisualizerView mVisualizerView;
-
+    //region VARIABLES
     private View testPronunciationView = null;
     private FloatingActionButton startButton = null;
+    private ImageButton listenSentence = null;
 
     // variables related to the view
     private TextView tvSentence = null;
@@ -50,6 +37,7 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
 
     private UserLocalStore userLocalStore = null;
     private User loggedUser = null;
+    //endregion
 
     public TestPronunciationFragment() { }
 
@@ -59,13 +47,12 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
     {
         this.testPronunciationView = inflater.inflate(R.layout.test_pronunciation_layout, container, false);
 
-        this.waveFormLayout = (LinearLayout) testPronunciationView.findViewById(R.id.waveFormLayout);
-        readFileAudioAndDrawWave();
-
         this.startButton = (FloatingActionButton) testPronunciationView.findViewById(R.id.fabStartRecording);
+        this.listenSentence = (ImageButton) testPronunciationView.findViewById(R.id.listenSentence);
 
         // register listener
         this.startButton.setOnClickListener(this);
+        this.listenSentence.setOnClickListener(this);
 
         this.userLocalStore = new UserLocalStore(this.getActivity());
         this.loggedUser = this.userLocalStore.getLoggedUser();
@@ -93,51 +80,71 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
                 Recorder recorder = new Recorder(this.getView());
                 recordingRequest.recordingAudioInBackground(recorder, new GetCallback() {
                     @Override
-                    public void done(Object... params) {
-                        // dismiss
-                        // and send it to server
-                        // ...
+                    public void done(Object... params)
+                    {
+                        try
+                        {
+                            // dismiss
+                            // and send it to server
+                            // ...
 
-                        // obtained as result
-                        Object fileAudio = null; // params[0];      // TODO: put the audiofile here
-                        String currentSentence = loggedUser.GetCurrentSentence();
+                            // obtained as result
+                            Object fileAudio = null; // params[0];      // TODO: put the audiofile here
+                            String currentSentence = loggedUser.GetCurrentSentence();
 
-                        ServerRequest request = new ServerRequest(getActivity() , "Analyzing audio", "Please wait...");
-                        request.sendRecordedAudioToServer(fileAudio, currentSentence, new GetCallback() {
-                            @Override
-                            public void done(Object... params) {
-                                // dismiss everything
-                                // save the result
-                                // start Feedback activity
-                                // ...
-                            }
-                        });
+                            InputStream inStream = testPronunciationView.getContext().getResources().openRawResource(R.raw.test_audio); // TODO: edit this line
+                            byte[] fileAudioByte = IOUtilities.convertStreamToByteArray(inStream);
+
+                            ServerRequest request = new ServerRequest(getActivity() , "Analyzing audio", "Please wait...");
+                            request.sendRecordedAudioToServer(loggedUser, fileAudioByte, currentSentence, new GetCallback() {
+                                @Override
+                                public void done(Object... params) {
+                                    // dismiss everything
+                                    // save the result
+                                    // start Feedback activity
+                                    // ...
+                                }
+                            });
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
+                break;
+            case R.id.listenSentence:
+                // play audio
+                try {
+                    // TODO: mapping between R.raw.xxx to sentence
+                    int resID = getActivity().getResources().getIdentifier("test_audio", "raw", getActivity().getPackageName());
+
+                    MediaPlayer mediaPlayer = MediaPlayer.create(getActivity().getApplicationContext(), resID);
+                    mediaPlayer.start();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
                 break;
         }
     }
 
-
-    private void readFileAudioAndDrawWave()
-    {
-        try
-        {
-            InputStream inStream = this.testPronunciationView.getContext().getResources().openRawResource(R.raw.test_audio);
-            byte[] music = IOUtilities.convertStreamToByteArray(inStream);
-
-            // Create a VisualizerView (defined below), which will render the simplified audio
-            // wave form to a Canvas.
-            mVisualizerView = new VisualizerView(this.testPronunciationView.getContext());
-            ViewGroup.LayoutParams params = waveFormLayout.getLayoutParams();
-            params.height = 100;
-
-            waveFormLayout.addView(mVisualizerView);
-
-            mVisualizerView.updateVisualizer(music);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+//    private void readFileAudioAndDrawWave()
+//    {
+//        try
+//        {
+//            InputStream inStream = this.testPronunciationView.getContext().getResources().openRawResource(R.raw.test_audio);
+//            byte[] music = IOUtilities.convertStreamToByteArray(inStream);
+//
+//            // Create a VisualizerView (defined below), which will render the simplified audio
+//            // wave form to a Canvas.
+//            mVisualizerView = new VisualizerView(this.testPronunciationView.getContext());
+//            ViewGroup.LayoutParams params = waveFormLayout.getLayoutParams();
+//            params.height = 100;
+//
+//            waveFormLayout.addView(mVisualizerView);
+//            mVisualizerView.updateVisualizer(music);
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 }

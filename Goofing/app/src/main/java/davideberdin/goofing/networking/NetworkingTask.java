@@ -2,6 +2,7 @@ package davideberdin.goofing.networking;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.util.Base64;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,6 +13,7 @@ import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -91,11 +93,14 @@ public class NetworkingTask extends AsyncTask
                     this.currentNetworkingState = Constants.NETWORKING_HANDLE_RECORDED_VOICE;
 
                     // Treat wav file to send to server
-                    Object fileAudio = params[0];
-                    String currentSentence = (String)params[1];
+                    User currentUser = (User)params[1];
+                    byte[] fileAudio = (byte[])params[2];
+                    String currentSentence = (String)params[3];
 
-                    String audioFileAsString = "blablablabla";
+                    String audioFileAsString = Base64.encodeToString(fileAudio, Base64.DEFAULT);
 
+                    String u = toJSON(currentUser);
+                    postParams.put("User", u);
                     postParams.put("FileAudio", audioFileAsString);
                     postParams.put("Sentence", currentSentence);
 
@@ -234,6 +239,21 @@ public class NetworkingTask extends AsyncTask
             }
         }
         return obj.toString();
+    }
+
+    public static String toJSON(Object object) throws JSONException, IllegalAccessException
+    {
+        String str = "";
+        Class c = object.getClass();
+        JSONObject jsonObject = new JSONObject();
+        for (Field field : c.getDeclaredFields()) {
+            field.setAccessible(true);
+            String name = field.getName();
+            String value = String.valueOf(field.get(object));
+            jsonObject.put(name, value);
+        }
+        System.out.println(jsonObject.toString());
+        return jsonObject.toString();
     }
 
     public static Map<String, Object> jsonToMap(JSONObject json) throws JSONException {

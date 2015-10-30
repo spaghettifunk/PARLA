@@ -48,13 +48,8 @@
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity
-            android:name=".ListeningNativeSpeaker"
-            android:label="@string/title_activity_listening_native_speaker"
-            android:theme="@style/AppTheme.NoActionBar" >
-        </activity>
-        <activity
-            android:name=".ListeningUser"
-            android:label="@string/title_activity_listening_user"
+            android:name=".Listening"
+            android:label="@string/title_activity_listening"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
     </application>

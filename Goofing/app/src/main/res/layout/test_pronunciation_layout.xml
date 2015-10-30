@@ -9,39 +9,77 @@
         android:id="@+id/tpMainLayout"
         android:weightSum="1">
 
-        <TextView
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/tpSentence"
-            android:id="@+id/tpSentence"
-            android:layout_gravity="center_horizontal"
-            android:textAlignment="center"
-            android:textStyle="bold|italic"
-            android:gravity="center_vertical" />
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:id="@+id/listenSentence"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:src="@drawable/speaker_icon"
+                android:background="@drawable/fab_background"
+                android:backgroundTint="@color/abc_search_url_text_pressed"
+                android:contentDescription="@string/listenSentenceImageButton"
+                android:onClick="onClick" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/tpSentence"
+                android:id="@+id/tpSentence"
+                android:textAlignment="center"
+                android:textStyle="bold|italic"
+                android:gravity="center_vertical"
+                android:layout_gravity="center" />
+        </LinearLayout>
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/waveFormLayout"/>
+            android:layout_height="334dp"
+            android:weightSum="1">
 
-        <android.support.design.widget.FloatingActionButton android:id="@+id/fabStartRecording"
-            android:layout_width="fill_parent" android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom" android:layout_margin="@dimen/fab_margin"
-            android:src="@android:drawable/ic_btn_speak_now"
-            android:onClick="onClick" />
+            <android.support.design.widget.FloatingActionButton android:id="@+id/fabStartRecording"
+                android:layout_width="fill_parent" android:layout_height="0dp"
+                android:src="@android:drawable/ic_btn_speak_now"
+                android:onClick="onClick"
+                android:layout_gravity="center"
+                android:layout_marginTop="70dp"
+                android:layout_weight="0.90" />
 
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/tpPhonetic"
-            android:id="@+id/tpPhoneticSentence"
-            android:textAlignment="center"
-            android:gravity="center_vertical|center_horizontal"
-            android:layout_gravity="bottom"
-            android:layout_weight="1" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/pressAndSpeakTextView"
+                android:layout_gravity="center_horizontal" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:weightSum="1">
+
+            <Space
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.72" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/tpPhonetic"
+                android:id="@+id/tpPhoneticSentence"
+                android:textAlignment="center"
+                android:gravity="bottom"
+                android:layout_gravity="bottom" />
+        </LinearLayout>
 
     </LinearLayout>
 
