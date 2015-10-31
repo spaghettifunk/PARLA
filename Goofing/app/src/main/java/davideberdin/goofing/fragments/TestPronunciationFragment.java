@@ -12,6 +12,9 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -93,7 +96,16 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
                             String currentSentence = loggedUser.GetCurrentSentence();
 
                             InputStream inStream = testPronunciationView.getContext().getResources().openRawResource(R.raw.test_audio); // TODO: edit this line
-                            byte[] fileAudioByte = IOUtilities.convertStreamToByteArray(inStream);
+                            ByteArrayOutputStream out = new ByteArrayOutputStream();
+                            BufferedInputStream in = new BufferedInputStream(inStream);
+
+                            int read;
+                            byte[] buff = new byte[1024];
+                            while ((read = in.read(buff)) > 0) {
+                                out.write(buff, 0, read);
+                            }
+                            out.flush();
+                            byte[] fileAudioByte = out.toByteArray();
 
                             ServerRequest request = new ServerRequest(getActivity() , "Analyzing audio", "Please wait...");
                             request.sendRecordedAudioToServer(loggedUser, fileAudioByte, currentSentence, new GetCallback() {
