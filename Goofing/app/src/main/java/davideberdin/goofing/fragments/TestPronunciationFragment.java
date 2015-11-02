@@ -1,13 +1,11 @@
 package davideberdin.goofing.fragments;
 
 import android.app.Fragment;
-import android.app.ProgressDialog;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.support.annotation.MainThread;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,16 +14,15 @@ import android.widget.TextView;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import davideberdin.goofing.FeedbacksActivity;
 import davideberdin.goofing.R;
 import davideberdin.goofing.controllers.Recorder;
 import davideberdin.goofing.controllers.User;
 import davideberdin.goofing.networking.GetCallback;
 import davideberdin.goofing.networking.ServerRequest;
-import davideberdin.goofing.utilities.IOUtilities;
 import davideberdin.goofing.utilities.UserLocalStore;
 
 
@@ -115,10 +112,12 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
                             {
                                 @Override
                                 public void done(Object... params) {
-                                    // dismiss everything
-                                    // save the result
-                                    // start Feedback activity
-                                    // ...
+
+                                    byte[] resultImage = (byte[]) params[0];
+                                    Intent intent = new Intent(getActivity(), FeedbacksActivity.class);
+                                    intent.putExtra("vowelchart", resultImage);
+
+                                    startActivity(intent);
                                 }
                             });
 

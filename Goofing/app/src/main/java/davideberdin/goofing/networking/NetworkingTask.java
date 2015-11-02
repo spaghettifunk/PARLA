@@ -1,8 +1,11 @@
 package davideberdin.goofing.networking;
 
 import android.app.ProgressDialog;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Base64;
+import android.widget.ImageView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -175,11 +178,9 @@ public class NetworkingTask extends AsyncTask
 
                         // handle response here
                         String feedbacks = (String) responseObject.get(Constants.GET_FEEDBACKS_POST);
-                        byte[] audioFileAsString = Base64.decode(feedbacks, Base64.DEFAULT);
+                        byte[] image = Base64.decode(feedbacks, Base64.DEFAULT);
 
-                        this.progressDialog.dismiss();
-                        userCallback.done();
-
+                        userCallback.done(image);
                         break;
 
                     default:
