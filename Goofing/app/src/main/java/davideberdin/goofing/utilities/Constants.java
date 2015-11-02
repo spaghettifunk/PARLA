@@ -24,6 +24,7 @@ public class Constants
     public static final String FAILED_POST = "FAILED";
     public static final String GET_SENTENCE_POST = "Sentence";
     public static final String GET_PHONETIC_POST = "Phonetic";
+    public static final String GET_FEEDBACKS_POST = "Feedbacks";
 
     // debugging and Toast strings
     public static final String TOAST_ERROR_LOGIN_ERROR = "Authentication failed";

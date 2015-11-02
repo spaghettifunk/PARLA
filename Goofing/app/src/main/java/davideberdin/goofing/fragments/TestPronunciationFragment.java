@@ -1,8 +1,10 @@
 package davideberdin.goofing.fragments;
 
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.support.annotation.MainThread;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Base64;
@@ -81,7 +83,8 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
         {
             case R.id.fabStartRecording:
                 Recorder recorder = new Recorder(this.getView());
-                recordingRequest.recordingAudioInBackground(recorder, new GetCallback() {
+                recordingRequest.recordingAudioInBackground(recorder, new GetCallback()
+                {
                     @Override
                     public void done(Object... params)
                     {
@@ -108,7 +111,8 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
                             byte[] fileAudioByte = out.toByteArray();
 
                             ServerRequest request = new ServerRequest(getActivity() , "Analyzing audio", "Please wait...");
-                            request.sendRecordedAudioToServer(loggedUser, fileAudioByte, currentSentence, new GetCallback() {
+                            request.sendRecordedAudioToServer(loggedUser, fileAudioByte, currentSentence, new GetCallback()
+                            {
                                 @Override
                                 public void done(Object... params) {
                                     // dismiss everything

@@ -174,6 +174,13 @@ public class NetworkingTask extends AsyncTask
                         Logger.Log(Constants.CONNECTION_ACTIVITY, Constants.PRONUNCIATION_ACTIVITY);
 
                         // handle response here
+                        String feedbacks = (String) responseObject.get(Constants.GET_FEEDBACKS_POST);
+                        byte[] audioFileAsString = Base64.decode(feedbacks, Base64.DEFAULT);
+
+                        this.progressDialog.dismiss();
+                        userCallback.done();
+
+                        break;
 
                     default:
                         Logger.Log(Constants.CONNECTION_ACTIVITY, Constants.GENERAL_ERROR_RESPONSE);
@@ -181,6 +188,8 @@ public class NetworkingTask extends AsyncTask
                 }
             }
         } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (Exception e){
             e.printStackTrace();
         }
     }

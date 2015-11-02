@@ -61,12 +61,7 @@ public class ServerRequest
                 // Stop Recording
                 // ...
 
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
+                progressDialog.cancel();    // GRAZIE DI ESISTERE!!!!!!!!
                 progressDialog.dismiss();
                 callback.done(null);    // TODO: put the wav file here
             }
@@ -84,8 +79,5 @@ public class ServerRequest
 
         NetworkingTask networkingTask = new NetworkingTask(callback, this.progressDialog);
         networkingTask.execute(Constants.NETWORKING_HANDLE_RECORDED_VOICE, loggedUser, fileAudioByte, currentSentence);
-
-        this.progressDialog.dismiss();
-        callback.done();
     }
 }
