@@ -98,7 +98,7 @@ public class NetworkingTask extends AsyncTask
                     String currentSentence = (String)params[3];
 
                     //String decoded = new String(fileAudio, "UTF-8");
-                    String audioFileAsString = Base64.encodeToString(fileAudio, Base64.NO_WRAP);
+                    String audioFileAsString = Base64.encodeToString(fileAudio, Base64.DEFAULT);
 
                     String u = toJSON(currentUser);
                     postParams.put("User", u);
