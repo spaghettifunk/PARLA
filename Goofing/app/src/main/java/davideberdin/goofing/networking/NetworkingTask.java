@@ -1,11 +1,8 @@
 package davideberdin.goofing.networking;
 
 import android.app.ProgressDialog;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Base64;
-import android.widget.ImageView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,7 +25,6 @@ import java.util.Map;
 import javax.net.ssl.HttpsURLConnection;
 
 // My imports
-import davideberdin.goofing.controllers.Recorder;
 import davideberdin.goofing.controllers.User;
 import davideberdin.goofing.utilities.Constants;
 import davideberdin.goofing.utilities.Logger;
@@ -177,7 +173,7 @@ public class NetworkingTask extends AsyncTask
                         Logger.Log(Constants.CONNECTION_ACTIVITY, Constants.PRONUNCIATION_ACTIVITY);
 
                         // handle response here
-                        String feedbacks = (String) responseObject.get(Constants.GET_FEEDBACKS_POST);
+                        String feedbacks = (String) responseObject.get(Constants.GET_VOWEL_CHART_POST);
                         byte[] image = Base64.decode(feedbacks, Base64.DEFAULT);
 
                         userCallback.done(image);

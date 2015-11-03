@@ -12,9 +12,17 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+
+import davideberdin.goofing.controllers.SentenceTuple;
+import davideberdin.goofing.controllers.StressTuple;
 import davideberdin.goofing.fragments.NewWordsFragment;
 import davideberdin.goofing.fragments.ScoreFragment;
 import davideberdin.goofing.fragments.TestPronunciationFragment;
+import davideberdin.goofing.utilities.Constants;
 import davideberdin.goofing.utilities.UserLocalStore;
 
 public class MenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
@@ -27,6 +35,11 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
+
+        // Init structs
+        if (Constants.nativeSenteceInfo.isEmpty())
+            fillSentencesMap();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -45,8 +58,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    protected void onStart()
-    {
+    protected void onStart() {
         super.onStart();
         if (authenticate() == false){
             Intent newIntent = new Intent(MenuActivity.this, LoginActivity.class);
@@ -89,8 +101,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public boolean onNavigationItemSelected(MenuItem item)
-    {
+    public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -115,5 +126,27 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public static void fillSentencesMap()
+    {
+        for(int i = 0; i < Constants.nativeSentences.length; i++)
+        {
+
+            String stressPhonemes = Constants.nativeStressPhonemes[i];
+            String stressPosition = Constants.nativeStressPosition[i];
+
+            List<String> phonemes = Arrays.asList(stressPhonemes.split("\\s*,\\s*"));
+            List<String> positions = Arrays.asList(stressPosition.split("\\s*,\\s*"));
+
+            ArrayList<StressTuple<String, String>> stressNative = new ArrayList<StressTuple<String, String>>();
+            for(int j = 0; j < phonemes.size(); j++){
+                StressTuple<String, String> stress = new StressTuple<String, String>(phonemes.get(j), positions.get(j));
+                stressNative.add(stress);
+            }
+
+            SentenceTuple<String, String, ArrayList<StressTuple<String, String>>> tuple = new SentenceTuple<>(Constants.nativePhonetics[i], Constants.nativePhonemes[i], stressNative);
+            Constants.nativeSenteceInfo.put(Constants.nativeSentences[i], tuple);
+        }
     }
 }

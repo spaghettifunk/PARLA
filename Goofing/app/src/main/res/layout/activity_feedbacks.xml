@@ -12,6 +12,69 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent">
 
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/pronunciationTextView"
+            android:id="@+id/pronunciationTextView"
+            android:textColor="#e61818"
+            android:textAlignment="center"
+            android:textStyle="bold" />
+
+        <davideberdin.goofing.utilities.AutoResizeTextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/feedbacksNativePhonemes"
+            android:textAlignment="center"
+            android:text="test" />
+
+        <davideberdin.goofing.utilities.AutoResizeTextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/feedbacksUserPhonemes"
+            android:textAlignment="center"
+            android:text="test" />
+
+        <Space
+            android:layout_width="fill_parent"
+            android:layout_height="30dp" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/stressTextView"
+            android:id="@+id/stressTextView"
+            android:textAlignment="center"
+            android:textColor="#e61818"
+            android:textStyle="bold"
+            android:singleLine="false"
+            android:phoneNumber="false"
+            android:password="false" />
+
+        <davideberdin.goofing.utilities.AutoResizeTextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/feedbacksNativeStress"
+            android:textAlignment="center"
+            android:text="test" />
+
+        <davideberdin.goofing.utilities.AutoResizeTextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:id="@+id/feedbacksUserStress"
+            android:textAlignment="center"
+            android:text="test" />
+
+        <Space
+            android:layout_width="fill_parent"
+            android:layout_height="30dp" />
+
         <ScrollView
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
@@ -21,7 +84,9 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/vowelChartImageView"
-                android:contentDescription="@string/vowelChartImageView" />
+                android:contentDescription="@string/vowelChartImageView"
+                android:cropToPadding="false" />
         </ScrollView>
+
     </LinearLayout>
 </RelativeLayout>

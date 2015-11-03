@@ -141,25 +141,4 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
                 break;
         }
     }
-
-//    private void readFileAudioAndDrawWave()
-//    {
-//        try
-//        {
-//            InputStream inStream = this.testPronunciationView.getContext().getResources().openRawResource(R.raw.test_audio);
-//            byte[] music = IOUtilities.convertStreamToByteArray(inStream);
-//
-//            // Create a VisualizerView (defined below), which will render the simplified audio
-//            // wave form to a Canvas.
-//            mVisualizerView = new VisualizerView(this.testPronunciationView.getContext());
-//            ViewGroup.LayoutParams params = waveFormLayout.getLayoutParams();
-//            params.height = 100;
-//
-//            waveFormLayout.addView(mVisualizerView);
-//            mVisualizerView.updateVisualizer(music);
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
 }

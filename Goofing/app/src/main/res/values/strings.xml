@@ -56,4 +56,6 @@
     <string name="listenSentenceImageButton">Listen native speaker sentence button</string>
     <string name="title_activity_listening">Listening</string>
     <string name="vowelChartImageView">Vowel chart feedback from server</string>
+    <string name="pronunciationTextView">PRONUNCIATION</string>
+    <string name="stressTextView">STRESS</string>
 </resources>
