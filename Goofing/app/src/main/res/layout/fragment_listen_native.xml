@@ -10,13 +10,13 @@
 
         <ListView
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="0dp"
             android:id="@+id/nativeListView"
-            android:layout_gravity="center_horizontal"
             android:clickable="true"
             android:smoothScrollbar="true"
             android:scrollingCache="true"
-            android:visibility="visible" />
+            android:visibility="visible"
+            android:layout_weight="1" />
     </LinearLayout>
 
 </RelativeLayout>

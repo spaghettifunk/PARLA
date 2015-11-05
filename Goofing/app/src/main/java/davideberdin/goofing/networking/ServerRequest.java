@@ -4,9 +4,17 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 
-import davideberdin.goofing.controllers.Recorder;
+import java.io.File;
+import java.io.IOException;
+
 import davideberdin.goofing.controllers.User;
+import davideberdin.goofing.fragments.TestPronunciationFragment;
 import davideberdin.goofing.utilities.Constants;
+import edu.cmu.pocketsphinx.Hypothesis;
+import edu.cmu.pocketsphinx.RecognitionListener;
+import edu.cmu.pocketsphinx.SpeechRecognizer;
+
+import static edu.cmu.pocketsphinx.SpeechRecognizerSetup.defaultSetup;
 
 public class ServerRequest
 {
@@ -18,8 +26,7 @@ public class ServerRequest
      * @param activity
      * @param params
      */
-    public ServerRequest(Activity activity, String... params)
-    {
+    public ServerRequest(Activity activity, String... params) {
         this.currentActivity = activity;
 
         this.progressDialog = new ProgressDialog(currentActivity);
@@ -54,12 +61,12 @@ public class ServerRequest
     }
 
     @SuppressWarnings("deprecation")
-    public void recordingAudioInBackground(Recorder recorder, final GetCallback callback) {
+    public void recordingAudioInBackground(final GetCallback callback) {
         this.progressDialog.setButton("Stop", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // Stop Recording
-                // ...
+                TestPronunciationFragment.recognizer.stop();
 
                 progressDialog.cancel();    // GRAZIE DI ESISTERE!!!!!!!!
                 progressDialog.dismiss();
@@ -67,14 +74,12 @@ public class ServerRequest
             }
         });
 
-        // Start Recording
-        // ...
-
+        // Start Recording here
+        TestPronunciationFragment.recognizer.startListening(Constants.PHONE_SEARCH, 10000);
         this.progressDialog.show();
     }
 
-    public void sendRecordedAudioToServer(User loggedUser, byte[] fileAudioByte, String currentSentence, GetCallback callback)
-    {
+    public void sendRecordedAudioToServer(User loggedUser, byte[] fileAudioByte, String currentSentence, GetCallback callback) {
         this.progressDialog.show();
 
         NetworkingTask networkingTask = new NetworkingTask(callback, this.progressDialog);

@@ -17,6 +17,9 @@ public class Constants
     public static final String REGISTRATION_ACTIVITY = "RegistrationActivity";
     public static final String PRONUNCIATION_ACTIVITY = "PronunciationActivity";
 
+    // recognition CMU Sphinxs
+    public static final String PHONE_SEARCH = "phones";
+
     // Network stuff
     public static final String SERVER_URL = "http://10.0.2.2:8000/goofy/";
     public static final String LOGIN_URL = "login/";

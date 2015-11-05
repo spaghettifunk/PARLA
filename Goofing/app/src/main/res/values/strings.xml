@@ -58,4 +58,10 @@
     <string name="vowelChartImageView">Vowel chart feedback from server</string>
     <string name="pronunciationTextView">PRONUNCIATION</string>
     <string name="stressTextView">STRESS</string>
+
+    <string name="title_activity_fullscreen_image">FullscreenImageActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="fullscreenImageView">Full screen vowel chart image</string>
+    <string name="imageviewFullscreen">image view full screen</string>
 </resources>

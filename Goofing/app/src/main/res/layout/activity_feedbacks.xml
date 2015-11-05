@@ -75,18 +75,15 @@
             android:layout_width="fill_parent"
             android:layout_height="30dp" />
 
-        <ScrollView
+        <ImageView
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:id="@+id/scrollView" >
-
-            <ImageView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/vowelChartImageView"
-                android:contentDescription="@string/vowelChartImageView"
-                android:cropToPadding="false" />
-        </ScrollView>
+            android:layout_height="0dp"
+            android:scaleType="fitXY"
+            android:adjustViewBounds="true"
+            android:id="@+id/vowelChartImageView"
+            android:contentDescription="@string/vowelChartImageView"
+            android:cropToPadding="false"
+            android:layout_weight="1" />
 
     </LinearLayout>
 </RelativeLayout>

@@ -1,8 +1,11 @@
 package davideberdin.goofing.fragments;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -14,21 +17,33 @@ import android.widget.TextView;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
 import davideberdin.goofing.FeedbacksActivity;
 import davideberdin.goofing.R;
-import davideberdin.goofing.controllers.Recorder;
 import davideberdin.goofing.controllers.User;
 import davideberdin.goofing.networking.GetCallback;
 import davideberdin.goofing.networking.ServerRequest;
+import davideberdin.goofing.utilities.AppWindowManager;
+import davideberdin.goofing.utilities.Constants;
 import davideberdin.goofing.utilities.UserLocalStore;
+import edu.cmu.pocketsphinx.Assets;
+import edu.cmu.pocketsphinx.Decoder;
+import edu.cmu.pocketsphinx.Hypothesis;
+import edu.cmu.pocketsphinx.PocketSphinx;
+import edu.cmu.pocketsphinx.RecognitionListener;
+import edu.cmu.pocketsphinx.SpeechRecognizer;
+
+import static edu.cmu.pocketsphinx.SpeechRecognizerSetup.defaultSetup;
 
 
-public class TestPronunciationFragment extends Fragment implements View.OnClickListener
+public class TestPronunciationFragment extends Fragment implements View.OnClickListener, RecognitionListener
 {
     //region VARIABLES
+    public static SpeechRecognizer recognizer;
+
     private View testPronunciationView = null;
     private FloatingActionButton startButton = null;
     private ImageButton listenSentence = null;
@@ -68,6 +83,28 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
         tmp = this.loggedUser.GetCurrentPhonetic();
         this.tvPhonemes.setText("/ " + tmp + " /");
 
+        // Setup listener for recognizing phonemes
+        new AsyncTask<Void, Void, Exception>() {
+            @Override
+            protected Exception doInBackground(Void... params) {
+                try {
+                    Assets assets = new Assets(getActivity());
+                    File assetDir = assets.syncAssets();
+                    setupRecognizer(assetDir);
+                } catch (IOException e) {
+                    return e;
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Exception result) {
+                if (result != null) {
+                    AppWindowManager.showErrorMessage(getActivity(), "Failed to init recognizer " + result);
+                }
+            }
+        }.execute();
+
         return this.testPronunciationView;
     }
 
@@ -79,8 +116,7 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
         switch (v.getId())
         {
             case R.id.fabStartRecording:
-                Recorder recorder = new Recorder(this.getView());
-                recordingRequest.recordingAudioInBackground(recorder, new GetCallback()
+                recordingRequest.recordingAudioInBackground(new GetCallback()
                 {
                     @Override
                     public void done(Object... params)
@@ -140,5 +176,62 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
                 }
                 break;
         }
+    }
+
+    @Override
+    public void onBeginningOfSpeech() {
+
+    }
+
+    @Override
+    public void onEndOfSpeech() {
+        String result = recognizer.getSearchName();
+
+        // TODO: check if result is correct
+    }
+
+    @Override
+    public void onPartialResult(Hypothesis hypothesis) {
+
+    }
+
+    @Override
+    public void onResult(Hypothesis hypothesis) {
+
+    }
+
+    @Override
+    public void onError(Exception e) {
+        AppWindowManager.showErrorMessage(getActivity(), e.getMessage());
+    }
+
+    @Override
+    public void onTimeout() {
+        // what can I do here ?
+        recognizer.cancel();
+    }
+
+    private void setupRecognizer(File assetsDir) throws IOException {
+        // The recognizer can be configured to perform multiple searches
+        // of different kind and switch between them
+
+        recognizer = defaultSetup()
+                .setAcousticModel(new File(assetsDir, "en-us-ptm"))
+                .setDictionary(new File(assetsDir, "cmudict-en-us.dict"))
+
+                        // To disable logging of raw audio comment out this call (takes a lot of space on the device)
+                .setRawLogDir(assetsDir)
+
+                        // Threshold to tune for keyphrase to balance between false alarms and misses
+                .setKeywordThreshold(1e-45f)
+
+                        // Use context-independent phonetic search, context-dependent is too slow for mobile
+                .setBoolean("-allphone_ci", true)
+
+                .getRecognizer();
+        recognizer.addListener(this);
+
+        File phoneticModel = new File(assetsDir, "en-phone.dmp");
+        recognizer.addAllphoneSearch(Constants.PHONE_SEARCH, phoneticModel);
     }
 }

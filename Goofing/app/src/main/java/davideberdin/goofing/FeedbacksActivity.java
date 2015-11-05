@@ -1,19 +1,16 @@
 package davideberdin.goofing;
 
-import android.app.ActionBar;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
-import android.text.Spanned;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,6 +25,8 @@ import davideberdin.goofing.utilities.UserLocalStore;
 
 public class FeedbacksActivity extends AppCompatActivity implements View.OnClickListener
 {
+    private byte[] imageByte;
+
     private AutoResizeTextView nativePhonemes;
     private AutoResizeTextView nativeStress;
 
@@ -42,7 +41,7 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
         setContentView(R.layout.activity_feedbacks);
 
         Bundle b = getIntent().getExtras();
-        byte[] audioFileAsByte = b.getByteArray("vowelchart");
+        this.imageByte = b.getByteArray("vowelchart");
 
         this.userLocalStore = new UserLocalStore(this);
         this.loggedUser = this.userLocalStore.getLoggedUser();
@@ -59,8 +58,9 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
 
         // Build feedbacks image
         this.vowelChart = (ImageView) findViewById(R.id.vowelChartImageView);
-        Bitmap bmp = BitmapFactory.decodeByteArray(audioFileAsByte, 0, audioFileAsByte.length);
+        Bitmap bmp = BitmapFactory.decodeByteArray(this.imageByte, 0, this.imageByte.length);
         this.vowelChart.setImageBitmap(bmp);
+        this.vowelChart.setOnClickListener(this);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -70,6 +70,11 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
     {
         switch (v.getId())
         {
+            case R.id.vowelChartImageView:
+                Intent newintent = new Intent(FeedbacksActivity.this, FullscreenImageActivity.class);
+                newintent.putExtra("vowelchart", this.imageByte);
+                startActivity(newintent);
+        break;
             default:
                 break;
         }

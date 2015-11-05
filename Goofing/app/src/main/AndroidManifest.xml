@@ -54,6 +54,12 @@
         </activity>
         <activity android:name=".FeedbacksActivity" >
         </activity>
+        <activity
+            android:name=".FullscreenImageActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_fullscreen_image"
+            android:theme="@style/FullscreenTheme" >
+        </activity>
     </application>
 
 </manifest>

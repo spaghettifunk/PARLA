@@ -26,11 +26,16 @@ public class AppWindowManager
 
     private AppWindowManager() { }
 
-    public static void showErrorMessage(Activity activity, String message)
+    public static void showErrorMessage(final Activity activity, String message)
     {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity);
         dialogBuilder.setMessage(message);
-        dialogBuilder.setPositiveButton("OK", null);
+        dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                activity.finishAffinity();
+            }
+        });
         dialogBuilder.show();
     }
 }
