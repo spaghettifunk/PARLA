@@ -1,5 +1,6 @@
 package davideberdin.goofing;
 
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -21,8 +22,8 @@ public class FullscreenImageActivity extends AppCompatActivity implements View.O
     private static final float MIN_ZOOM = 1f,MAX_ZOOM = 1f;
 
     // These matrices will be used to scale points of the image
-    Matrix matrix = new Matrix();
-    Matrix savedMatrix = new Matrix();
+    private Matrix matrix = new Matrix();
+    private Matrix savedMatrix = new Matrix();
 
     // The 3 states (events) which the user is trying to perform
     static final int NONE = 0;
@@ -56,6 +57,28 @@ public class FullscreenImageActivity extends AppCompatActivity implements View.O
         this.vowelChart.setOnTouchListener(this);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        Matrix matrix = new Matrix();
+
+        // Checks the orientation of the screen
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            this.vowelChart.setScaleType(ImageView.ScaleType.MATRIX);   //required
+            matrix.postRotate(90f, this.vowelChart.getDrawable().getBounds().width()/2, this.vowelChart.getDrawable().getBounds().height()/2);
+            this.vowelChart.setImageMatrix(matrix);
+
+            // Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show();
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+            // Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show();
+
+            this.vowelChart.setScaleType(ImageView.ScaleType.MATRIX);   //required
+            matrix.postRotate(-90f, this.vowelChart.getDrawable().getBounds().width()/2, this.vowelChart.getDrawable().getBounds().height()/2);
+            this.vowelChart.setImageMatrix(matrix);
+        }
     }
 
     @Override
@@ -159,7 +182,6 @@ public class FullscreenImageActivity extends AppCompatActivity implements View.O
      * checks the spacing between the two fingers on touch
      * ----------------------------------------------------
      */
-
     private float spacing(MotionEvent event)
     {
         float x = event.getX(0) - event.getX(1);
@@ -173,7 +195,6 @@ public class FullscreenImageActivity extends AppCompatActivity implements View.O
      * Description: calculates the midpoint between the two fingers
      * ------------------------------------------------------------
      */
-
     private void midPoint(PointF point, MotionEvent event)
     {
         float x = event.getX(0) + event.getX(1);

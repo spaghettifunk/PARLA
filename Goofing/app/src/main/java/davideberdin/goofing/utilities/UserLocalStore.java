@@ -5,9 +5,7 @@ import android.content.SharedPreferences;
 
 import davideberdin.goofing.controllers.User;
 
-/**
- * Created by dado on 27/10/15.
- */
+
 public class UserLocalStore
 {
     public static final String SP_NAME = "userDetails";
