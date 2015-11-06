@@ -11,16 +11,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 import davideberdin.goofing.controllers.SentenceTuple;
 import davideberdin.goofing.controllers.StressTuple;
 import davideberdin.goofing.fragments.NewWordsFragment;
-import davideberdin.goofing.fragments.ScoreFragment;
 import davideberdin.goofing.fragments.TestPronunciationFragment;
 import davideberdin.goofing.utilities.Constants;
 import davideberdin.goofing.utilities.UserLocalStore;
@@ -52,6 +52,12 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
         this.userLocalStore = new UserLocalStore(this);
+
+        TextView usernameMenuDrawer = (TextView) findViewById(R.id.usernameMenuDrawer);
+        usernameMenuDrawer.setText("Hi " + this.userLocalStore.getLoggedUser().GetUsername());
+
+        ImageView avatar = (ImageView) findViewById(R.id.avatarImageView);
+        avatar.setImageResource(R.drawable.avatar);
 
         fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_menu, new TestPronunciationFragment()).commit();
@@ -110,8 +116,6 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.critical_listening) {
             Intent intent = new Intent(MenuActivity.this, Listening.class);
             startActivity(intent);
-        } else if (id == R.id.score) {
-            this.fragmentManager.beginTransaction().replace(R.id.content_menu, new ScoreFragment()).commit();
         } else if (id == R.id.new_words) {
             this.fragmentManager.beginTransaction().replace(R.id.content_menu, new NewWordsFragment()).commit();
         } else if (id == R.id.logout) {

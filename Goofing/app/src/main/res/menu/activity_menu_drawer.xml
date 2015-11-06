@@ -6,8 +6,6 @@
             android:title="Test Pronunciation" />
         <item android:id="@+id/critical_listening" android:icon="@android:drawable/ic_lock_silent_mode_off"
             android:title="Critical Listening" />
-        <item android:id="@+id/score" android:icon="@android:drawable/btn_star_big_on"
-            android:title="Show Score" />
         <item android:id="@+id/new_words" android:icon="@android:drawable/ic_menu_send"
             android:title="New Words" />
     </group>

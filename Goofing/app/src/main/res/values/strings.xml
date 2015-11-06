@@ -64,4 +64,6 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="fullscreenImageView">Full screen vowel chart image</string>
     <string name="imageviewFullscreen">image view full screen</string>
+    <string name="subtitleMenuDrawer">Happy pronunciation</string>
+    <string name="pictureMenuDrawer">Picture menu drawer</string>
 </resources>
