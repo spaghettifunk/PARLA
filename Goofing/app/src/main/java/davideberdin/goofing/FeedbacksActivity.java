@@ -3,14 +3,18 @@ package davideberdin.goofing;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,8 +31,10 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
 {
     private byte[] imageByte;
 
-    private AutoResizeTextView nativePhonemes;
-    private AutoResizeTextView nativeStress;
+    private AutoResizeTextView nativeFeedbacks;
+    private AutoResizeTextView nativeFeedbacksSentence;
+
+    private AutoResizeTextView userFeedbacks;
 
     private ImageView vowelChart;
     private User loggedUser;
@@ -47,11 +53,17 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
         this.loggedUser = this.userLocalStore.getLoggedUser();
 
         // Feedbacks
-        this.nativePhonemes = (AutoResizeTextView) findViewById(R.id.feedbacksNativePhonemes);
-        this.nativePhonemes.setMaxLines(1);
+        this.nativeFeedbacks = (AutoResizeTextView) findViewById(R.id.feedbacksNative);
+        this.nativeFeedbacks.setMaxLines(1);
 
-        this.nativeStress = (AutoResizeTextView) findViewById(R.id.feedbacksNativeStress);
-        this.nativeStress.setMaxLines(1);
+        this.nativeFeedbacksSentence = (AutoResizeTextView) findViewById(R.id.feedbacksNativeSentence);
+        this.nativeFeedbacksSentence.setMaxLines(1);
+        this.nativeFeedbacksSentence.setLineSpacing(2.0f, 5.0f);
+
+        this.nativeFeedbacksSentence.setText(this.loggedUser.GetCurrentSentence());
+
+        this.userFeedbacks = (AutoResizeTextView) findViewById(R.id.feedbacksUser);
+        this.userFeedbacks.setMaxLines(1);
 
         // color strings
         fillNativeFeedbacks();
@@ -109,9 +121,9 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
     private void fillNativeFeedbacks()
     {
         String currentSentence = this.loggedUser.GetCurrentSentence();
-        SentenceTuple<String, String, ArrayList<StressTuple<String, String>>> sentenceNativeFeedbacks = Constants.nativeSenteceInfo.get(currentSentence);
+        SentenceTuple<String, String, ArrayList<StressTuple<String, String>>> sentenceNativeFeedbacks = Constants.nativeSentenceInfo.get(currentSentence);
 
-        this.nativePhonemes.setText(sentenceNativeFeedbacks.getPhonemes());
+        this.nativeFeedbacks.setText(sentenceNativeFeedbacks.getPhonemes());
 
         // change color based on stress position
         String currentSentenceNoDigits = sentenceNativeFeedbacks.getPhonemes().replaceAll("\\d", "");
@@ -119,22 +131,31 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
         List<String> allPhonemes = Arrays.asList(currentSentenceNoDigits.split("\\s+"));
         ArrayList<StressTuple<String, String>> stress = sentenceNativeFeedbacks.getStress();
 
-        String stressRepresentation = "";
+        String pronunciationRepresentation = "";
         for (String p: allPhonemes) {
             boolean changed = false;
             for (StressTuple<String, String> st : new ArrayList<StressTuple<String, String>>(stress)) {
-                if (p.equals(st.getPhoneme()) && st.getIsStress().equals("1")) {
+                if (p.contains(st.getPhoneme()) && st.getIsStress().equals("1")) {
                     stress.remove(st);
-                    stressRepresentation += Constants.getColoredSpanned(p, Color.RED) + " ";
+
+                    int subPosition = p.indexOf(st.getPhoneme());
+                    String temp = p.replace(st.getPhoneme(), "");
+
+                    String coloredPhoneme = Constants.getColoredSpanned(st.getPhoneme(), Color.RED) + " ";
+
+                    StringBuffer buff = new StringBuffer(temp);
+                    buff.insert(subPosition, coloredPhoneme);
+
+                    pronunciationRepresentation += "<u>" + buff.toString() + "</u> ";
+
                     changed = true;
                     break;
                 }
             }
-
             if (changed == false)
-                stressRepresentation += Constants.getColoredSpanned(p, Color.BLUE) + " ";
+                pronunciationRepresentation +=  "<u>" + p + "</u> ";
         }
 
-        this.nativeStress.setText(Html.fromHtml(stressRepresentation));
+        this.nativeFeedbacks.setText(Html.fromHtml(pronunciationRepresentation));
     }
 }

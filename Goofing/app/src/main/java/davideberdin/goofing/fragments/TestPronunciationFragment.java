@@ -108,6 +108,35 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
         return this.testPronunciationView;
     }
 
+//    @Override
+//    public void onResume(){
+//        if (recognizer != null) {
+//            recognizer.cancel();
+//            recognizer.stop();
+//            recognizer.shutdown();
+//            recognizer.removeListener(this);
+//        }
+//    }
+
+//    @Override
+//    public void onStop(){
+//        if (recognizer != null) {
+//            recognizer.cancel();
+//            recognizer.stop();
+//            recognizer.shutdown();
+//            recognizer.removeListener(this);
+//        }
+//    }
+//
+    @Override
+    public void onPause(){
+        super.onPause();
+        if (recognizer != null) {
+            recognizer.shutdown();
+            recognizer = null;
+        }
+    }
+
     @Override
     public void onClick(View v)
     {

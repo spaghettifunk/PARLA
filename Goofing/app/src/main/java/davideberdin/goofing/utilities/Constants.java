@@ -1,8 +1,5 @@
 package davideberdin.goofing.utilities;
 
-import android.text.Html;
-import android.text.Spanned;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -52,8 +49,7 @@ public class Constants
     public static final String GET_OCCUPATION_POST = "Occupation";
 
     // sentences - KEEP THE SAME ORDER
-    public static HashMap<String, SentenceTuple<String, String, ArrayList<StressTuple<String, String>>>> nativeSenteceInfo =
-            new HashMap<String, SentenceTuple<String, String, ArrayList<StressTuple<String, String>>>>();
+    public static HashMap<String, SentenceTuple<String, String, ArrayList<StressTuple<String, String>>>> nativeSentenceInfo = new HashMap<>();
 
     public static String[] nativeSentences = { "A piece of cake", "Blow a fuse", "Catch some zs", "Down to the wire",
                                                "Eager beaver", "Fair and square", "Get cold feet", "Mellow out",
@@ -63,16 +59,16 @@ public class Constants
                                                "dˌaʊn tə ðə wˈaɪɚ", "ˈiːɡɚ bˈiːvɚ", "fˈɛɹ ænd skwˈɛɹ",
                                                "ɡɛt kˈoʊld fˈiːt", "mˈɛloʊ ˈaʊt", "pˈʊlɪŋ jʊɹ lˈɛɡz", "θˈɪŋkɪŋ ˈaʊt lˈaʊd" };
 
-    public static String[] nativePhonemes = { "AH0 P IY1 S AH0 V K EY1 K",
-                                              "B L OW1 AH0 F Y UW1 Z",
-                                              "K AE1 CH S AH1 M Z IY0 Z",
-                                              "D AW1 N T AH0 DH AH0 W AY1 ER0",
-                                              "IY1 G ER0 B IY1 V ER0",
-                                              "F EH1 R AH0 N D S K W EH1 R",
-                                              "G EH1 T K OW1 L D F IY1 T",
-                                              "M EH1 L OW0 AW1 T",
-                                              "P UH1 L IH0 NG Y UH1 R L EH1 G Z",
-                                              "TH IH1 NG K AH0 NG AW1 T L AW1 D" };
+    public static String[] nativePhonemes = { "AH PIYS AHV KEYK",
+                                              "BLOW AH FYUWZ",
+                                              "KAECH SAHM ZIYZ",
+                                              "DAWN TAH DHAH WAYER",
+                                              "IYGER BIYVER",
+                                              "FEHR AHND SKWEHR",
+                                              "GEHT KOWLD FIYT",
+                                              "MEHLOW AWT",
+                                              "PUHLIHNG YUHR LEHGZ",
+                                              "THIHNGKAHNG AWT LAWD" };
 
     public static String[] nativeStressPhonemes = { "AH, IY, AH, EY",
                                                     "OW, AH, UW",

@@ -37,7 +37,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_menu);
 
         // Init structs
-        if (Constants.nativeSenteceInfo.isEmpty())
+        if (Constants.nativeSentenceInfo.isEmpty())
             fillSentencesMap();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -150,7 +150,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
             }
 
             SentenceTuple<String, String, ArrayList<StressTuple<String, String>>> tuple = new SentenceTuple<>(Constants.nativePhonetics[i], Constants.nativePhonemes[i], stressNative);
-            Constants.nativeSenteceInfo.put(Constants.nativeSentences[i], tuple);
+            Constants.nativeSentenceInfo.put(Constants.nativeSentences[i], tuple);
         }
     }
 }
