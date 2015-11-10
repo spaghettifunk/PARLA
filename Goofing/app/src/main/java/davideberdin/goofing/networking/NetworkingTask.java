@@ -173,10 +173,13 @@ public class NetworkingTask extends AsyncTask
                         Logger.Log(Constants.CONNECTION_ACTIVITY, Constants.PRONUNCIATION_ACTIVITY);
 
                         // handle response here
-                        String feedbacks = (String) responseObject.get(Constants.GET_VOWEL_CHART_POST);
-                        byte[] image = Base64.decode(feedbacks, Base64.DEFAULT);
+                        String pitch_chart = (String) responseObject.get(Constants.GET_PITCH_CHART_POST);
+                        byte[] pitch_chart_byte = Base64.decode(pitch_chart, Base64.DEFAULT);
 
-                        userCallback.done(image);
+                        String vowel_chart = (String) responseObject.get(Constants.GET_VOWEL_CHART_POST);
+                        byte[] vowel_chart_byte = Base64.decode(vowel_chart, Base64.DEFAULT);
+
+                        userCallback.done(pitch_chart_byte, vowel_chart_byte);
                         break;
 
                     default:

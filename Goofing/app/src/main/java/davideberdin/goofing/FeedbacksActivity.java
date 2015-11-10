@@ -3,18 +3,14 @@ package davideberdin.goofing;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,13 +25,15 @@ import davideberdin.goofing.utilities.UserLocalStore;
 
 public class FeedbacksActivity extends AppCompatActivity implements View.OnClickListener
 {
-    private byte[] imageByte;
+    private byte[] pitchChartByte;
+    private byte[] vowelChartByte;
 
     private AutoResizeTextView nativeFeedbacks;
     private AutoResizeTextView nativeFeedbacksSentence;
 
     private AutoResizeTextView userFeedbacks;
 
+    private ImageView pitchChart;
     private ImageView vowelChart;
     private User loggedUser;
     private UserLocalStore userLocalStore;
@@ -47,7 +45,9 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
         setContentView(R.layout.activity_feedbacks);
 
         Bundle b = getIntent().getExtras();
-        this.imageByte = b.getByteArray("vowelchart");
+
+        this.pitchChartByte = b.getByteArray("pitchchart");
+        this.vowelChartByte = b.getByteArray("vowelchart");
 
         this.userLocalStore = new UserLocalStore(this);
         this.loggedUser = this.userLocalStore.getLoggedUser();
@@ -68,10 +68,15 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
         // color strings
         fillNativeFeedbacks();
 
+        this.pitchChart = (ImageView) findViewById(R.id.pitchChartImageView);
+        Bitmap pitchBitmap = BitmapFactory.decodeByteArray(this.pitchChartByte, 0, this.pitchChartByte.length);
+        this.pitchChart.setImageBitmap(pitchBitmap);
+        this.pitchChart.setOnClickListener(this);
+
         // Build feedbacks image
         this.vowelChart = (ImageView) findViewById(R.id.vowelChartImageView);
-        Bitmap bmp = BitmapFactory.decodeByteArray(this.imageByte, 0, this.imageByte.length);
-        this.vowelChart.setImageBitmap(bmp);
+        Bitmap vowelBitmap = BitmapFactory.decodeByteArray(this.vowelChartByte, 0, this.vowelChartByte.length);
+        this.vowelChart.setImageBitmap(vowelBitmap);
         this.vowelChart.setOnClickListener(this);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -82,10 +87,16 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
     {
         switch (v.getId())
         {
+            case R.id.pitchChartImageView:
+                Intent pitchIntent = new Intent(FeedbacksActivity.this, FullscreenImageActivity.class);
+                pitchIntent.putExtra("isPitch", true);
+                pitchIntent.putExtra("pitchchart", this.pitchChartByte);
+                startActivity(pitchIntent);
             case R.id.vowelChartImageView:
-                Intent newintent = new Intent(FeedbacksActivity.this, FullscreenImageActivity.class);
-                newintent.putExtra("vowelchart", this.imageByte);
-                startActivity(newintent);
+                Intent vowelIntent = new Intent(FeedbacksActivity.this, FullscreenImageActivity.class);
+                vowelIntent.putExtra("isPitch", false);
+                vowelIntent.putExtra("vowelchart", this.vowelChartByte);
+                startActivity(vowelIntent);
         break;
             default:
                 break;

@@ -117,7 +117,7 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
 //            recognizer.removeListener(this);
 //        }
 //    }
-
+//
 //    @Override
 //    public void onStop(){
 //        if (recognizer != null) {
@@ -138,8 +138,7 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
     }
 
     @Override
-    public void onClick(View v)
-    {
+    public void onClick(View v) {
         ServerRequest recordingRequest = new ServerRequest(this.getActivity(), "Recording", "Say the sentence");
 
         switch (v.getId())
@@ -176,11 +175,14 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
                             request.sendRecordedAudioToServer(loggedUser, fileAudioByte, currentSentence, new GetCallback()
                             {
                                 @Override
-                                public void done(Object... params) {
+                                public void done(Object... params)
+                                {
+                                    byte[] pitch_chart_byte = (byte[]) params[0];
+                                    byte[] vowel_chart_byte = (byte[]) params[1];
 
-                                    byte[] resultImage = (byte[]) params[0];
                                     Intent intent = new Intent(getActivity(), FeedbacksActivity.class);
-                                    intent.putExtra("vowelchart", resultImage);
+                                    intent.putExtra("pitchchart", pitch_chart_byte);
+                                    intent.putExtra("vowelchart", vowel_chart_byte);
 
                                     startActivity(intent);
                                 }

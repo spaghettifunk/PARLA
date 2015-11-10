@@ -36,7 +36,7 @@ public class FullscreenImageActivity extends AppCompatActivity implements View.O
     PointF mid = new PointF();
     float oldDist = 1f;
 
-    private ImageView vowelChart = null;
+    private ImageView chart = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,13 +48,18 @@ public class FullscreenImageActivity extends AppCompatActivity implements View.O
         setContentView(R.layout.activity_fullscreen_image);
 
         Bundle b = getIntent().getExtras();
-        byte[] audioFileAsByte = b.getByteArray("vowelchart");
+
+        byte[] chartByte = null;
+        if (b.getBoolean("isPitch"))
+            chartByte = b.getByteArray("pitchchart");
+        else
+            chartByte = b.getByteArray("vowelchart");
 
         // Build feedbacks image
-        this.vowelChart = (ImageView) findViewById(R.id.fullscreen_image);
-        Bitmap bmp = BitmapFactory.decodeByteArray(audioFileAsByte, 0, audioFileAsByte.length);
-        this.vowelChart.setImageBitmap(bmp);
-        this.vowelChart.setOnTouchListener(this);
+        this.chart = (ImageView) findViewById(R.id.fullscreen_image);
+        Bitmap bmp = BitmapFactory.decodeByteArray(chartByte, 0, chartByte.length);
+        this.chart.setImageBitmap(bmp);
+        this.chart.setOnTouchListener(this);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -67,17 +72,17 @@ public class FullscreenImageActivity extends AppCompatActivity implements View.O
 
         // Checks the orientation of the screen
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            this.vowelChart.setScaleType(ImageView.ScaleType.MATRIX);   //required
-            matrix.postRotate(90f, this.vowelChart.getDrawable().getBounds().width()/2, this.vowelChart.getDrawable().getBounds().height()/2);
-            this.vowelChart.setImageMatrix(matrix);
+            this.chart.setScaleType(ImageView.ScaleType.MATRIX);   //required
+            matrix.postRotate(90f, this.chart.getDrawable().getBounds().width()/2, this.chart.getDrawable().getBounds().height()/2);
+            this.chart.setImageMatrix(matrix);
 
             // Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show();
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
             // Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show();
 
-            this.vowelChart.setScaleType(ImageView.ScaleType.MATRIX);   //required
-            matrix.postRotate(-90f, this.vowelChart.getDrawable().getBounds().width()/2, this.vowelChart.getDrawable().getBounds().height()/2);
-            this.vowelChart.setImageMatrix(matrix);
+            this.chart.setScaleType(ImageView.ScaleType.MATRIX);   //required
+            matrix.postRotate(-90f, this.chart.getDrawable().getBounds().width()/2, this.chart.getDrawable().getBounds().height()/2);
+            this.chart.setImageMatrix(matrix);
         }
     }
 

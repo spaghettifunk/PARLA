@@ -7,10 +7,13 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="davideberdin.goofing.FeedbacksActivity">
 
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="wrap_content">
 
         <TextView
             android:layout_width="fill_parent"
@@ -99,13 +102,26 @@
 
         <ImageView
             android:layout_width="fill_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:adjustViewBounds="true"
+            android:id="@+id/pitchChartImageView"
+            android:contentDescription="@string/vowelChartImageView"
+            android:cropToPadding="false" />
+
+        <Space
+            android:layout_width="fill_parent"
+            android:layout_height="30dp" />
+
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
             android:scaleType="fitXY"
             android:adjustViewBounds="true"
             android:id="@+id/vowelChartImageView"
             android:contentDescription="@string/vowelChartImageView"
-            android:cropToPadding="false"
-            android:layout_weight="1" />
+            android:cropToPadding="false" />
 
     </LinearLayout>
+    </ScrollView>
 </RelativeLayout>
