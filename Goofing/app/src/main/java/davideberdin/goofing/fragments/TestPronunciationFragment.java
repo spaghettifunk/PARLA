@@ -60,8 +60,7 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.testPronunciationView = inflater.inflate(R.layout.test_pronunciation_layout, container, false);
 
         this.startButton = (FloatingActionButton) testPronunciationView.findViewById(R.id.fabStartRecording);
@@ -108,26 +107,24 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
         return this.testPronunciationView;
     }
 
-//    @Override
-//    public void onResume(){
-//        if (recognizer != null) {
-//            recognizer.cancel();
-//            recognizer.stop();
-//            recognizer.shutdown();
-//            recognizer.removeListener(this);
-//        }
-//    }
-//
-//    @Override
-//    public void onStop(){
-//        if (recognizer != null) {
-//            recognizer.cancel();
-//            recognizer.stop();
-//            recognizer.shutdown();
-//            recognizer.removeListener(this);
-//        }
-//    }
-//
+    @Override
+    public void onResume(){
+        super.onResume();
+        if (recognizer != null) {
+            recognizer.shutdown();
+            recognizer = null;
+        }
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        if (recognizer != null) {
+            recognizer.shutdown();
+            recognizer = null;
+        }
+    }
+
     @Override
     public void onPause(){
         super.onPause();
@@ -250,13 +247,13 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
                 .setAcousticModel(new File(assetsDir, "en-us-ptm"))
                 .setDictionary(new File(assetsDir, "cmudict-en-us.dict"))
 
-                        // To disable logging of raw audio comment out this call (takes a lot of space on the device)
+                // To disable logging of raw audio comment out this call (takes a lot of space on the device)
                 .setRawLogDir(assetsDir)
 
-                        // Threshold to tune for keyphrase to balance between false alarms and misses
+                // Threshold to tune for keyphrase to balance between false alarms and misses
                 .setKeywordThreshold(1e-45f)
 
-                        // Use context-independent phonetic search, context-dependent is too slow for mobile
+                // Use context-independent phonetic search, context-dependent is too slow for mobile
                 .setBoolean("-allphone_ci", true)
 
                 .getRecognizer();

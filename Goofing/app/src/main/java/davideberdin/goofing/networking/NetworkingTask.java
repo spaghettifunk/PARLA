@@ -37,8 +37,7 @@ public class NetworkingTask extends AsyncTask
 
     private int currentNetworkingState;
 
-    public NetworkingTask(User u, GetCallback userCallback, ProgressDialog progressDialog)
-    {
+    public NetworkingTask(User u, GetCallback userCallback, ProgressDialog progressDialog) {
         this.currentNetworkingState = -1;
 
         this.user = u;
@@ -46,8 +45,7 @@ public class NetworkingTask extends AsyncTask
         this.progressDialog = progressDialog;
     }
 
-    public NetworkingTask(GetCallback userCallback, ProgressDialog progressDialog)
-    {
+    public NetworkingTask(GetCallback userCallback, ProgressDialog progressDialog) {
         this.currentNetworkingState = -1;
 
         this.userCallback = userCallback;
@@ -55,8 +53,7 @@ public class NetworkingTask extends AsyncTask
     }
 
     @Override
-    protected Object doInBackground(Object[] params)
-    {
+    protected Object doInBackground(Object[] params) {
         HashMap<String, String> postParams = new HashMap<>();
         try {
 
@@ -117,8 +114,7 @@ public class NetworkingTask extends AsyncTask
     }
 
     @Override
-    protected void onPostExecute(Object result)
-    {
+    protected void onPostExecute(Object result) {
         this.progressDialog.dismiss();
 
         // Handle every response here
@@ -194,8 +190,7 @@ public class NetworkingTask extends AsyncTask
         }
     }
 
-    public String performPostCall(String requestURL, HashMap<String, String> postDataParams)
-    {
+    public String performPostCall(String requestURL, HashMap<String, String> postDataParams) {
         URL url;
         String response = "";
 
@@ -237,8 +232,7 @@ public class NetworkingTask extends AsyncTask
         return response;
     }
 
-    private String getPostDataString(HashMap<String, String> params)
-    {
+    private String getPostDataString(HashMap<String, String> params) {
         JSONObject obj = new JSONObject();
         for(Map.Entry<String, String> entry : params.entrySet())
         {
@@ -251,8 +245,7 @@ public class NetworkingTask extends AsyncTask
         return obj.toString();
     }
 
-    public static String toJSON(Object object) throws JSONException, IllegalAccessException
-    {
+    public static String toJSON(Object object) throws JSONException, IllegalAccessException {
         String str = "";
         Class c = object.getClass();
         JSONObject jsonObject = new JSONObject();
