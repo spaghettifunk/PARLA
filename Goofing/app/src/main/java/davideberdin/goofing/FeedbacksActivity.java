@@ -10,7 +10,9 @@ import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,12 +21,16 @@ import java.util.List;
 import davideberdin.goofing.controllers.SentenceTuple;
 import davideberdin.goofing.controllers.StressTuple;
 import davideberdin.goofing.controllers.User;
+import davideberdin.goofing.utilities.AppWindowManager;
 import davideberdin.goofing.utilities.AutoResizeTextView;
 import davideberdin.goofing.utilities.Constants;
 import davideberdin.goofing.utilities.UserLocalStore;
 
 public class FeedbacksActivity extends AppCompatActivity implements View.OnClickListener
 {
+    //region VARIABLES
+    private ArrayList<String> phonemes;
+    private ArrayList<StressTuple> vowelStress;
     private byte[] pitchChartByte;
     private byte[] vowelChartByte;
 
@@ -32,11 +38,16 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
     private AutoResizeTextView nativeFeedbacksSentence;
 
     private AutoResizeTextView userFeedbacks;
+    private AutoResizeTextView userFeedbacksSentence;
 
     private ImageView pitchChart;
     private ImageView vowelChart;
     private User loggedUser;
     private UserLocalStore userLocalStore;
+
+    private ImageButton infoFeedbacksButton;
+    private RelativeLayout feedbacksRelativeLayout;
+    //endregion
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -44,15 +55,23 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedbacks);
 
+        this.feedbacksRelativeLayout = (RelativeLayout) findViewById(R.id.feedbacksRelativeLayout);
+        this.feedbacksRelativeLayout.setVisibility(View.VISIBLE);
+
         Bundle b = getIntent().getExtras();
 
-        this.pitchChartByte = b.getByteArray("pitchchart");
-        this.vowelChartByte = b.getByteArray("vowelchart");
+        this.phonemes = b.getStringArrayList(Constants.GET_PHONEMES_POST);
+        this.vowelStress = b.getParcelableArrayList(Constants.GET_VOWELSTRESS_POST);
+        this.pitchChartByte = b.getByteArray(Constants.GET_PITCH_CHART_POST);
+        this.vowelChartByte = b.getByteArray(Constants.GET_VOWEL_CHART_POST);
 
         this.userLocalStore = new UserLocalStore(this);
         this.loggedUser = this.userLocalStore.getLoggedUser();
 
         // Feedbacks
+        this.infoFeedbacksButton = (ImageButton) findViewById(R.id.infoImageButton);
+        this.infoFeedbacksButton.setOnClickListener(this);
+
         this.nativeFeedbacks = (AutoResizeTextView) findViewById(R.id.feedbacksNative);
         this.nativeFeedbacks.setMaxLines(1);
 
@@ -65,8 +84,12 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
         this.userFeedbacks = (AutoResizeTextView) findViewById(R.id.feedbacksUser);
         this.userFeedbacks.setMaxLines(1);
 
+        this.userFeedbacksSentence = (AutoResizeTextView) findViewById(R.id.feedbacksUserSentence);
+        this.userFeedbacksSentence.setMaxLines(1);
+
         // color strings
         fillNativeFeedbacks();
+        fillUserFeedbacks();
 
         this.pitchChart = (ImageView) findViewById(R.id.pitchChartImageView);
         Bitmap pitchBitmap = BitmapFactory.decodeByteArray(this.pitchChartByte, 0, this.pitchChartByte.length);
@@ -92,12 +115,20 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
                 pitchIntent.putExtra("isPitch", true);
                 pitchIntent.putExtra("pitchchart", this.pitchChartByte);
                 startActivity(pitchIntent);
+                break;
+
             case R.id.vowelChartImageView:
                 Intent vowelIntent = new Intent(FeedbacksActivity.this, FullscreenImageActivity.class);
                 vowelIntent.putExtra("isPitch", false);
                 vowelIntent.putExtra("vowelchart", this.vowelChartByte);
                 startActivity(vowelIntent);
-        break;
+                break;
+
+            case R.id.infoImageButton:
+
+                AppWindowManager.showInfoDialog(this, Constants.DIALOG_INFO_FEEDBACKS_TITLE, Constants.DIALOG_INFO_FEEDBACKS_MESSAGE);
+
+                break;
             default:
                 break;
         }
@@ -132,7 +163,7 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
     private void fillNativeFeedbacks()
     {
         String currentSentence = this.loggedUser.GetCurrentSentence();
-        SentenceTuple<String, String, ArrayList<StressTuple<String, String>>> sentenceNativeFeedbacks = Constants.nativeSentenceInfo.get(currentSentence);
+        SentenceTuple<String, String, ArrayList<StressTuple>> sentenceNativeFeedbacks = Constants.nativeSentenceInfo.get(currentSentence);
 
         this.nativeFeedbacks.setText(sentenceNativeFeedbacks.getPhonemes());
 
@@ -140,12 +171,12 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
         String currentSentenceNoDigits = sentenceNativeFeedbacks.getPhonemes().replaceAll("\\d", "");
         
         List<String> allPhonemes = Arrays.asList(currentSentenceNoDigits.split("\\s+"));
-        ArrayList<StressTuple<String, String>> stress = sentenceNativeFeedbacks.getStress();
+        ArrayList<StressTuple> stress = sentenceNativeFeedbacks.getStress();
 
         String pronunciationRepresentation = "";
         for (String p: allPhonemes) {
             boolean changed = false;
-            for (StressTuple<String, String> st : new ArrayList<StressTuple<String, String>>(stress)) {
+            for (StressTuple st : new ArrayList<StressTuple>(stress)) {
                 if (p.contains(st.getPhoneme()) && st.getIsStress().equals("1")) {
                     stress.remove(st);
 
@@ -168,5 +199,48 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
         }
 
         this.nativeFeedbacks.setText(Html.fromHtml(pronunciationRepresentation));
+    }
+
+    private void fillUserFeedbacks()
+    {
+        String currentSentence = this.loggedUser.GetCurrentSentence();
+
+        String userPhonemes = "";
+        for (String p: phonemes)
+            userPhonemes += p.replace(" ", "") + " ";
+        userPhonemes = userPhonemes.replaceAll("\\d", "");
+        this.userFeedbacks.setText(userPhonemes);
+
+        // change color based on stress position
+        List<String> allPhonemes = Arrays.asList(userPhonemes.split("\\s+"));
+        ArrayList<StressTuple> stress = this.vowelStress;
+
+        String pronunciationRepresentation = "";
+        for (String p: allPhonemes) {
+            boolean changed = false;
+            for (StressTuple st : new ArrayList<StressTuple>(stress)) {
+                if (p.contains(st.getPhoneme()) && st.getIsStress().equals("1")) {
+                    stress.remove(st);
+
+                    int subPosition = p.indexOf(st.getPhoneme());
+                    String temp = p.replace(st.getPhoneme(), "");
+
+                    String coloredPhoneme = Constants.getColoredSpanned(st.getPhoneme(), Color.RED) + " ";
+
+                    StringBuffer buff = new StringBuffer(temp);
+                    buff.insert(subPosition, coloredPhoneme);
+
+                    pronunciationRepresentation += "<u>" + buff.toString() + "</u> ";
+
+                    changed = true;
+                    break;
+                }
+            }
+            if (changed == false)
+                pronunciationRepresentation +=  "<u>" + p + "</u> ";
+        }
+
+        this.userFeedbacks.setText(Html.fromHtml(pronunciationRepresentation));
+        this.userFeedbacksSentence.setText(currentSentence);
     }
 }

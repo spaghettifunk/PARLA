@@ -33,6 +33,8 @@ public class Constants
     public static final String FAILED_POST = "FAILED";
     public static final String GET_SENTENCE_POST = "Sentence";
     public static final String GET_PHONETIC_POST = "Phonetic";
+    public static final String GET_PHONEMES_POST = "Phonemes";
+    public static final String GET_VOWELSTRESS_POST = "VowelStress";
     public static final String GET_PITCH_CHART_POST = "PitchChart";
     public static final String GET_VOWEL_CHART_POST = "VowelChart";
 
@@ -40,7 +42,12 @@ public class Constants
     public static final String TOAST_ERROR_LOGIN_ERROR = "Authentication failed";
     public static final String GENERAL_ERROR_REQUEST = "Unknown behaviour during REQUEST";
     public static final String GENERAL_ERROR_RESPONSE = "Unknown behaviour during RESPONSE";
-    public static final String ERROR_SELECTING_SENTENCE = "Select a sentence to listen";
+    public static final String DIALOG_INFO_FEEDBACKS_TITLE = "Info Feedbacks";
+    public static final String DIALOG_INFO_FEEDBACKS_MESSAGE = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, \n" +
+            "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation \n" +
+            "ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse \n" +
+            "cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia\n" +
+            "deserunt mollit anim id est laborum.";
 
     // Username json keys
     public static final String GET_USERNAME_POST = "Username";
@@ -50,7 +57,7 @@ public class Constants
     public static final String GET_OCCUPATION_POST = "Occupation";
 
     // sentences - KEEP THE SAME ORDER
-    public static HashMap<String, SentenceTuple<String, String, ArrayList<StressTuple<String, String>>>> nativeSentenceInfo = new HashMap<>();
+    public static HashMap<String, SentenceTuple<String, String, ArrayList<StressTuple>>> nativeSentenceInfo = new HashMap<>();
 
     public static String[] nativeSentences = { "A piece of cake", "Blow a fuse", "Catch some zs", "Down to the wire",
                                                "Eager beaver", "Fair and square", "Get cold feet", "Mellow out",

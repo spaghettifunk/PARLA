@@ -2,19 +2,21 @@ package davideberdin.goofing.networking;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
+import java.io.InputStream;
+import java.util.UUID;
 
+import davideberdin.goofing.R;
 import davideberdin.goofing.controllers.User;
-import davideberdin.goofing.fragments.TestPronunciationFragment;
 import davideberdin.goofing.utilities.Constants;
-import edu.cmu.pocketsphinx.Hypothesis;
-import edu.cmu.pocketsphinx.RecognitionListener;
-import edu.cmu.pocketsphinx.SpeechRecognizer;
-
-import static edu.cmu.pocketsphinx.SpeechRecognizerSetup.defaultSetup;
+import davideberdin.goofing.utilities.Debug;
+import davideberdin.goofing.utilities.Logger;
+import davideberdin.goofing.utilities.Recording;
 
 public class ServerRequest
 {
@@ -61,21 +63,54 @@ public class ServerRequest
     }
 
     @SuppressWarnings("deprecation")
-    public void recordingAudioInBackground(final GetCallback callback) {
+    public void recordingAudioInBackground(final Context context, final GetCallback callback)
+    {
+        final String audioFilename = "recorded_" + UUID.randomUUID().toString();
+        if (Debug.debugging) {
+            Recording.startRecording(context, audioFilename);
+        }
+
         this.progressDialog.setButton("Stop", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // Stop Recording
-                TestPronunciationFragment.recognizer.stop();
+                try {
+                    InputStream inStream;
+                    if (Debug.debugging) {
+                        Recording.stopRecording();
+                        inStream = context.openFileInput(audioFilename);
+                    } else {
+                        inStream = context.getResources().openRawResource(R.raw.test_audio);
+                    }
 
-                progressDialog.cancel();    // GRAZIE DI ESISTERE!!!!!!!!
-                progressDialog.dismiss();
-                callback.done(null);    // TODO: put the wav file here
+                    ByteArrayOutputStream out = new ByteArrayOutputStream();
+                    BufferedInputStream in = new BufferedInputStream(inStream);
+
+                    int read;
+                    byte[] buff = new byte[1024];
+                    while ((read = in.read(buff)) > 0) {
+                        out.write(buff, 0, read);
+                    }
+                    out.flush();
+
+                    byte[] recordedAudio = out.toByteArray();
+
+                    progressDialog.cancel();    // GRAZIE DI ESISTERE!!!!!!!!
+                    progressDialog.dismiss();
+
+                    callback.done(recordedAudio);
+                } catch (Exception e) {
+                    Logger.Log(Constants.CONNECTION_ACTIVITY, "Error in recordingAudioIBackground()\n" + e.getMessage());
+                } finally
+                {
+                    if(Debug.debugging) {
+                        File audioFile = context.getFileStreamPath(audioFilename);
+                        audioFile.delete();
+                    }
+                }
             }
         });
 
         // Start Recording here
-        TestPronunciationFragment.recognizer.startListening(Constants.PHONE_SEARCH, 10000);
         this.progressDialog.show();
     }
 

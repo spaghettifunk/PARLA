@@ -25,6 +25,8 @@ import java.util.Map;
 import javax.net.ssl.HttpsURLConnection;
 
 // My imports
+import davideberdin.goofing.controllers.SentenceTuple;
+import davideberdin.goofing.controllers.StressTuple;
 import davideberdin.goofing.controllers.User;
 import davideberdin.goofing.utilities.Constants;
 import davideberdin.goofing.utilities.Logger;
@@ -140,6 +142,7 @@ public class NetworkingTask extends AsyncTask
                 switch (this.currentNetworkingState)
                 {
                     case Constants.NETWORKING_LOGIN_STATE:
+                        //region LOGIN
                         Logger.Log(Constants.CONNECTION_ACTIVITY, Constants.LOGIN_ACTIVITY);
 
                         String username = ((String) responseObject.get(Constants.GET_USERNAME_POST));
@@ -154,29 +157,41 @@ public class NetworkingTask extends AsyncTask
 
                         this.userCallback.done(loggedUser);
                         break;
+                        //endregion
 
                     case Constants.NETWORKING_REGISTER_STATE:
+                        //region REGISTER
                         Logger.Log(Constants.CONNECTION_ACTIVITY, Constants.REGISTRATION_ACTIVITY);
 
                         String sentenceReg = (String) responseObject.get(Constants.GET_SENTENCE_POST);
                         String phoneticReg = (String) responseObject.get(Constants.GET_PHONETIC_POST);
 
                         this.userCallback.done(sentenceReg, phoneticReg);
-
                         break;
+                        //endregion
 
                     case Constants.NETWORKING_HANDLE_RECORDED_VOICE:
+                        //region CLASSIFICATION
                         Logger.Log(Constants.CONNECTION_ACTIVITY, Constants.PRONUNCIATION_ACTIVITY);
 
                         // handle response here
-                        String pitch_chart = (String) responseObject.get(Constants.GET_PITCH_CHART_POST);
-                        byte[] pitch_chart_byte = Base64.decode(pitch_chart, Base64.DEFAULT);
+                        ArrayList<String> phonemes = (ArrayList<String>) responseObject.get(Constants.GET_PHONEMES_POST);
+                        ArrayList<ArrayList<String>> vowelStressObject = (ArrayList<ArrayList<String>>) responseObject.get(Constants.GET_VOWELSTRESS_POST);
 
-                        String vowel_chart = (String) responseObject.get(Constants.GET_VOWEL_CHART_POST);
-                        byte[] vowel_chart_byte = Base64.decode(vowel_chart, Base64.DEFAULT);
+                        ArrayList<StressTuple> vowelStress = new ArrayList<StressTuple>();
+                        for (ArrayList<String> vs : vowelStressObject){
+                            vowelStress.add(new StressTuple(vs.get(0), vs.get(1)));
+                        }
 
-                        userCallback.done(pitch_chart_byte, vowel_chart_byte);
+                        String pitchChart = (String) responseObject.get(Constants.GET_PITCH_CHART_POST);
+                        byte[] pitchChartByte = Base64.decode(pitchChart, Base64.DEFAULT);
+
+                        String vowelChart = (String) responseObject.get(Constants.GET_VOWEL_CHART_POST);
+                        byte[] vowelChartByte = Base64.decode(vowelChart, Base64.DEFAULT);
+
+                        userCallback.done(phonemes, vowelStress, pitchChartByte, vowelChartByte);
                         break;
+                        //endregion
 
                     default:
                         Logger.Log(Constants.CONNECTION_ACTIVITY, Constants.GENERAL_ERROR_RESPONSE);

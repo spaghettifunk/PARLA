@@ -17,6 +17,7 @@ import davideberdin.goofing.networking.GetCallback;
 import davideberdin.goofing.networking.ServerRequest;
 import davideberdin.goofing.utilities.AppWindowManager;
 import davideberdin.goofing.utilities.Constants;
+import davideberdin.goofing.utilities.Debug;
 import davideberdin.goofing.utilities.Logger;
 import davideberdin.goofing.utilities.UserLocalStore;
 
@@ -63,37 +64,47 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 username = etUsername.getText().toString();
                 password = etPassword.getText().toString();
 
-                if(username.isEmpty() || password.isEmpty()) {
-                    Toast.makeText(LoginActivity.this, "Insert username or password", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                // Networking stuff here
-                User user = new User(username, password);
-                ServerRequest request = new ServerRequest(this);
-                request.fetchUserDataInBackgroud(user, new GetCallback()
+                if (Debug.debugging)
                 {
-                    @Override
-                    public void done(Object... params) {
-                        if (params[0] instanceof JSONObject) {
-                            JSONObject obj = (JSONObject) params[0];
-                            try {
-                                AppWindowManager.showErrorMessage(LoginActivity.this, obj.getString("Reason"));
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-                            User u = (User) params[0];
-                            if (u == null) {
-                                AppWindowManager.showErrorMessage(LoginActivity.this, Constants.TOAST_ERROR_LOGIN_ERROR);
+                    User u = new User("test" , "test", "m", "italian", "student", Constants.nativeSentences[0], Constants.nativePhonetics[0]);
+                    userLocalStore.storeUserData(u);
+                    userLocalStore.setUserLoggedIn(true);
+                    startActivity(new Intent(LoginActivity.this, MenuActivity.class));
+                }
+                // TODO: remove the if-statement when I will be able to connect to server
+                else
+                {
+                    if(username.isEmpty() || password.isEmpty()) {
+                        Toast.makeText(LoginActivity.this, "Insert username or password", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    // Networking stuff here
+                    User user = new User(username, password);
+                    ServerRequest request = new ServerRequest(this);
+                    request.fetchUserDataInBackgroud(user, new GetCallback() {
+                        @Override
+                        public void done(Object... params) {
+                            if (params[0] instanceof JSONObject) {
+                                JSONObject obj = (JSONObject) params[0];
+                                try {
+                                    AppWindowManager.showErrorMessage(LoginActivity.this, obj.getString("Reason"));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
                             } else {
-                                userLocalStore.storeUserData(u);
-                                userLocalStore.setUserLoggedIn(true);
-                                startActivity(new Intent(LoginActivity.this, MenuActivity.class));
+                                User u = (User) params[0];
+                                if (u == null) {
+                                    AppWindowManager.showErrorMessage(LoginActivity.this, Constants.TOAST_ERROR_LOGIN_ERROR);
+                                } else {
+                                    userLocalStore.storeUserData(u);
+                                    userLocalStore.setUserLoggedIn(true);
+                                    startActivity(new Intent(LoginActivity.this, MenuActivity.class));
+                                }
                             }
                         }
-                    }
-                });
+                    });
+                }
                 break;
             case R.id.registerButton:
 

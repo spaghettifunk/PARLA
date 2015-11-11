@@ -27,7 +27,7 @@ import davideberdin.goofing.utilities.UserLocalStore;
 
 public class MenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
 {
-    private FragmentManager fragmentManager;
+    public static FragmentManager fragmentManager;
     private UserLocalStore userLocalStore = null;
 
     @Override
@@ -143,13 +143,13 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
             List<String> phonemes = Arrays.asList(stressPhonemes.split("\\s*,\\s*"));
             List<String> positions = Arrays.asList(stressPosition.split("\\s*,\\s*"));
 
-            ArrayList<StressTuple<String, String>> stressNative = new ArrayList<StressTuple<String, String>>();
+            ArrayList<StressTuple> stressNative = new ArrayList<StressTuple>();
             for(int j = 0; j < phonemes.size(); j++){
-                StressTuple<String, String> stress = new StressTuple<String, String>(phonemes.get(j), positions.get(j));
+                StressTuple stress = new StressTuple(phonemes.get(j), positions.get(j));
                 stressNative.add(stress);
             }
 
-            SentenceTuple<String, String, ArrayList<StressTuple<String, String>>> tuple = new SentenceTuple<>(Constants.nativePhonetics[i], Constants.nativePhonemes[i], stressNative);
+            SentenceTuple<String, String, ArrayList<StressTuple>> tuple = new SentenceTuple<>(Constants.nativePhonetics[i], Constants.nativePhonemes[i], stressNative);
             Constants.nativeSentenceInfo.put(Constants.nativeSentences[i], tuple);
         }
     }

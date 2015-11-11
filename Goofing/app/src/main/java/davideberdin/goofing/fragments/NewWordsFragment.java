@@ -9,17 +9,16 @@ import android.view.ViewGroup;
 
 import davideberdin.goofing.R;
 
-/**
- * Created by dado on 25/10/15.
- */
 public class NewWordsFragment extends Fragment
 {
     private View newWordsView = null;
 
+    public NewWordsFragment() { }
+
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.newWordsView = inflater.inflate(R.layout.new_words_layout, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
         this.newWordsView = inflater.inflate(R.layout.new_words_layout, container, false);
         return this.newWordsView;
     }
