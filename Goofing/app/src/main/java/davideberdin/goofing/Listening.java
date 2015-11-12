@@ -21,10 +21,7 @@ import davideberdin.goofing.fragments.ListenNative;
 import davideberdin.goofing.fragments.ListenUser;
 import davideberdin.goofing.utilities.UserLocalStore;
 
-public class Listening extends AppCompatActivity implements View.OnClickListener
-{
-    public static String selectedSentence = "";
-    public static String selectedPhonetic = "";
+public class Listening extends AppCompatActivity implements View.OnClickListener {
 
     private UserLocalStore userLocalStore = null;
     private User loggedUser = null;
@@ -33,8 +30,7 @@ public class Listening extends AppCompatActivity implements View.OnClickListener
     private ViewPager mViewPager;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listening);
 
@@ -69,8 +65,7 @@ public class Listening extends AppCompatActivity implements View.OnClickListener
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
+    public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -87,27 +82,28 @@ public class Listening extends AppCompatActivity implements View.OnClickListener
     }
 
     @Override
-    public void onClick(View v)
-    {
-        switch (v.getId()){
+    public void onClick(View v) {
+        switch (v.getId()) {
             case R.id.fabListening:
                 // play audio
                 try {
-                    // TODO: mapping between R.raw.xxx to sentence
-                    int resID = this.getResources().getIdentifier("test_audio", "raw", this.getPackageName());
+                    this.userLocalStore = new UserLocalStore(this);
+                    this.loggedUser = this.userLocalStore.getLoggedUser();
 
+                    String fileAudio = ((this.loggedUser.GetCurrentSentence()).toLowerCase()).replace(" ", "_");
+                    if (this.loggedUser.GetGender().equals("Male"))
+                        fileAudio = "m_" + fileAudio;
+                    else
+                        fileAudio = "f_" + fileAudio;
+
+                    int resID = this.getResources().getIdentifier(fileAudio, "raw", this.getPackageName());
                     MediaPlayer mediaPlayer = MediaPlayer.create(this.getApplicationContext(), resID);
                     mediaPlayer.start();
-                } catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 break;
             case R.id.fabTestPronunciation:
-                this.userLocalStore = new UserLocalStore(this);
-                this.loggedUser = this.userLocalStore.getLoggedUser();
-                this.loggedUser.SetCurrentSentence(selectedSentence);
-                this.loggedUser.SetCurrentPhonetic(selectedPhonetic);
-                this.userLocalStore.storeUserData(this.loggedUser);
 
                 Intent intent = new Intent(this, MenuActivity.class);
                 startActivity(intent);
@@ -127,16 +123,15 @@ public class Listening extends AppCompatActivity implements View.OnClickListener
         }
 
         @Override
-        public Fragment getItem(int position)
-        {
+        public Fragment getItem(int position) {
             Fragment f;
-            switch (position){
+            switch (position) {
                 case 0:
                     f = new ListenNative();
                     break;
                 case 1:
                     f = new ListenUser();
-                break;
+                    break;
                 default:
                     f = null;
             }

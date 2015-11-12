@@ -11,6 +11,9 @@ import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.concurrent.Executor;
 
@@ -53,5 +56,23 @@ public class AppWindowManager
             }
         });
         ad.show();
+    }
+
+    public static void showInfoFeedbacksDialog(final Context context, String title) {
+        // custom dialog
+        final Dialog dialog = new Dialog(context);
+        dialog.setContentView(R.layout.info_feedbacks_dialog);
+        dialog.setTitle(title);
+
+        // if button is clicked, close the custom dialog
+        Button dialogButton = (Button) dialog.findViewById(R.id.infoOKButton);
+        dialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 }

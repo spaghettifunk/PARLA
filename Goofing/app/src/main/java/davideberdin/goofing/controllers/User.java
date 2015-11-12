@@ -1,17 +1,7 @@
 package davideberdin.goofing.controllers;
 
-/**
- * Created by dado on 22/10/15.
- */
 public class User
 {
-//    private static User singletonUser = new User();
-//    public static User getUser() { return singletonUser; }
-//
-//    public static void createUser(String n, String p, String g, String nat, String occ) {
-//        singletonUser = new User(n, p, g, nat, occ);
-//    }
-
     private String currentSentence = "";
     private String currentePhonetic = "";
 

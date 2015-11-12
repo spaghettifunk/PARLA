@@ -34,6 +34,7 @@ public class Constants
     public static final String GET_SENTENCE_POST = "Sentence";
     public static final String GET_PHONETIC_POST = "Phonetic";
     public static final String GET_PHONEMES_POST = "Phonemes";
+    public static final String GET_WER_POST = "WER";
     public static final String GET_VOWELSTRESS_POST = "VowelStress";
     public static final String GET_PITCH_CHART_POST = "PitchChart";
     public static final String GET_VOWEL_CHART_POST = "VowelChart";

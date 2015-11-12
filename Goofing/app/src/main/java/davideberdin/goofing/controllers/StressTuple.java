@@ -3,18 +3,22 @@ package davideberdin.goofing.controllers;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class StressTuple implements Parcelable
-{
+public class StressTuple implements Parcelable {
     private String phoneme;
     private String isStress;
 
-    public StressTuple(String phoneme, String isStress){
+    public StressTuple(String phoneme, String isStress) {
         this.phoneme = phoneme;
         this.isStress = isStress;
     }
 
-    public String getPhoneme() { return phoneme; }
-    public String getIsStress() { return isStress; }
+    public String getPhoneme() {
+        return phoneme;
+    }
+
+    public String getIsStress() {
+        return isStress;
+    }
 
     //region Parcelable
     public StressTuple(Parcel in) {

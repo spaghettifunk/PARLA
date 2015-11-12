@@ -13,11 +13,9 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.concurrent.CompletionService;
 
 import davideberdin.goofing.FeedbacksActivity;
 import davideberdin.goofing.R;
-import davideberdin.goofing.controllers.StressTuple;
 import davideberdin.goofing.controllers.User;
 import davideberdin.goofing.networking.GetCallback;
 import davideberdin.goofing.networking.ServerRequest;
@@ -26,8 +24,7 @@ import davideberdin.goofing.utilities.Debug;
 import davideberdin.goofing.utilities.UserLocalStore;
 
 
-public class TestPronunciationFragment extends Fragment implements View.OnClickListener
-{
+public class TestPronunciationFragment extends Fragment implements View.OnClickListener {
     //region VARIABLES
     private View testPronunciationView = null;
     private FloatingActionButton startButton = null;
@@ -41,7 +38,8 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
     private User loggedUser = null;
     //endregion
 
-    public TestPronunciationFragment() { }
+    public TestPronunciationFragment() {
+    }
 
     @Nullable
     @Override
@@ -71,17 +69,17 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
     }
 
     @Override
-    public void onStop(){
+    public void onStop() {
         super.onStop();
     }
 
     @Override
-    public void onPause(){
+    public void onPause() {
         super.onPause();
     }
 
@@ -89,14 +87,11 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
     public void onClick(View v) {
         ServerRequest recordingRequest = new ServerRequest(this.getActivity(), "Recording", "Say the sentence");
 
-        switch (v.getId())
-        {
+        switch (v.getId()) {
             case R.id.fabStartRecording:
-                recordingRequest.recordingAudioInBackground(testPronunciationView.getContext(), new GetCallback()
-                {
+                recordingRequest.recordingAudioInBackground(testPronunciationView.getContext(), new GetCallback() {
                     @Override
-                    public void done(Object... params)
-                    {
+                    public void done(Object... params) {
                         // obtained as result
                         byte[] fileAudioByte = (byte[]) params[0];      // TODO: put the audiofile here
                         String currentSentence = loggedUser.GetCurrentSentence();
@@ -109,12 +104,15 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
                                     ArrayList<String> phonemes = (ArrayList<String>) params[0];
                                     ArrayList<ArrayList<String>> vowelStress = (ArrayList<ArrayList<String>>) params[1];
 
-                                    byte[] pitch_chart_byte = (byte[]) params[2];
-                                    byte[] vowel_chart_byte = (byte[]) params[3];
+                                    String resultWER = (String) params[2];
+
+                                    byte[] pitch_chart_byte = (byte[]) params[3];
+                                    byte[] vowel_chart_byte = (byte[]) params[4];
 
                                     Intent intent = new Intent(getActivity(), FeedbacksActivity.class);
                                     intent.putExtra(Constants.GET_PHONEMES_POST, phonemes);
                                     intent.putExtra(Constants.GET_VOWELSTRESS_POST, vowelStress);
+                                    intent.putExtra(Constants.GET_WER_POST, resultWER);
                                     intent.putExtra(Constants.GET_PITCH_CHART_POST, pitch_chart_byte);
                                     intent.putExtra(Constants.GET_VOWEL_CHART_POST, vowel_chart_byte);
 
@@ -127,13 +125,18 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
                 break;
             case R.id.listenSentence:
                 // play audio
-                try {
-                    // TODO: mapping between R.raw.xxx to sentence
-                    int resID = getActivity().getResources().getIdentifier("test_audio", "raw", getActivity().getPackageName());
+                try
+                {
+                    String fileAudio = ((this.loggedUser.GetCurrentSentence()).toLowerCase()).replace(" ", "_");
+                    if (this.loggedUser.GetGender() == "Male")
+                        fileAudio = "m_" + fileAudio;
+                    else
+                        fileAudio = "f_" + fileAudio;
 
+                    int resID = getActivity().getResources().getIdentifier(fileAudio, "raw", getActivity().getPackageName());
                     MediaPlayer mediaPlayer = MediaPlayer.create(getActivity().getApplicationContext(), resID);
                     mediaPlayer.start();
-                } catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 break;

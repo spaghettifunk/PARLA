@@ -15,7 +15,9 @@ import java.util.ArrayList;
 
 import davideberdin.goofing.Listening;
 import davideberdin.goofing.R;
+import davideberdin.goofing.controllers.User;
 import davideberdin.goofing.utilities.Constants;
+import davideberdin.goofing.utilities.UserLocalStore;
 
 
 public class ListenUser extends Fragment
@@ -24,6 +26,9 @@ public class ListenUser extends Fragment
     private ListView userListView = null;
     private View previouslyUserSelectedItem = null;
 
+    private UserLocalStore userLocalStore = null;
+    private User loggedUser = null;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -31,6 +36,7 @@ public class ListenUser extends Fragment
         this.listenUserFragment = inflater.inflate(R.layout.fragment_listen_user, container, false);
 
         this.userListView = (ListView) this.listenUserFragment.findViewById(R.id.userListView);
+        this.userLocalStore = new UserLocalStore(this.getActivity());
 
         // Fill list view user sentences
         ArrayList<String> userSentences = fillUserList();
@@ -42,10 +48,13 @@ public class ListenUser extends Fragment
                 if (previouslyUserSelectedItem != null)
                     previouslyUserSelectedItem.setBackgroundColor(getResources().getColor(android.R.color.transparent));
 
-                view.setBackgroundColor(getResources().getColor(android.R.color.holo_orange_dark));
+                view.setBackgroundColor(getResources().getColor(android.R.color.holo_blue_dark));
                 previouslyUserSelectedItem = view;
-                Listening.selectedSentence = (String)parent.getItemAtPosition(position);
-                Listening.selectedPhonetic = Constants.nativePhonetics[position];
+
+                loggedUser = userLocalStore.getLoggedUser();
+                loggedUser.SetCurrentSentence((String)parent.getItemAtPosition(position));
+                loggedUser.SetCurrentPhonetic(Constants.nativePhonetics[position]);
+                userLocalStore.storeUserData(loggedUser);
             }
         });
 

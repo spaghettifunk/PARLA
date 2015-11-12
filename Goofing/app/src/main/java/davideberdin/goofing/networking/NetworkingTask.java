@@ -25,14 +25,12 @@ import java.util.Map;
 import javax.net.ssl.HttpsURLConnection;
 
 // My imports
-import davideberdin.goofing.controllers.SentenceTuple;
 import davideberdin.goofing.controllers.StressTuple;
 import davideberdin.goofing.controllers.User;
 import davideberdin.goofing.utilities.Constants;
 import davideberdin.goofing.utilities.Logger;
 
-public class NetworkingTask extends AsyncTask
-{
+public class NetworkingTask extends AsyncTask {
     private User user;
     private GetCallback userCallback;
     private ProgressDialog progressDialog;
@@ -59,13 +57,12 @@ public class NetworkingTask extends AsyncTask
         HashMap<String, String> postParams = new HashMap<>();
         try {
 
-            switch ((int)params[0])
-            {
+            switch ((int) params[0]) {
                 case Constants.NETWORKING_LOGIN_STATE:
 
                     this.currentNetworkingState = Constants.NETWORKING_LOGIN_STATE;
 
-                    User loggedUser = (User)params[1];
+                    User loggedUser = (User) params[1];
 
                     postParams.put("Username", loggedUser.GetUsername());
                     postParams.put("Password", loggedUser.GetPassword());
@@ -76,7 +73,7 @@ public class NetworkingTask extends AsyncTask
 
                     this.currentNetworkingState = Constants.NETWORKING_REGISTER_STATE;
 
-                    User registeredUser = (User)params[1];
+                    User registeredUser = (User) params[1];
 
                     postParams.put("Username", registeredUser.GetUsername());
                     postParams.put("Password", registeredUser.GetPassword());
@@ -91,9 +88,9 @@ public class NetworkingTask extends AsyncTask
                     this.currentNetworkingState = Constants.NETWORKING_HANDLE_RECORDED_VOICE;
 
                     // Treat wav file to send to server
-                    User currentUser = (User)params[1];
-                    byte[] fileAudio = (byte[])params[2];
-                    String currentSentence = (String)params[3];
+                    User currentUser = (User) params[1];
+                    byte[] fileAudio = (byte[]) params[2];
+                    String currentSentence = (String) params[3];
 
                     //String decoded = new String(fileAudio, "UTF-8");
                     String audioFileAsString = Base64.encodeToString(fileAudio, Base64.DEFAULT);
@@ -125,22 +122,19 @@ public class NetworkingTask extends AsyncTask
             assert result != null;
             if (!(result instanceof String)) throw new AssertionError();
 
-            JSONObject jsonObject = new JSONObject((String)result);
+            JSONObject jsonObject = new JSONObject((String) result);
 
             String response = "";
             response = jsonObject.getString("Response");
 
-            if (response.equals(Constants.FAILED_POST) || response.isEmpty()){
+            if (response.equals(Constants.FAILED_POST) || response.isEmpty()) {
                 this.userCallback.done(jsonObject);
-            }
-            else
-            {
+            } else {
                 assert response.equals(Constants.SUCCESS_POST);
 
                 HashMap<String, Object> responseObject = (HashMap<String, Object>) jsonToMap(jsonObject);
 
-                switch (this.currentNetworkingState)
-                {
+                switch (this.currentNetworkingState) {
                     case Constants.NETWORKING_LOGIN_STATE:
                         //region LOGIN
                         Logger.Log(Constants.CONNECTION_ACTIVITY, Constants.LOGIN_ACTIVITY);
@@ -157,7 +151,7 @@ public class NetworkingTask extends AsyncTask
 
                         this.userCallback.done(loggedUser);
                         break;
-                        //endregion
+                    //endregion
 
                     case Constants.NETWORKING_REGISTER_STATE:
                         //region REGISTER
@@ -168,7 +162,7 @@ public class NetworkingTask extends AsyncTask
 
                         this.userCallback.done(sentenceReg, phoneticReg);
                         break;
-                        //endregion
+                    //endregion
 
                     case Constants.NETWORKING_HANDLE_RECORDED_VOICE:
                         //region CLASSIFICATION
@@ -179,9 +173,11 @@ public class NetworkingTask extends AsyncTask
                         ArrayList<ArrayList<String>> vowelStressObject = (ArrayList<ArrayList<String>>) responseObject.get(Constants.GET_VOWELSTRESS_POST);
 
                         ArrayList<StressTuple> vowelStress = new ArrayList<StressTuple>();
-                        for (ArrayList<String> vs : vowelStressObject){
+                        for (ArrayList<String> vs : vowelStressObject) {
                             vowelStress.add(new StressTuple(vs.get(0), vs.get(1)));
                         }
+
+                        String resultWER = (String) responseObject.get(Constants.GET_WER_POST);
 
                         String pitchChart = (String) responseObject.get(Constants.GET_PITCH_CHART_POST);
                         byte[] pitchChartByte = Base64.decode(pitchChart, Base64.DEFAULT);
@@ -189,9 +185,9 @@ public class NetworkingTask extends AsyncTask
                         String vowelChart = (String) responseObject.get(Constants.GET_VOWEL_CHART_POST);
                         byte[] vowelChartByte = Base64.decode(vowelChart, Base64.DEFAULT);
 
-                        userCallback.done(phonemes, vowelStress, pitchChartByte, vowelChartByte);
+                        userCallback.done(phonemes, vowelStress, resultWER, pitchChartByte, vowelChartByte);
                         break;
-                        //endregion
+                    //endregion
 
                     default:
                         Logger.Log(Constants.CONNECTION_ACTIVITY, Constants.GENERAL_ERROR_RESPONSE);
@@ -200,7 +196,7 @@ public class NetworkingTask extends AsyncTask
             }
         } catch (JSONException e) {
             e.printStackTrace();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -209,8 +205,7 @@ public class NetworkingTask extends AsyncTask
         URL url;
         String response = "";
 
-        try
-        {
+        try {
             url = new URL(requestURL);
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -229,16 +224,14 @@ public class NetworkingTask extends AsyncTask
             os.close();
             int responseCode = conn.getResponseCode();
 
-            if (responseCode == HttpsURLConnection.HTTP_OK)
-            {
+            if (responseCode == HttpsURLConnection.HTTP_OK) {
                 String line;
                 BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                while ((line=br.readLine()) != null) {
-                    response+=line;
+                while ((line = br.readLine()) != null) {
+                    response += line;
                 }
-            }
-            else {
-                response="FAILED";
+            } else {
+                response = "FAILED";
             }
         } catch (Exception e) {
             Logger.Log(Constants.CONNECTION_ACTIVITY, e.getMessage());
@@ -249,8 +242,7 @@ public class NetworkingTask extends AsyncTask
 
     private String getPostDataString(HashMap<String, String> params) {
         JSONObject obj = new JSONObject();
-        for(Map.Entry<String, String> entry : params.entrySet())
-        {
+        for (Map.Entry<String, String> entry : params.entrySet()) {
             try {
                 obj.put(entry.getKey(), entry.getValue());
             } catch (JSONException e) {
@@ -277,7 +269,7 @@ public class NetworkingTask extends AsyncTask
     public static Map<String, Object> jsonToMap(JSONObject json) throws JSONException {
         Map<String, Object> retMap = new HashMap<String, Object>();
 
-        if(json != JSONObject.NULL) {
+        if (json != JSONObject.NULL) {
             retMap = toMap(json);
         }
         return retMap;
@@ -287,15 +279,13 @@ public class NetworkingTask extends AsyncTask
         Map<String, Object> map = new HashMap<String, Object>();
 
         Iterator<String> keysItr = object.keys();
-        while(keysItr.hasNext()) {
+        while (keysItr.hasNext()) {
             String key = keysItr.next();
             Object value = object.get(key);
 
-            if(value instanceof JSONArray) {
+            if (value instanceof JSONArray) {
                 value = toList((JSONArray) value);
-            }
-
-            else if(value instanceof JSONObject) {
+            } else if (value instanceof JSONObject) {
                 value = toMap((JSONObject) value);
             }
             map.put(key, value);
@@ -305,13 +295,11 @@ public class NetworkingTask extends AsyncTask
 
     public static List<Object> toList(JSONArray array) throws JSONException {
         List<Object> list = new ArrayList<Object>();
-        for(int i = 0; i < array.length(); i++) {
+        for (int i = 0; i < array.length(); i++) {
             Object value = array.get(i);
-            if(value instanceof JSONArray) {
+            if (value instanceof JSONArray) {
                 value = toList((JSONArray) value);
-            }
-
-            else if(value instanceof JSONObject) {
+            } else if (value instanceof JSONObject) {
                 value = toMap((JSONObject) value);
             }
             list.add(value);

@@ -31,6 +31,7 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
     //region VARIABLES
     private ArrayList<String> phonemes;
     private ArrayList<StressTuple> vowelStress;
+    private String resultWER;
     private byte[] pitchChartByte;
     private byte[] vowelChartByte;
 
@@ -39,6 +40,7 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
 
     private AutoResizeTextView userFeedbacks;
     private AutoResizeTextView userFeedbacksSentence;
+    private AutoResizeTextView resultWERFeedbacks;
 
     private ImageView pitchChart;
     private ImageView vowelChart;
@@ -60,6 +62,7 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
 
         Bundle b = getIntent().getExtras();
 
+        this.resultWER = b.getString(Constants.GET_WER_POST);
         this.phonemes = b.getStringArrayList(Constants.GET_PHONEMES_POST);
         this.vowelStress = b.getParcelableArrayList(Constants.GET_VOWELSTRESS_POST);
         this.pitchChartByte = b.getByteArray(Constants.GET_PITCH_CHART_POST);
@@ -86,6 +89,10 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
 
         this.userFeedbacksSentence = (AutoResizeTextView) findViewById(R.id.feedbacksUserSentence);
         this.userFeedbacksSentence.setMaxLines(1);
+
+        this.resultWERFeedbacks = (AutoResizeTextView) findViewById(R.id.infoWERTextView);
+        this.resultWERFeedbacks.setMaxLines(1);
+        this.resultWERFeedbacks.setText(this.resultWER);
 
         // color strings
         fillNativeFeedbacks();
@@ -126,7 +133,8 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
 
             case R.id.infoImageButton:
 
-                AppWindowManager.showInfoDialog(this, Constants.DIALOG_INFO_FEEDBACKS_TITLE, Constants.DIALOG_INFO_FEEDBACKS_MESSAGE);
+                AppWindowManager.showInfoFeedbacksDialog(this, Constants.DIALOG_INFO_FEEDBACKS_TITLE);
+                // AppWindowManager.showInfoDialog(this, Constants.DIALOG_INFO_FEEDBACKS_TITLE, Constants.DIALOG_INFO_FEEDBACKS_MESSAGE);
 
                 break;
             default:
