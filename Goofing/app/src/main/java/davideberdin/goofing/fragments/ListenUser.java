@@ -2,9 +2,9 @@ package davideberdin.goofing.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -13,7 +13,6 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-import davideberdin.goofing.Listening;
 import davideberdin.goofing.R;
 import davideberdin.goofing.controllers.User;
 import davideberdin.goofing.utilities.Constants;
@@ -40,7 +39,7 @@ public class ListenUser extends Fragment
 
         // Fill list view user sentences
         ArrayList<String> userSentences = fillUserList();
-        ArrayAdapter userAdapter = new ArrayAdapter(this.listenUserFragment.getContext(), android.R.layout.simple_list_item_1, userSentences);
+        ArrayAdapter<String> userAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, userSentences);
         this.userListView.setAdapter(userAdapter);
         this.userListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -52,7 +51,7 @@ public class ListenUser extends Fragment
                 previouslyUserSelectedItem = view;
 
                 loggedUser = userLocalStore.getLoggedUser();
-                loggedUser.SetCurrentSentence((String)parent.getItemAtPosition(position));
+                loggedUser.SetCurrentSentence((String) parent.getItemAtPosition(position));
                 loggedUser.SetCurrentPhonetic(Constants.nativePhonetics[position]);
                 userLocalStore.storeUserData(loggedUser);
             }

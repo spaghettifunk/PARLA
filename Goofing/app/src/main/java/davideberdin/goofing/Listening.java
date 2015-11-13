@@ -1,9 +1,10 @@
 package davideberdin.goofing;
 
 import android.content.Intent;
+import android.view.View.OnClickListener;
 import android.media.MediaPlayer;
 import android.support.design.widget.TabLayout;
-import android.support.design.widget.FloatingActionButton;
+
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -15,13 +16,17 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 import davideberdin.goofing.controllers.User;
 import davideberdin.goofing.fragments.ListenNative;
 import davideberdin.goofing.fragments.ListenUser;
+import davideberdin.goofing.libraries.FloatingActionButton;
+import davideberdin.goofing.libraries.FloatingActionsMenu;
 import davideberdin.goofing.utilities.UserLocalStore;
 
-public class Listening extends AppCompatActivity implements View.OnClickListener {
+public class Listening extends AppCompatActivity {
 
     private UserLocalStore userLocalStore = null;
     private User loggedUser = null;
@@ -37,6 +42,12 @@ public class Listening extends AppCompatActivity implements View.OnClickListener
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // need to change the color - android bug
+        Window window = this.getWindow();
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(this.getResources().getColor(R.color.colorPrimaryDark));
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -48,11 +59,44 @@ public class Listening extends AppCompatActivity implements View.OnClickListener
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-        FloatingActionButton fabListening = (FloatingActionButton) findViewById(R.id.fabListening);
-        fabListening.setOnClickListener(this);
+        FloatingActionButton fabListening = new FloatingActionButton(getBaseContext());
+        fabListening.setImageResource(android.R.drawable.ic_lock_silent_mode_off);
+        fabListening.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // play audio
+                try {
+                    userLocalStore = new UserLocalStore(v.getContext());
+                    loggedUser = userLocalStore.getLoggedUser();
 
-        FloatingActionButton fabTest = (FloatingActionButton) findViewById(R.id.fabTestPronunciation);
-        fabTest.setOnClickListener(this);
+                    String fileAudio = ((loggedUser.GetCurrentSentence()).toLowerCase()).replace(" ", "_");
+                    if (loggedUser.GetGender().equals("Male"))
+                        fileAudio = "m_" + fileAudio;
+                    else
+                        fileAudio = "f_" + fileAudio;
+
+                    int resID = getResources().getIdentifier(fileAudio, "raw", getPackageName());
+                    MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), resID);
+                    mediaPlayer.start();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        FloatingActionButton fabTest = new FloatingActionButton(getBaseContext());
+        fabTest.setImageResource(android.R.drawable.ic_btn_speak_now);
+        fabTest.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Listening.this, MenuActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        final FloatingActionsMenu menuMultipleActions = (FloatingActionsMenu) findViewById(R.id.fabMenu);
+        menuMultipleActions.addButton(fabListening);
+        menuMultipleActions.addButton(fabTest);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -78,37 +122,6 @@ public class Listening extends AppCompatActivity implements View.OnClickListener
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.fabListening:
-                // play audio
-                try {
-                    this.userLocalStore = new UserLocalStore(this);
-                    this.loggedUser = this.userLocalStore.getLoggedUser();
-
-                    String fileAudio = ((this.loggedUser.GetCurrentSentence()).toLowerCase()).replace(" ", "_");
-                    if (this.loggedUser.GetGender().equals("Male"))
-                        fileAudio = "m_" + fileAudio;
-                    else
-                        fileAudio = "f_" + fileAudio;
-
-                    int resID = this.getResources().getIdentifier(fileAudio, "raw", this.getPackageName());
-                    MediaPlayer mediaPlayer = MediaPlayer.create(this.getApplicationContext(), resID);
-                    mediaPlayer.start();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                break;
-            case R.id.fabTestPronunciation:
-
-                Intent intent = new Intent(this, MenuActivity.class);
-                startActivity(intent);
-
-                break;
         }
     }
 

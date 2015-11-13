@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -11,9 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import davideberdin.goofing.Listening;
 import davideberdin.goofing.R;
 import davideberdin.goofing.controllers.User;
 import davideberdin.goofing.utilities.Constants;
@@ -39,12 +38,11 @@ public class ListenNative extends Fragment
 
         // Fill list view native sentences
         ArrayList<String> nativeSentences = fillNativeList();
-        ArrayAdapter nativeAdapter = new ArrayAdapter(this.listenNativeFragment.getContext(), android.R.layout.simple_list_item_1 , nativeSentences);
+        ArrayAdapter<String> nativeAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1 , nativeSentences);
         this.nativeListView.setAdapter(nativeAdapter);
         this.nativeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-            {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (previouslyNativeSelectedItem != null)
                     previouslyNativeSelectedItem.setBackgroundColor(getResources().getColor(android.R.color.transparent));
 
