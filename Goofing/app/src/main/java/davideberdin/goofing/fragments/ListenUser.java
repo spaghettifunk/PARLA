@@ -19,8 +19,7 @@ import davideberdin.goofing.utilities.Constants;
 import davideberdin.goofing.utilities.UserLocalStore;
 
 
-public class ListenUser extends Fragment
-{
+public class ListenUser extends Fragment {
     private View listenUserFragment;
     private ListView userListView = null;
     private View previouslyUserSelectedItem = null;
@@ -30,8 +29,7 @@ public class ListenUser extends Fragment
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.listenUserFragment = inflater.inflate(R.layout.fragment_listen_user, container, false);
 
         this.userListView = (ListView) this.listenUserFragment.findViewById(R.id.userListView);
@@ -60,8 +58,7 @@ public class ListenUser extends Fragment
         return this.listenUserFragment;
     }
 
-    private ArrayList<String> fillUserList()
-    {
+    private ArrayList<String> fillUserList() {
         final ArrayList<String> list = new ArrayList<String>();
         for (int i = 0; i < Constants.userSentences.length; ++i) {
             list.add(Constants.nativeSentences[i]);

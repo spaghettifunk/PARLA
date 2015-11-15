@@ -96,30 +96,29 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
                         byte[] fileAudioByte = (byte[]) params[0];      // TODO: put the audiofile here
                         String currentSentence = loggedUser.GetCurrentSentence();
 
-                        if (Debug.debugging == false) {
-                            ServerRequest request = new ServerRequest(getActivity(), "Analyzing audio", "Please wait...");
-                            request.sendRecordedAudioToServer(loggedUser, fileAudioByte, currentSentence, new GetCallback() {
-                                @Override
-                                public void done(Object... params) {
-                                    ArrayList<String> phonemes = (ArrayList<String>) params[0];
-                                    ArrayList<ArrayList<String>> vowelStress = (ArrayList<ArrayList<String>>) params[1];
+                        ServerRequest request = new ServerRequest(getActivity(), "Analyzing audio", "Please wait...");
+                        request.sendRecordedAudioToServer(loggedUser, fileAudioByte, currentSentence, new GetCallback() {
+                            @Override
+                            public void done(Object... params) {
+                                ArrayList<String> phonemes = (ArrayList<String>) params[0];
+                                ArrayList<ArrayList<String>> vowelStress = (ArrayList<ArrayList<String>>) params[1];
 
-                                    String resultWER = (String) params[2];
+                                String resultWER = (String) params[2];
 
-                                    byte[] pitch_chart_byte = (byte[]) params[3];
-                                    byte[] vowel_chart_byte = (byte[]) params[4];
+                                byte[] pitch_chart_byte = (byte[]) params[3];
+                                byte[] vowel_chart_byte = (byte[]) params[4];
 
-                                    Intent intent = new Intent(getActivity(), FeedbacksActivity.class);
-                                    intent.putExtra(Constants.GET_PHONEMES_POST, phonemes);
-                                    intent.putExtra(Constants.GET_VOWELSTRESS_POST, vowelStress);
-                                    intent.putExtra(Constants.GET_WER_POST, resultWER);
-                                    intent.putExtra(Constants.GET_PITCH_CHART_POST, pitch_chart_byte);
-                                    intent.putExtra(Constants.GET_VOWEL_CHART_POST, vowel_chart_byte);
+                                Intent intent = new Intent(getActivity(), FeedbacksActivity.class);
+                                intent.putExtra(Constants.GET_PHONEMES_POST, phonemes);
+                                intent.putExtra(Constants.GET_VOWELSTRESS_POST, vowelStress);
+                                intent.putExtra(Constants.GET_WER_POST, resultWER);
+                                intent.putExtra(Constants.GET_PITCH_CHART_POST, pitch_chart_byte);
+                                intent.putExtra(Constants.GET_VOWEL_CHART_POST, vowel_chart_byte);
 
-                                    startActivity(intent);
-                                }
-                            });
-                        }
+                                startActivity(intent);
+                            }
+                        });
+
                     }
                 });
                 break;

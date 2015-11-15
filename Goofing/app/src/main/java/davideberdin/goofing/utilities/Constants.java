@@ -11,8 +11,7 @@ import java.util.HashMap;
 import davideberdin.goofing.controllers.SentenceTuple;
 import davideberdin.goofing.controllers.StressTuple;
 
-public class Constants
-{
+public class Constants {
     // Activities Name
     public static final String LOGIN_ACTIVITY = "LoginActivity";
     public static final String CONNECTION_ACTIVITY = "ConnectionActivity";
@@ -23,7 +22,7 @@ public class Constants
     public static final String PHONE_SEARCH = "phones";
 
     // Network stuff
-    public static final String SERVER_URL = "http://10.0.2.2:8000/goofy/";
+    public static final String SERVER_URL = "http://192.168.1.137:8000/goofy/";
     public static final String LOGIN_URL = "login/";
     public static final String REGISTRATION_URL = "register/";
     public static final String HANDLE_RECORDING_URL = "pronunciation/";
@@ -60,49 +59,49 @@ public class Constants
     // sentences - KEEP THE SAME ORDER
     public static HashMap<String, SentenceTuple<String, String, ArrayList<StressTuple>>> nativeSentenceInfo = new HashMap<>();
 
-    public static String[] nativeSentences = { "A piece of cake", "Blow a fuse", "Catch some zs", "Down to the wire",
-                                               "Eager beaver", "Fair and square", "Get cold feet", "Mellow out",
-                                               "Pulling your legs", "Thinking out loud"};
+    public static String[] nativeSentences = {"A piece of cake", "Blow a fuse", "Catch some zs", "Down to the wire",
+            "Eager beaver", "Fair and square", "Get cold feet", "Mellow out",
+            "Pulling your legs", "Thinking out loud"};
 
-    public static String[] nativePhonetics = { "ɐ pˈiːs ʌv kˈeɪk", "blˈoʊ ɐ fjˈuːz", "kˈætʃ sˌʌm zˌiːˈɛs",
-                                               "dˌaʊn tə ðə wˈaɪɚ", "ˈiːɡɚ bˈiːvɚ", "fˈɛɹ ænd skwˈɛɹ",
-                                               "ɡɛt kˈoʊld fˈiːt", "mˈɛloʊ ˈaʊt", "pˈʊlɪŋ jʊɹ lˈɛɡz", "θˈɪŋkɪŋ ˈaʊt lˈaʊd"};
+    public static String[] nativePhonetics = {"ɐ pˈiːs ʌv kˈeɪk", "blˈoʊ ɐ fjˈuːz", "kˈætʃ sˌʌm zˌiːˈɛs",
+            "dˌaʊn tə ðə wˈaɪɚ", "ˈiːɡɚ bˈiːvɚ", "fˈɛɹ ænd skwˈɛɹ",
+            "ɡɛt kˈoʊld fˈiːt", "mˈɛloʊ ˈaʊt", "pˈʊlɪŋ jʊɹ lˈɛɡz", "θˈɪŋkɪŋ ˈaʊt lˈaʊd"};
 
-    public static String[] nativePhonemes = { "AH PIYS AHV KEYK",
-                                              "BLOW AH FYUWZ",
-                                              "KAECH SAHM ZIYZ",
-                                              "DAWN TAH DHAH WAYER",
-                                              "IYGER BIYVER",
-                                              "FEHR AHND SKWEHR",
-                                              "GEHT KOWLD FIYT",
-                                              "MEHLOW AWT",
-                                              "PUHLIHNG YUHR LEHGZ",
-                                              "THIHNGKAHNG AWT LAWD"};
+    public static String[] nativePhonemes = {"AH PIYS AHV KEYK",
+            "BLOW AH FYUWZ",
+            "KAECH SAHM ZIYZ",
+            "DAWN TAH DHAH WAYER",
+            "IYGER BIYVER",
+            "FEHR AHND SKWEHR",
+            "GEHT KOWLD FIYT",
+            "MEHLOW AWT",
+            "PUHLIHNG YUHR LEHGZ",
+            "THIHNGKAHNG AWT LAWD"};
 
-    public static String[] nativeStressPhonemes = { "AH, IY, AH, EY",
-                                                    "OW, AH, UW",
-                                                    "AE, AH, IY",
-                                                    "AH, AH, AY, ER",
-                                                    "IY, ER, IY, ER",
-                                                    "EH, AH, EH",
-                                                    "EH, OW, IY",
-                                                    "EH, OW, AW",
-                                                    "UH, IH, UH, EH",
-                                                    "IH, AH, AW, AW"};
+    public static String[] nativeStressPhonemes = {"AH, IY, AH, EY",
+            "OW, AH, UW",
+            "AE, AH, IY",
+            "AH, AH, AY, ER",
+            "IY, ER, IY, ER",
+            "EH, AH, EH",
+            "EH, OW, IY",
+            "EH, OW, AW",
+            "UH, IH, UH, EH",
+            "IH, AH, AW, AW"};
 
-    public static String[] nativeStressPosition = { "0, 1, 0, 1",
-                                                    "1, 0, 1",
-                                                    "1, 1, 0",
-                                                    "0, 0, 1, 0",
-                                                    "1, 0, 1, 0",
-                                                    "1, 0, 1",
-                                                    "1, 1, 1",
-                                                    "1, 0, 1",
-                                                    "1, 0, 1, 1",
-                                                    "1, 0, 1, 1"};
+    public static String[] nativeStressPosition = {"0, 1, 0, 1",
+            "1, 0, 1",
+            "1, 1, 0",
+            "0, 0, 1, 0",
+            "1, 0, 1, 0",
+            "1, 0, 1",
+            "1, 1, 1",
+            "1, 0, 1",
+            "1, 0, 1, 1",
+            "1, 0, 1, 1"};
 
     // just for testing
-    public static String[] userSentences = { "A piece of cake", "Blow a fuse" };
+    public static String[] userSentences = {"A piece of cake", "Blow a fuse"};
 
     public static String getColoredSpanned(String text, int color) {
         String hexColor = "#" + Integer.toHexString(color).substring(2);
