@@ -2,8 +2,12 @@ package davideberdin.goofing.networking;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.IBinder;
+import android.support.annotation.Nullable;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -13,10 +17,12 @@ import java.util.UUID;
 
 import davideberdin.goofing.R;
 import davideberdin.goofing.controllers.User;
+import davideberdin.goofing.fragments.TestPronunciationFragment;
 import davideberdin.goofing.utilities.Constants;
 import davideberdin.goofing.utilities.Debug;
 import davideberdin.goofing.utilities.Logger;
 import davideberdin.goofing.utilities.Recording;
+import edu.cmu.pocketsphinx.Decoder;
 
 public class ServerRequest
 {
@@ -50,6 +56,13 @@ public class ServerRequest
         }
     }
 
+    public ServerRequest() { }
+
+    public void dismissProgress(){
+        progressDialog.cancel();    // GRAZIE DI ESISTERE!!!!!!!!
+        progressDialog.dismiss();
+    }
+
     public void fetchUserDataInBackgroud(User user, GetCallback callback) {
         this.progressDialog.show();
         NetworkingTask networkingTask = new NetworkingTask(user, callback, progressDialog);
@@ -63,10 +76,10 @@ public class ServerRequest
     }
 
     @SuppressWarnings("deprecation")
-    public void recordingAudioInBackground(final Context context, final GetCallback callback)
-    {
+    public void recordingAudioInBackground(final Context context, final GetCallback callback) {
         final String audioFilename = "recorded_" + UUID.randomUUID().toString();
         if (Debug.debugging) {
+            TestPronunciationFragment.recognizer.startListening(Constants.PHONE_SEARCH, 10000);
             Recording.startRecording(context, audioFilename);
         }
 
@@ -77,6 +90,7 @@ public class ServerRequest
                     InputStream inStream;
                     if (Debug.debugging) {
                         Recording.stopRecording();
+                        TestPronunciationFragment.recognizer.stop();
                         inStream = context.openFileInput(audioFilename);
                     } else {
                         inStream = context.getResources().openRawResource(R.raw.test_audio);
@@ -94,8 +108,7 @@ public class ServerRequest
 
                     byte[] recordedAudio = out.toByteArray();
 
-                    progressDialog.cancel();    // GRAZIE DI ESISTERE!!!!!!!!
-                    progressDialog.dismiss();
+                    dismissProgress();
 
                     callback.done(recordedAudio);
                 } catch (Exception e) {

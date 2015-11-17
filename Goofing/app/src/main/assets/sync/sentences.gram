@@ -1,0 +1,4 @@
+#JSGF V1.0;
+
+grammar sentences;
+public <sentence> = a piece of cake | blow a fuse | down to the wire | catch some zs | eager beaver | fair and square | get cold feet | mellow out | pulling your legs | thinking out loud;
