@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import davideberdin.goofing.controllers.SentenceTuple;
-import davideberdin.goofing.controllers.StressTuple;
+import davideberdin.goofing.controllers.Tuple;
 
 public class Constants {
     // Activities Name
@@ -43,7 +43,7 @@ public class Constants {
     public static final String TOAST_ERROR_LOGIN_ERROR = "Authentication failed";
     public static final String GENERAL_ERROR_REQUEST = "Unknown behaviour during REQUEST";
     public static final String GENERAL_ERROR_RESPONSE = "Unknown behaviour during RESPONSE";
-    public static final String DIALOG_INFO_FEEDBACKS_TITLE = "Info Feedbacks";
+    public static final String DIALOG_INFO_FEEDBACKS_TITLE = "Meaning";
     public static final String ERROR_WRONG_WORDS = "You haven't spelled the sentence correctly, try again...";
 
     // Username json keys
@@ -54,7 +54,7 @@ public class Constants {
     public static final String GET_OCCUPATION_POST = "Occupation";
 
     // sentences - KEEP THE SAME ORDER
-    public static HashMap<String, SentenceTuple<String, String, ArrayList<StressTuple>>> nativeSentenceInfo = new HashMap<>();
+    public static HashMap<String, SentenceTuple<String, String, ArrayList<Tuple>>> nativeSentenceInfo = new HashMap<>();
 
     public static String[] nativeSentences = {"A piece of cake", "Blow a fuse", "Catch some zs", "Down to the wire",
             "Eager beaver", "Fair and square", "Get cold feet", "Mellow out",
@@ -97,6 +97,30 @@ public class Constants {
             "1, 0, 1, 1",
             "1, 0, 1, 1"};
 
+    public static HashMap<String, Tuple> meaningExampleMap = new HashMap<>();
+
+    public static String[] sentenceMeaning = {"To refer to something as a piece of cake means that you consider it to be very easy.",
+            "If you blow a fuse, you suddenly lose your temper and become very angry.",
+            "The idiom catch some Z's means to sleep. \"Zzzz\" is the sound that a person makes when they sleep, so when you catch some Z's, you are sleeping.",
+            "If something such as project or a match goes down to the wire, the situation can change up until the last possible moment.",
+            "The term eager beaver refers to a person who is hardworking and enthusiastic, sometimes considered overzealous.",
+            "If something is obtained or won fair and square, it is done in an honest and open manner, the rules are respected and there is no cheating or lying.",
+            "If you get cold feet about something, you begin to hesitate about doing it; you are no longer sure whether you want to do it or not.",
+            "To become more relaxed and calm, or to make someone more relaxed and calm",
+            "If you pull somebody's leg, you tease them by telling them something that is not true.",
+            "To say your thoughts aloud"};
+
+    public static String[] sentencesExample = {"The English test was a piece of cake!",
+            "Charlie blew a fuse yesterday then he discovered that his ipod had been stolen.",
+            "I've been working hard today. I need to catch some Z's.",
+            "There's nothing as exciting as watching a game that goes down to the wire.",
+            "The new accountant works all the time - first to arrive and last to leave. He's a real eager beaver!",
+            "Gavin won the competition fair and square - there was no doubt about the result.",
+            "I wanted to enter the competition but at the last minute I got cold feet.",
+            "He needs to mellow out a little.",
+            "Of course I'm not going to buy a sports car. I was just pulling your leg!",
+            "I'm thinking out loud now, but it looks as if I can meet you Tuesday."};
+
     // just for testing
     public static String[] userSentences = {"A piece of cake", "Blow a fuse"};
 
@@ -104,5 +128,13 @@ public class Constants {
         String hexColor = "#" + Integer.toHexString(color).substring(2);
         String input = "<font color=" + hexColor + ">" + text + "</font>";
         return input;
+    }
+
+    public static void createMeaningExampleDictionary(){
+        int index = 0;
+        for (String sentence : nativeSentences){
+            meaningExampleMap.put(sentence, new Tuple(sentenceMeaning[index], sentencesExample[index]));
+            index++;
+        }
     }
 }

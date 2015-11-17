@@ -18,16 +18,21 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/infoPronunciationTextView"
+                android:text="@string/infoMeaningTextView"
                 android:textAlignment="center"
                 android:textStyle="bold"
-                android:textColor="#ff0000" />
+                android:textColor="#ff0000"
+                android:id="@+id/infoMeaningTitle" />
+
+            <Space
+                android:layout_width="fill_parent"
+                android:layout_height="10dp" />
 
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation"
-                android:id="@+id/explanationPronunciation" />
+                android:text=""
+                android:id="@+id/infoMeaningTextView" />
 
             <Space
                 android:layout_width="fill_parent"
@@ -36,61 +41,29 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/infoStressFeedbacksTextView"
-                android:autoText="false"
+                android:text="@string/infoExampleTextView"
                 android:textAlignment="center"
                 android:textStyle="bold"
-                android:textColor="#ff0000" />
+                android:textColor="#ff0000"
+                android:id="@+id/infoExampleTitle" />
+
+            <Space
+                android:layout_width="fill_parent"
+                android:layout_height="10dp" />
 
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation"
-                android:id="@+id/explanationStress" />
+                android:text=""
+                android:id="@+id/infoExampleTextView" />
 
             <Space
                 android:layout_width="fill_parent"
                 android:layout_height="30dp" />
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/infoPitchFeedbacksTextView"
-                android:textAlignment="center"
-                android:textStyle="bold"
-                android:textColor="#ff0000" />
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation"
-                android:id="@+id/explanationPitch" />
-
-            <Space
-                android:layout_width="fill_parent"
-                android:layout_height="30dp" />
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/infoPredictionFeedbacksTextView"
-                android:textAlignment="center"
-                android:textStyle="bold"
-                android:textColor="#ff0000" />
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation"
-                android:id="@+id/explanationPrediction" />
-
-            <Space
-                android:layout_width="fill_parent"
-                android:layout_height="20dp" />
 
             <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="77dp"
+                android:layout_height="28dp"
                 android:text="@string/okText"
                 android:id="@+id/infoOKButton"
                 android:layout_gravity="right"

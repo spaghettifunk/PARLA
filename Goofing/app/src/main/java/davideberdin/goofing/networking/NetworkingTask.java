@@ -25,7 +25,7 @@ import java.util.Map;
 import javax.net.ssl.HttpsURLConnection;
 
 // My imports
-import davideberdin.goofing.controllers.StressTuple;
+import davideberdin.goofing.controllers.Tuple;
 import davideberdin.goofing.controllers.User;
 import davideberdin.goofing.utilities.Constants;
 import davideberdin.goofing.utilities.Logger;
@@ -172,9 +172,9 @@ public class NetworkingTask extends AsyncTask {
                         ArrayList<String> phonemes = (ArrayList<String>) responseObject.get(Constants.GET_PHONEMES_POST);
                         ArrayList<ArrayList<String>> vowelStressObject = (ArrayList<ArrayList<String>>) responseObject.get(Constants.GET_VOWELSTRESS_POST);
 
-                        ArrayList<StressTuple> vowelStress = new ArrayList<StressTuple>();
+                        ArrayList<Tuple> vowelStress = new ArrayList<Tuple>();
                         for (ArrayList<String> vs : vowelStressObject) {
-                            vowelStress.add(new StressTuple(vs.get(0), vs.get(1)));
+                            vowelStress.add(new Tuple(vs.get(0), vs.get(1)));
                         }
 
                         String resultWER = (String) responseObject.get(Constants.GET_WER_POST);

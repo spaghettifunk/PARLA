@@ -25,8 +25,7 @@ import davideberdin.goofing.utilities.UserLocalStore;
 
 import edu.cmu.pocketsphinx.SpeechRecognizer;
 
-public class TestPronunciationFragment extends Fragment implements View.OnClickListener
-{
+public class TestPronunciationFragment extends Fragment implements View.OnClickListener {
     //region VARIABLES
     public static SpeechRecognizer recognizer;
     public static String recognizedPhonemes = "";
@@ -45,7 +44,8 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
     private User loggedUser = null;
     //endregion
 
-    public TestPronunciationFragment() { }
+    public TestPronunciationFragment() {
+    }
 
     @Nullable
     @Override
@@ -72,7 +72,7 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
         this.tvPhonemes.setText("/ " + phonetic + " /");
 
         // TODO: need lot of testing because of the events
-        if(recognizer == null) {
+        if (recognizer == null) {
             this.recognitionTask = new RecognitionTask(getActivity(), this.loggedUser);
             this.recognitionTask.execute();
         }
@@ -84,7 +84,7 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
     @Override
     public void onResume() {
         super.onResume();
-        if(recognizer != null) {
+        if (recognizer != null) {
             recognizer.cancel();
             recognizer.shutdown();
         }
@@ -93,7 +93,7 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
     @Override
     public void onStop() {
         super.onStop();
-        if(recognizer != null) {
+        if (recognizer != null) {
             recognizer.cancel();
             recognizer.shutdown();
         }
@@ -102,7 +102,7 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
     @Override
     public void onPause() {
         super.onPause();
-        if(recognizer != null) {
+        if (recognizer != null) {
             recognizer.cancel();
             recognizer.shutdown();
         }
@@ -111,7 +111,7 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(recognizer != null) {
+        if (recognizer != null) {
             recognizer.cancel();
             recognizer.shutdown();
         }
@@ -162,8 +162,7 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
                 break;
             case R.id.listenSentence:
                 // play audio
-                try
-                {
+                try {
                     String fileAudio = ((this.loggedUser.GetCurrentSentence()).toLowerCase()).replace(" ", "_");
                     if (this.loggedUser.GetGender() == "Male")
                         fileAudio = "m_" + fileAudio;

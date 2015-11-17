@@ -19,26 +19,28 @@ import java.util.Arrays;
 import java.util.List;
 
 import davideberdin.goofing.controllers.SentenceTuple;
-import davideberdin.goofing.controllers.StressTuple;
+import davideberdin.goofing.controllers.Tuple;
 import davideberdin.goofing.fragments.NewWordsFragment;
 import davideberdin.goofing.fragments.TestPronunciationFragment;
 import davideberdin.goofing.utilities.Constants;
 import davideberdin.goofing.utilities.UserLocalStore;
 
-public class MenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
-{
+public class MenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public static FragmentManager fragmentManager;
     private UserLocalStore userLocalStore = null;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
         // Init structs
         if (Constants.nativeSentenceInfo.isEmpty())
             fillSentencesMap();
+
+        // fill dictionary sentence-meaning-example
+        if (Constants.meaningExampleMap.isEmpty())
+            Constants.createMeaningExampleDictionary();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -66,13 +68,15 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onStart() {
         super.onStart();
-        if (authenticate() == false){
+        if (authenticate() == false) {
             Intent newIntent = new Intent(MenuActivity.this, LoginActivity.class);
             startActivity(newIntent);
         }
     }
 
-    private boolean authenticate(){ return this.userLocalStore.getUserLoggedIn(); }
+    private boolean authenticate() {
+        return this.userLocalStore.getUserLoggedIn();
+    }
 
     @Override
     public void onBackPressed() {
@@ -132,10 +136,8 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    public static void fillSentencesMap()
-    {
-        for(int i = 0; i < Constants.nativeSentences.length; i++)
-        {
+    public static void fillSentencesMap() {
+        for (int i = 0; i < Constants.nativeSentences.length; i++) {
 
             String stressPhonemes = Constants.nativeStressPhonemes[i];
             String stressPosition = Constants.nativeStressPosition[i];
@@ -143,13 +145,13 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
             List<String> phonemes = Arrays.asList(stressPhonemes.split("\\s*,\\s*"));
             List<String> positions = Arrays.asList(stressPosition.split("\\s*,\\s*"));
 
-            ArrayList<StressTuple> stressNative = new ArrayList<StressTuple>();
-            for(int j = 0; j < phonemes.size(); j++){
-                StressTuple stress = new StressTuple(phonemes.get(j), positions.get(j));
+            ArrayList<Tuple> stressNative = new ArrayList<Tuple>();
+            for (int j = 0; j < phonemes.size(); j++) {
+                Tuple stress = new Tuple(phonemes.get(j), positions.get(j));
                 stressNative.add(stress);
             }
 
-            SentenceTuple<String, String, ArrayList<StressTuple>> tuple = new SentenceTuple<>(Constants.nativePhonetics[i], Constants.nativePhonemes[i], stressNative);
+            SentenceTuple<String, String, ArrayList<Tuple>> tuple = new SentenceTuple<>(Constants.nativePhonetics[i], Constants.nativePhonemes[i], stressNative);
             Constants.nativeSentenceInfo.put(Constants.nativeSentences[i], tuple);
         }
     }

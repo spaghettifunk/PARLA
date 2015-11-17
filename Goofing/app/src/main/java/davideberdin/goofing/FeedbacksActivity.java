@@ -19,18 +19,17 @@ import java.util.Arrays;
 import java.util.List;
 
 import davideberdin.goofing.controllers.SentenceTuple;
-import davideberdin.goofing.controllers.StressTuple;
+import davideberdin.goofing.controllers.Tuple;
 import davideberdin.goofing.controllers.User;
 import davideberdin.goofing.utilities.AppWindowManager;
 import davideberdin.goofing.utilities.AutoResizeTextView;
 import davideberdin.goofing.utilities.Constants;
 import davideberdin.goofing.utilities.UserLocalStore;
 
-public class FeedbacksActivity extends AppCompatActivity implements View.OnClickListener
-{
+public class FeedbacksActivity extends AppCompatActivity implements View.OnClickListener {
     //region VARIABLES
     private ArrayList<String> phonemes;
-    private ArrayList<StressTuple> vowelStress;
+    private ArrayList<Tuple> vowelStress;
     private String resultWER;
     private byte[] pitchChartByte;
     private byte[] vowelChartByte;
@@ -52,8 +51,7 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
     //endregion
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_feedbacks);
 
@@ -113,10 +111,8 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
     }
 
     @Override
-    public void onClick(View v)
-    {
-        switch (v.getId())
-        {
+    public void onClick(View v) {
+        switch (v.getId()) {
             case R.id.pitchChartImageView:
                 Intent pitchIntent = new Intent(FeedbacksActivity.this, FullscreenImageActivity.class);
                 pitchIntent.putExtra("isPitch", true);
@@ -133,8 +129,7 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
 
             case R.id.infoImageButton:
 
-                AppWindowManager.showInfoFeedbacksDialog(this, Constants.DIALOG_INFO_FEEDBACKS_TITLE);
-                // AppWindowManager.showInfoDialog(this, Constants.DIALOG_INFO_FEEDBACKS_TITLE, Constants.DIALOG_INFO_FEEDBACKS_MESSAGE);
+                AppWindowManager.showInfoFeedbacksDialog(this, this.loggedUser.GetCurrentSentence());
 
                 break;
             default:
@@ -143,16 +138,14 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
+    public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_listening, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
+    public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -168,84 +161,82 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
         }
     }
 
-    private void fillNativeFeedbacks()
-    {
+    private void fillNativeFeedbacks() {
         String currentSentence = this.loggedUser.GetCurrentSentence();
-        SentenceTuple<String, String, ArrayList<StressTuple>> sentenceNativeFeedbacks = Constants.nativeSentenceInfo.get(currentSentence);
+        SentenceTuple<String, String, ArrayList<Tuple>> sentenceNativeFeedbacks = Constants.nativeSentenceInfo.get(currentSentence);
 
         this.nativeFeedbacks.setText(sentenceNativeFeedbacks.getPhonemes());
 
         // change color based on stress position
         String currentSentenceNoDigits = sentenceNativeFeedbacks.getPhonemes().replaceAll("\\d", "");
-        
+
         List<String> allPhonemes = Arrays.asList(currentSentenceNoDigits.split("\\s+"));
-        ArrayList<StressTuple> stress = sentenceNativeFeedbacks.getStress();
+        ArrayList<Tuple> stress = sentenceNativeFeedbacks.getStress();
 
         String pronunciationRepresentation = "";
-        for (String p: allPhonemes) {
+        for (String p : allPhonemes) {
             boolean changed = false;
-            for (StressTuple st : new ArrayList<StressTuple>(stress)) {
-                if (p.contains(st.getPhoneme()) && st.getIsStress().equals("1")) {
+            for (Tuple st : new ArrayList<Tuple>(stress)) {
+                if (p.contains(st.getFirst()) && st.getSecond().equals("1")) {
                     stress.remove(st);
 
-                    int subPosition = p.indexOf(st.getPhoneme());
-                    String temp = p.replace(st.getPhoneme(), "");
+                    int subPosition = p.indexOf(st.getFirst());
+                    String temp = p.replace(st.getFirst(), "");
 
-                    String coloredPhoneme = Constants.getColoredSpanned(st.getPhoneme(), Color.RED) + " ";
+                    String coloredPhoneme = "<big>" + Constants.getColoredSpanned(st.getFirst(), Color.RED) + "</big>";
 
                     StringBuffer buff = new StringBuffer(temp);
                     buff.insert(subPosition, coloredPhoneme);
 
-                    pronunciationRepresentation += "<u>" + buff.toString() + "</u> ";
+                    pronunciationRepresentation += "<u>" + buff.toString() + "</u>&#160";
 
                     changed = true;
                     break;
                 }
             }
-            if (changed == false)
-                pronunciationRepresentation +=  "<u>" + p + "</u> ";
+            if (!changed)
+                pronunciationRepresentation += "<u>" + p + "</u>&#160";
         }
 
         this.nativeFeedbacks.setText(Html.fromHtml(pronunciationRepresentation));
     }
 
-    private void fillUserFeedbacks()
-    {
+    private void fillUserFeedbacks() {
         String currentSentence = this.loggedUser.GetCurrentSentence();
 
         String userPhonemes = "";
-        for (String p: phonemes)
+        for (String p : phonemes)
             userPhonemes += p.replace(" ", "") + " ";
         userPhonemes = userPhonemes.replaceAll("\\d", "");
         this.userFeedbacks.setText(userPhonemes);
 
         // change color based on stress position
         List<String> allPhonemes = Arrays.asList(userPhonemes.split("\\s+"));
-        ArrayList<StressTuple> stress = this.vowelStress;
+        ArrayList<Tuple> stress = this.vowelStress;
 
         String pronunciationRepresentation = "";
-        for (String p: allPhonemes) {
+        for (String p : allPhonemes) {
             boolean changed = false;
-            for (StressTuple st : new ArrayList<StressTuple>(stress)) {
-                if (p.contains(st.getPhoneme()) && st.getIsStress().equals("1")) {
+            for (Tuple st : new ArrayList<Tuple>(stress)) {
+                if (p.contains(st.getFirst()) && st.getSecond().equals("1")) {
                     stress.remove(st);
 
-                    int subPosition = p.indexOf(st.getPhoneme());
-                    String temp = p.replace(st.getPhoneme(), "");
+                    int subPosition = p.indexOf(st.getFirst());
+                    String temp = p.replace(st.getFirst(), "");
 
-                    String coloredPhoneme = Constants.getColoredSpanned(st.getPhoneme(), Color.RED) + " ";
+                    String coloredPhoneme = "<big>" + Constants.getColoredSpanned(st.getFirst(), Color.RED) + "</big>";
 
                     StringBuffer buff = new StringBuffer(temp);
                     buff.insert(subPosition, coloredPhoneme);
 
-                    pronunciationRepresentation += "<u>" + buff.toString() + "</u> ";
+                    pronunciationRepresentation += "<u>" + buff.toString() + "</u>&#160";
 
                     changed = true;
                     break;
                 }
             }
             if (changed == false)
-                pronunciationRepresentation +=  "<u>" + p + "</u> ";
+                pronunciationRepresentation += "<u>" + p + "</u>&#160";
         }
 
         this.userFeedbacks.setText(Html.fromHtml(pronunciationRepresentation));

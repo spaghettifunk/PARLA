@@ -3,37 +3,26 @@ package davideberdin.goofing.utilities;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.media.MediaPlayer;
-import android.os.AsyncTask;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.concurrent.Executor;
-
 import davideberdin.goofing.R;
-import davideberdin.goofing.networking.GetCallback;
-import davideberdin.goofing.networking.NetworkingTask;
+import davideberdin.goofing.controllers.Tuple;
 
-
-public class AppWindowManager
-{
+public class AppWindowManager {
     private static AppWindowManager ourInstance = new AppWindowManager();
 
     public static AppWindowManager getInstance() {
         return ourInstance;
     }
 
-    private AppWindowManager() { }
+    private AppWindowManager() {
+    }
 
-    public static void showErrorMessage(final Activity activity, String message)
-    {
+    public static void showErrorMessage(final Activity activity, String message) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity);
         dialogBuilder.setMessage(message);
         dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -45,8 +34,7 @@ public class AppWindowManager
         dialogBuilder.show();
     }
 
-    public static void showInfoDialog(final Activity activity, String title, String message)
-    {
+    public static void showInfoDialog(final Activity activity, String title, String message) {
         AlertDialog.Builder ad = new AlertDialog.Builder(activity);
         ad.setTitle(title);
         ad.setMessage(message);
@@ -58,11 +46,17 @@ public class AppWindowManager
         ad.show();
     }
 
-    public static void showInfoFeedbacksDialog(final Context context, String title) {
+    public static void showInfoFeedbacksDialog(final Context context, String sentence) {
         // custom dialog
         final Dialog dialog = new Dialog(context);
         dialog.setContentView(R.layout.info_feedbacks_dialog);
-        dialog.setTitle(title);
+
+        Tuple tuple = Constants.meaningExampleMap.get(sentence);
+        TextView meaning = (TextView) dialog.findViewById(R.id.infoMeaningTextView);
+        meaning.setText(tuple.getFirst());
+
+        TextView example = (TextView) dialog.findViewById(R.id.infoExampleTextView);
+        example.setText(tuple.getSecond());
 
         // if button is clicked, close the custom dialog
         Button dialogButton = (Button) dialog.findViewById(R.id.infoOKButton);
