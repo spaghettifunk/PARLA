@@ -26,6 +26,8 @@ import edu.cmu.pocketsphinx.Decoder;
 
 public class ServerRequest
 {
+    public boolean sendData = true;
+
     private ProgressDialog progressDialog;
     private Activity currentActivity;
 
@@ -56,8 +58,6 @@ public class ServerRequest
         }
     }
 
-    public ServerRequest() { }
-
     public void dismissProgress(){
         progressDialog.cancel();    // GRAZIE DI ESISTERE!!!!!!!!
         progressDialog.dismiss();
@@ -79,7 +79,7 @@ public class ServerRequest
     public void recordingAudioInBackground(final Context context, final GetCallback callback) {
         final String audioFilename = "recorded_" + UUID.randomUUID().toString();
         if (Debug.debugging) {
-            TestPronunciationFragment.recognizer.startListening(Constants.PHONE_SEARCH, 10000);
+            TestPronunciationFragment.recognizer.startListening(Constants.SENTENCES_SEARCH, 10000);
             Recording.startRecording(context, audioFilename);
         }
 

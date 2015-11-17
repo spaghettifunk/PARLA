@@ -1,10 +1,5 @@
 package davideberdin.goofing.utilities;
 
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -49,6 +44,7 @@ public class Constants {
     public static final String GENERAL_ERROR_REQUEST = "Unknown behaviour during REQUEST";
     public static final String GENERAL_ERROR_RESPONSE = "Unknown behaviour during RESPONSE";
     public static final String DIALOG_INFO_FEEDBACKS_TITLE = "Info Feedbacks";
+    public static final String ERROR_WRONG_WORDS = "You haven't spelled the sentence correctly, try again...";
 
     // Username json keys
     public static final String GET_USERNAME_POST = "Username";
