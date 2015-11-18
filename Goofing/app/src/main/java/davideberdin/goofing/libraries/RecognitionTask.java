@@ -68,29 +68,31 @@ public class RecognitionTask extends AsyncTask<Void, Void, Exception> implements
         // The recognizer can be configured to perform multiple searches
         // of different kind and switch between them
 
-        TestPronunciationFragment.recognizer = defaultSetup()
-                .setAcousticModel(new File(assetsDir, "en-us-ptm"))
-                        //.setDictionary(new File(assetsDir, "cmudict-en-us.dict"))
-                .setDictionary(new File(assetsDir, "1240.dic"))
+        if (TestPronunciationFragment.recognizer == null) {
+            TestPronunciationFragment.recognizer = defaultSetup()
+                    .setAcousticModel(new File(assetsDir, "en-us-ptm"))
+                            //.setDictionary(new File(assetsDir, "cmudict-en-us.dict"))
+                    .setDictionary(new File(assetsDir, "1240.dic"))
 
-                        // To disable logging of raw audio comment out this call (takes a lot of space on the device)
-                .setRawLogDir(assetsDir)
+                            // To disable logging of raw audio comment out this call (takes a lot of space on the device)
+                    .setRawLogDir(assetsDir)
 
-                        // Threshold to tune for keyphrase to balance between false alarms and misses
-                .setKeywordThreshold(1e-45f)
+                            // Threshold to tune for keyphrase to balance between false alarms and misses
+                    .setKeywordThreshold(1e-45f)
 
-                        // Use context-independent phonetic search, context-dependent is too slow for mobile
-                .setBoolean("-allphone_ci", true)
+                            // Use context-independent phonetic search, context-dependent is too slow for mobile
+                    .setBoolean("-allphone_ci", true)
 
-                .getRecognizer();
-        TestPronunciationFragment.recognizer.addListener(this);
+                    .getRecognizer();
+            TestPronunciationFragment.recognizer.addListener(this);
 
-        File mymodel = new File(assetsDir, "test.dmp");
-        TestPronunciationFragment.recognizer.addNgramSearch(Constants.SENTENCES_SEARCH, mymodel);
+            File mymodel = new File(assetsDir, "test.dmp");
+            TestPronunciationFragment.recognizer.addNgramSearch(Constants.SENTENCES_SEARCH, mymodel);
 
-        // Phonetic search
-        // File phoneticModel = new File(assetsDir, "en-phone.dmp");
-        // recognizer.addAllphoneSearch(Constants.PHONE_SEARCH, phoneticModel);
+            // Phonetic search
+            // File phoneticModel = new File(assetsDir, "en-phone.dmp");
+            // recognizer.addAllphoneSearch(Constants.PHONE_SEARCH, phoneticModel);
+        }
     }
 
     //region CMU POCKETSPHINX

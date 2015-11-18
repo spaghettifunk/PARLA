@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import davideberdin.goofing.FeedbacksActivity;
@@ -21,6 +22,7 @@ import davideberdin.goofing.libraries.RecognitionTask;
 import davideberdin.goofing.networking.GetCallback;
 import davideberdin.goofing.networking.ServerRequest;
 import davideberdin.goofing.utilities.Constants;
+import davideberdin.goofing.utilities.IOUtilities;
 import davideberdin.goofing.utilities.UserLocalStore;
 
 import edu.cmu.pocketsphinx.SpeechRecognizer;
@@ -88,6 +90,14 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
             recognizer.cancel();
             recognizer.shutdown();
         }
+
+        try {
+            IOUtilities.readUserAudio(getActivity());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -96,6 +106,12 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
         if (recognizer != null) {
             recognizer.cancel();
             recognizer.shutdown();
+        }
+
+        try {
+            IOUtilities.writeUserAudio(getActivity());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -106,6 +122,12 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
             recognizer.cancel();
             recognizer.shutdown();
         }
+
+        try {
+            IOUtilities.writeUserAudio(getActivity());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -115,13 +137,25 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
             recognizer.cancel();
             recognizer.shutdown();
         }
+
+        try {
+            IOUtilities.writeUserAudio(getActivity());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     //endregion
 
     @Override
     public void onClick(View v) {
         this.recordingRequest = new ServerRequest(this.getActivity(), "Recording", "Say the sentence");
-        this.recognitionTask.setServerRequest(this.recordingRequest);
+
+        if(this.recognitionTask == null){
+            this.recognitionTask = new RecognitionTask(getActivity(), this.loggedUser);
+            this.recognitionTask.execute();
+        } else {
+            this.recognitionTask.setServerRequest(this.recordingRequest);
+        }
 
         switch (v.getId()) {
             case R.id.fabStartRecording:

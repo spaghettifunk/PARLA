@@ -20,6 +20,7 @@ import davideberdin.goofing.controllers.User;
 import davideberdin.goofing.fragments.TestPronunciationFragment;
 import davideberdin.goofing.utilities.Constants;
 import davideberdin.goofing.utilities.Debug;
+import davideberdin.goofing.utilities.IOUtilities;
 import davideberdin.goofing.utilities.Logger;
 import davideberdin.goofing.utilities.Recording;
 import edu.cmu.pocketsphinx.Decoder;
@@ -98,6 +99,7 @@ public class ServerRequest {
                         Recording.stopRecording();
                         TestPronunciationFragment.recognizer.stop();
                         inStream = context.openFileInput(audioFilename);
+
                     } else {
                         inStream = context.getResources().openRawResource(R.raw.test_audio);
                     }

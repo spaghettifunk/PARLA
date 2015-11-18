@@ -1,6 +1,8 @@
 package davideberdin.goofing;
 
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Parcel;
 import android.view.View.OnClickListener;
 import android.media.MediaPlayer;
 import android.support.design.widget.TabLayout;
@@ -19,11 +21,16 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import java.io.IOException;
+import java.util.List;
+
 import davideberdin.goofing.controllers.User;
 import davideberdin.goofing.fragments.ListenNative;
 import davideberdin.goofing.fragments.ListenUser;
 import davideberdin.goofing.libraries.FloatingActionButton;
 import davideberdin.goofing.libraries.FloatingActionsMenu;
+import davideberdin.goofing.utilities.Constants;
+import davideberdin.goofing.utilities.IOUtilities;
 import davideberdin.goofing.utilities.UserLocalStore;
 
 public class Listening extends AppCompatActivity {
@@ -72,18 +79,23 @@ public class Listening extends AppCompatActivity {
                     userLocalStore = new UserLocalStore(v.getContext());
                     loggedUser = userLocalStore.getLoggedUser();
 
+                    MediaPlayer mediaPlayer = null;
                     String fileAudio = ((loggedUser.GetCurrentSentence()).toLowerCase()).replace(" ", "_");
                     if( Listening.listeningNative) {
                         if (loggedUser.GetGender().equals("Male"))
                             fileAudio = "m_" + fileAudio;
                         else
                             fileAudio = "f_" + fileAudio;
+
+                        int resID = getResources().getIdentifier(fileAudio, "raw", getPackageName());
+                        mediaPlayer = MediaPlayer.create(getApplicationContext(), resID);
                     } else {
                         fileAudio = "recorded_" + fileAudio;
+                        String fileAudioPath = IOUtilities.audioFilesPath.get(fileAudio);
+                        mediaPlayer = MediaPlayer.create(getApplicationContext(), Uri.parse(fileAudioPath));
+                        mediaPlayer.setDataSource(fileAudioPath);
                     }
 
-                    int resID = getResources().getIdentifier(fileAudio, "raw", getPackageName());
-                    MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), resID);
                     mediaPlayer.start();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -131,6 +143,53 @@ public class Listening extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    //region APP EVENTS
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        try {
+            IOUtilities.readUserAudio(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        try {
+            IOUtilities.writeUserAudio(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        try {
+            IOUtilities.writeUserAudio(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        try {
+            IOUtilities.writeUserAudio(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    //endregion
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to

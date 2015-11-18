@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,6 +24,7 @@ import davideberdin.goofing.controllers.Tuple;
 import davideberdin.goofing.fragments.NewWordsFragment;
 import davideberdin.goofing.fragments.TestPronunciationFragment;
 import davideberdin.goofing.utilities.Constants;
+import davideberdin.goofing.utilities.IOUtilities;
 import davideberdin.goofing.utilities.UserLocalStore;
 
 public class MenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -135,6 +137,53 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+    //region APP EVENTS
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        try {
+            IOUtilities.readUserAudio(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        try {
+            IOUtilities.writeUserAudio(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        try {
+            IOUtilities.writeUserAudio(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        try {
+            IOUtilities.writeUserAudio(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    //endregion
 
     public static void fillSentencesMap() {
         for (int i = 0; i < Constants.nativeSentences.length; i++) {

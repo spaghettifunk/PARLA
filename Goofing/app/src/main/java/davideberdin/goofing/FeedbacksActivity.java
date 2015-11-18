@@ -14,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,6 +25,7 @@ import davideberdin.goofing.controllers.User;
 import davideberdin.goofing.utilities.AppWindowManager;
 import davideberdin.goofing.utilities.AutoResizeTextView;
 import davideberdin.goofing.utilities.Constants;
+import davideberdin.goofing.utilities.IOUtilities;
 import davideberdin.goofing.utilities.UserLocalStore;
 
 public class FeedbacksActivity extends AppCompatActivity implements View.OnClickListener {
@@ -160,6 +162,53 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    //region APP EVENTS
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        try {
+            IOUtilities.readUserAudio(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        try {
+            IOUtilities.writeUserAudio(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        try {
+            IOUtilities.writeUserAudio(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        try {
+            IOUtilities.writeUserAudio(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    //endregion
 
     private void fillNativeFeedbacks() {
         String currentSentence = this.loggedUser.GetCurrentSentence();

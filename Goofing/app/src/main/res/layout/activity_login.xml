@@ -43,10 +43,11 @@
                 android:layout_marginBottom="20dp" />
 
             <CheckBox
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/rememberMeCheckbox"
-                android:id="@+id/rememberMeCheckBox" />
+                android:id="@+id/rememberMeCheckBox"
+                android:checked="false" />
 
             <Button
                 android:layout_width="161dp"

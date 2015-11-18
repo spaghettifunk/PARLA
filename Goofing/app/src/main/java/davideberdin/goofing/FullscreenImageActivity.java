@@ -15,11 +15,14 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
-public class FullscreenImageActivity extends AppCompatActivity implements View.OnTouchListener
-{
+import java.io.IOException;
+
+import davideberdin.goofing.utilities.IOUtilities;
+
+public class FullscreenImageActivity extends AppCompatActivity implements View.OnTouchListener {
     private static final String TAG = "Touch";
     @SuppressWarnings("unused")
-    private static final float MIN_ZOOM = 1f,MAX_ZOOM = 1f;
+    private static final float MIN_ZOOM = 1f, MAX_ZOOM = 1f;
 
     // These matrices will be used to scale points of the image
     private Matrix matrix = new Matrix();
@@ -73,30 +76,28 @@ public class FullscreenImageActivity extends AppCompatActivity implements View.O
         // Checks the orientation of the screen
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             this.chart.setScaleType(ImageView.ScaleType.MATRIX);   //required
-            matrix.postRotate(90f, this.chart.getDrawable().getBounds().width()/2, this.chart.getDrawable().getBounds().height()/2);
+            matrix.postRotate(90f, this.chart.getDrawable().getBounds().width() / 2, this.chart.getDrawable().getBounds().height() / 2);
             this.chart.setImageMatrix(matrix);
 
             // Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show();
-        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
             // Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show();
 
             this.chart.setScaleType(ImageView.ScaleType.MATRIX);   //required
-            matrix.postRotate(-90f, this.chart.getDrawable().getBounds().width()/2, this.chart.getDrawable().getBounds().height()/2);
+            matrix.postRotate(-90f, this.chart.getDrawable().getBounds().width() / 2, this.chart.getDrawable().getBounds().height() / 2);
             this.chart.setImageMatrix(matrix);
         }
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
+    public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_listening, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
+    public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -113,8 +114,7 @@ public class FullscreenImageActivity extends AppCompatActivity implements View.O
     }
 
     @Override
-    public boolean onTouch(View v, MotionEvent event)
-    {
+    public boolean onTouch(View v, MotionEvent event) {
         ImageView view = (ImageView) v;
         view.setScaleType(ImageView.ScaleType.MATRIX);
         float scale;
@@ -122,8 +122,7 @@ public class FullscreenImageActivity extends AppCompatActivity implements View.O
         dumpEvent(event);
         // Handle touch events here...
 
-        switch (event.getAction() & MotionEvent.ACTION_MASK)
-        {
+        switch (event.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:   // first finger down only
                 savedMatrix.set(matrix);
                 start.set(event.getX(), event.getY());
@@ -153,18 +152,14 @@ public class FullscreenImageActivity extends AppCompatActivity implements View.O
 
             case MotionEvent.ACTION_MOVE:
 
-                if (mode == DRAG)
-                {
+                if (mode == DRAG) {
                     matrix.set(savedMatrix);
                     matrix.postTranslate(event.getX() - start.x, event.getY() - start.y); // create the transformation in the matrix  of points
-                }
-                else if (mode == ZOOM)
-                {
+                } else if (mode == ZOOM) {
                     // pinch zooming
                     float newDist = spacing(event);
                     Log.d(TAG, "newDist=" + newDist);
-                    if (newDist > 5f)
-                    {
+                    if (newDist > 5f) {
                         matrix.set(savedMatrix);
                         scale = newDist / oldDist; // setting the scaling of the
                         // matrix...if scale > 1 means
@@ -181,17 +176,63 @@ public class FullscreenImageActivity extends AppCompatActivity implements View.O
         return true; // indicate event was handled
     }
 
+    //region APP EVENTS
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        try {
+            IOUtilities.readUserAudio(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        try {
+            IOUtilities.writeUserAudio(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        try {
+            IOUtilities.writeUserAudio(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        try {
+            IOUtilities.writeUserAudio(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    //endregion
+
     /*
      * --------------------------------------------------------------------------
      * Method: spacing Parameters: MotionEvent Returns: float Description:
      * checks the spacing between the two fingers on touch
      * ----------------------------------------------------
      */
-    private float spacing(MotionEvent event)
-    {
+    private float spacing(MotionEvent event) {
         float x = event.getX(0) - event.getX(1);
         float y = event.getY(0) - event.getY(1);
-        return (float)Math.sqrt(x * x + y * y);
+        return (float) Math.sqrt(x * x + y * y);
     }
 
     /*
@@ -200,31 +241,29 @@ public class FullscreenImageActivity extends AppCompatActivity implements View.O
      * Description: calculates the midpoint between the two fingers
      * ------------------------------------------------------------
      */
-    private void midPoint(PointF point, MotionEvent event)
-    {
+    private void midPoint(PointF point, MotionEvent event) {
         float x = event.getX(0) + event.getX(1);
         float y = event.getY(0) + event.getY(1);
         point.set(x / 2, y / 2);
     }
 
-    /** Show an event in the LogCat view, for debugging */
-    private void dumpEvent(MotionEvent event)
-    {
-        String names[] = { "DOWN", "UP", "MOVE", "CANCEL", "OUTSIDE","POINTER_DOWN", "POINTER_UP", "7?", "8?", "9?" };
+    /**
+     * Show an event in the LogCat view, for debugging
+     */
+    private void dumpEvent(MotionEvent event) {
+        String names[] = {"DOWN", "UP", "MOVE", "CANCEL", "OUTSIDE", "POINTER_DOWN", "POINTER_UP", "7?", "8?", "9?"};
         StringBuilder sb = new StringBuilder();
         int action = event.getAction();
         int actionCode = action & MotionEvent.ACTION_MASK;
         sb.append("event ACTION_").append(names[actionCode]);
 
-        if (actionCode == MotionEvent.ACTION_POINTER_DOWN || actionCode == MotionEvent.ACTION_POINTER_UP)
-        {
+        if (actionCode == MotionEvent.ACTION_POINTER_DOWN || actionCode == MotionEvent.ACTION_POINTER_UP) {
             sb.append("(pid ").append(action >> MotionEvent.ACTION_POINTER_ID_SHIFT);
             sb.append(")");
         }
 
         sb.append("[");
-        for (int i = 0; i < event.getPointerCount(); i++)
-        {
+        for (int i = 0; i < event.getPointerCount(); i++) {
             sb.append("#").append(i);
             sb.append("(pid ").append(event.getPointerId(i));
             sb.append(")=").append((int) event.getX(i));
