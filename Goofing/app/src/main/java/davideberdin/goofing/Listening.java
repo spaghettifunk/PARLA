@@ -34,6 +34,8 @@ public class Listening extends AppCompatActivity {
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private ViewPager mViewPager;
 
+    public static boolean listeningNative = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,14 +68,19 @@ public class Listening extends AppCompatActivity {
             public void onClick(View v) {
                 // play audio
                 try {
+
                     userLocalStore = new UserLocalStore(v.getContext());
                     loggedUser = userLocalStore.getLoggedUser();
 
                     String fileAudio = ((loggedUser.GetCurrentSentence()).toLowerCase()).replace(" ", "_");
-                    if (loggedUser.GetGender().equals("Male"))
-                        fileAudio = "m_" + fileAudio;
-                    else
-                        fileAudio = "f_" + fileAudio;
+                    if( Listening.listeningNative) {
+                        if (loggedUser.GetGender().equals("Male"))
+                            fileAudio = "m_" + fileAudio;
+                        else
+                            fileAudio = "f_" + fileAudio;
+                    } else {
+                        fileAudio = "recorded_" + fileAudio;
+                    }
 
                     int resID = getResources().getIdentifier(fileAudio, "raw", getPackageName());
                     MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), resID);

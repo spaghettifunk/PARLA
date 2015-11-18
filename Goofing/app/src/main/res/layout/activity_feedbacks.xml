@@ -140,7 +140,8 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text=""
                 android:id="@+id/infoWERTextView"
-                android:textColor="#000000" />
+                android:textColor="#000000"
+                android:textAlignment="center" />
 
             <Space
                 android:layout_width="fill_parent"

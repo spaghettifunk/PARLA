@@ -125,7 +125,8 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
 
         switch (v.getId()) {
             case R.id.fabStartRecording:
-                recordingRequest.recordingAudioInBackground(testPronunciationView.getContext(), new GetCallback() {
+                String currentSentence = ((loggedUser.GetCurrentSentence()).toLowerCase()).replace(" ", "_");
+                recordingRequest.recordingAudioInBackground(testPronunciationView.getContext(), currentSentence, new GetCallback() {
                     @Override
                     public void done(Object... params) {
                         if (recordingRequest.sendData) {

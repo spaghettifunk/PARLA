@@ -122,7 +122,7 @@ public class Constants {
             "I'm thinking out loud now, but it looks as if I can meet you Tuesday."};
 
     // just for testing
-    public static String[] userSentences = {"A piece of cake", "Blow a fuse"};
+    public static ArrayList<String> userSentences = new ArrayList<>();
 
     public static String getColoredSpanned(String text, int color) {
         String hexColor = "#" + Integer.toHexString(color).substring(2);

@@ -32,6 +32,8 @@ public class RecognitionTask extends AsyncTask<Void, Void, Exception> implements
 
         this.progress = new ProgressDialog(activity);
         this.progress.setMessage("Initializing dictionary...");
+        this.progress.setCancelable(false);
+        this.progress.setCanceledOnTouchOutside(false);
         this.progress.show();
     }
 

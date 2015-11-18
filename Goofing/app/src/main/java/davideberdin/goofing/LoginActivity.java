@@ -1,11 +1,14 @@
 package davideberdin.goofing;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 // my imports
@@ -29,8 +32,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private String username;
     private String password;
 
+    // variables for saving the login
+    private CheckBox saveLoginCheckBox;
+    private SharedPreferences loginPreferences;
+    private SharedPreferences.Editor loginPrefsEditor;
+    private Boolean saveLogin;
+
     private Button loginButton;
-    private Button registerButton;
+    private TextView registerButton;
 
     private UserLocalStore userLocalStore = null;
 
@@ -47,7 +56,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         this.etPassword = (EditText) findViewById(R.id.etPassword);
 
         this.loginButton = (Button) findViewById(R.id.loginButton);
-        this.registerButton = (Button) findViewById(R.id.registerButton);
+        this.registerButton = (TextView) findViewById(R.id.registerButton);
+
+        saveLoginCheckBox = (CheckBox)findViewById(R.id.rememberMeCheckBox);
+        loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
+        loginPrefsEditor = loginPreferences.edit();
+
+        saveLogin = loginPreferences.getBoolean("saveLogin", false);
+        if (saveLogin) {
+            etUsername.setText(loginPreferences.getString("username", ""));
+            etPassword.setText(loginPreferences.getString("password", ""));
+            saveLoginCheckBox.setChecked(true);
+        }
 
         this.loginButton.setOnClickListener(this);
         this.registerButton.setOnClickListener(this);
@@ -97,6 +117,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 if (u == null) {
                                     AppWindowManager.showErrorMessage(LoginActivity.this, Constants.TOAST_ERROR_LOGIN_ERROR);
                                 } else {
+
+                                    // save data on phone
+                                    if (saveLoginCheckBox.isChecked()) {
+                                        loginPrefsEditor.putBoolean("saveLogin", true);
+                                        loginPrefsEditor.putString("username", username);
+                                        loginPrefsEditor.putString("password", password);
+                                        loginPrefsEditor.commit();
+                                    } else {
+                                        loginPrefsEditor.clear();
+                                        loginPrefsEditor.commit();
+                                    }
+
                                     userLocalStore.storeUserData(u);
                                     userLocalStore.setUserLoggedIn(true);
                                     startActivity(new Intent(LoginActivity.this, MenuActivity.class));

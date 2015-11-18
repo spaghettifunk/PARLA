@@ -24,8 +24,7 @@ import davideberdin.goofing.utilities.Logger;
 import davideberdin.goofing.utilities.Recording;
 import edu.cmu.pocketsphinx.Decoder;
 
-public class ServerRequest
-{
+public class ServerRequest {
     public boolean sendData = true;
 
     private ProgressDialog progressDialog;
@@ -33,6 +32,7 @@ public class ServerRequest
 
     /**
      * Server request - Params in this order: params[0] = Title, params[1] = Message
+     *
      * @param activity
      * @param params
      */
@@ -43,8 +43,7 @@ public class ServerRequest
         this.progressDialog.setIndeterminate(true);
 
         // For recording part
-        if (params.length > 0)
-        {
+        if (params.length > 0) {
             String title = params[0];
             String message = params[1];
             this.progressDialog.setTitle(title);
@@ -58,7 +57,7 @@ public class ServerRequest
         }
     }
 
-    public void dismissProgress(){
+    public void dismissProgress() {
         progressDialog.cancel();    // GRAZIE DI ESISTERE!!!!!!!!
         progressDialog.dismiss();
     }
@@ -76,8 +75,15 @@ public class ServerRequest
     }
 
     @SuppressWarnings("deprecation")
-    public void recordingAudioInBackground(final Context context, final GetCallback callback) {
-        final String audioFilename = "recorded_" + UUID.randomUUID().toString();
+    public void recordingAudioInBackground(final Context context, String currentSentence, final GetCallback callback) {
+        final String audioFilename = "recorded_" + currentSentence; // overwrite the file for each sentence
+
+        // add sentence when recording
+        String sentenceTV = currentSentence.replace("_", " ");
+        sentenceTV = Character.toString(sentenceTV.charAt(0)).toUpperCase() + sentenceTV.substring(1);
+        if (!Constants.userSentences.contains(sentenceTV))
+            Constants.userSentences.add(sentenceTV);
+
         if (Debug.debugging) {
             TestPronunciationFragment.recognizer.startListening(Constants.SENTENCES_SEARCH, 10000);
             Recording.startRecording(context, audioFilename);
@@ -113,9 +119,8 @@ public class ServerRequest
                     callback.done(recordedAudio);
                 } catch (Exception e) {
                     Logger.Log(Constants.CONNECTION_ACTIVITY, "Error in recordingAudioIBackground()\n" + e.getMessage());
-                } finally
-                {
-                    if(Debug.debugging) {
+                } finally {
+                    if (Debug.debugging) {
                         File audioFile = context.getFileStreamPath(audioFilename);
                         audioFile.delete();
                     }
@@ -123,11 +128,16 @@ public class ServerRequest
             }
         });
 
+        this.progressDialog.setCancelable(false);
+        this.progressDialog.setCanceledOnTouchOutside(false);
+
         // Start Recording here
         this.progressDialog.show();
     }
 
     public void sendRecordedAudioToServer(User loggedUser, byte[] fileAudioByte, String currentSentence, GetCallback callback) {
+        this.progressDialog.setCancelable(false);
+        this.progressDialog.setCanceledOnTouchOutside(false);
         this.progressDialog.show();
 
         NetworkingTask networkingTask = new NetworkingTask(callback, this.progressDialog);

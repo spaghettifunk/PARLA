@@ -13,6 +13,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import davideberdin.goofing.Listening;
 import davideberdin.goofing.R;
 import davideberdin.goofing.controllers.User;
 import davideberdin.goofing.utilities.Constants;
@@ -36,8 +37,9 @@ public class ListenUser extends Fragment {
         this.userLocalStore = new UserLocalStore(this.getActivity());
 
         // Fill list view user sentences
-        ArrayList<String> userSentences = fillUserList();
-        ArrayAdapter<String> userAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, userSentences);
+        ArrayAdapter<String> userAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, Constants.userSentences);
+        userAdapter.notifyDataSetChanged();
+
         this.userListView.setAdapter(userAdapter);
         this.userListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -52,18 +54,11 @@ public class ListenUser extends Fragment {
                 loggedUser.SetCurrentSentence((String) parent.getItemAtPosition(position));
                 loggedUser.SetCurrentPhonetic(Constants.nativePhonetics[position]);
                 userLocalStore.storeUserData(loggedUser);
+
+                Listening.listeningNative = false;
             }
         });
 
         return this.listenUserFragment;
-    }
-
-    private ArrayList<String> fillUserList() {
-        final ArrayList<String> list = new ArrayList<String>();
-        for (int i = 0; i < Constants.userSentences.length; ++i) {
-            list.add(Constants.nativeSentences[i]);
-        }
-
-        return list;
     }
 }

@@ -42,25 +42,31 @@
                 android:password="true"
                 android:layout_marginBottom="20dp" />
 
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/rememberMeCheckbox"
+                android:id="@+id/rememberMeCheckBox" />
+
             <Button
-                android:layout_width="fill_parent"
+                android:layout_width="161dp"
                 android:layout_height="wrap_content"
                 android:text="@string/loginButton"
-                android:id="@+id/loginButton" />
+                android:id="@+id/loginButton"
+                android:layout_marginTop="50dp"
+                android:layout_gravity="center" />
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
-
-            <Button
+            <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/registerButton"
-                android:id="@+id/registerButton" />
+                android:id="@+id/registerButton"
+                android:textAlignment="center"
+                android:textStyle="bold|italic"
+                android:layout_marginTop="10dp"
+                android:clickable="true"
+                android:textIsSelectable="false" />
+
         </LinearLayout>
 
     </LinearLayout>

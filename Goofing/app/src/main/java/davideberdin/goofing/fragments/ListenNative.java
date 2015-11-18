@@ -13,6 +13,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import davideberdin.goofing.Listening;
 import davideberdin.goofing.R;
 import davideberdin.goofing.controllers.User;
 import davideberdin.goofing.utilities.Constants;
@@ -53,6 +54,8 @@ public class ListenNative extends Fragment
                 loggedUser.SetCurrentSentence((String) parent.getItemAtPosition(position));
                 loggedUser.SetCurrentPhonetic(Constants.nativePhonetics[position]);
                 userLocalStore.storeUserData(loggedUser);
+
+                Listening.listeningNative = true;
             }
         });
 
