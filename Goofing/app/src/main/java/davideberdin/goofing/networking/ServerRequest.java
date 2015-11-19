@@ -49,13 +49,14 @@ public class ServerRequest {
             String message = params[1];
             this.progressDialog.setTitle(title);
             this.progressDialog.setMessage(message);
-            this.progressDialog.setCancelable(true);
 
         } else {
             this.progressDialog.setTitle("Processing");
             this.progressDialog.setMessage("Please wait...");
-            this.progressDialog.setCancelable(false);
         }
+
+        this.progressDialog.setCancelable(false);
+        this.progressDialog.setCanceledOnTouchOutside(false);
     }
 
     public void dismissProgress() {
@@ -86,8 +87,8 @@ public class ServerRequest {
             Constants.userSentences.add(sentenceTV);
 
         if (Debug.debugging) {
-            TestPronunciationFragment.recognizer.startListening(Constants.SENTENCES_SEARCH, 10000);
             Recording.startRecording(context, audioFilename);
+            //TestPronunciationFragment.recognizer.startListening(Constants.SENTENCES_SEARCH, 10000);
         }
 
         this.progressDialog.setButton("Stop", new DialogInterface.OnClickListener() {
@@ -97,7 +98,7 @@ public class ServerRequest {
                     InputStream inStream;
                     if (Debug.debugging) {
                         Recording.stopRecording();
-                        TestPronunciationFragment.recognizer.stop();
+                        //TestPronunciationFragment.recognizer.stop();
                         inStream = context.openFileInput(audioFilename);
 
                     } else {
@@ -138,8 +139,6 @@ public class ServerRequest {
     }
 
     public void sendRecordedAudioToServer(User loggedUser, byte[] fileAudioByte, String currentSentence, GetCallback callback) {
-        this.progressDialog.setCancelable(false);
-        this.progressDialog.setCanceledOnTouchOutside(false);
         this.progressDialog.show();
 
         NetworkingTask networkingTask = new NetworkingTask(callback, this.progressDialog);
@@ -147,8 +146,6 @@ public class ServerRequest {
     }
 
     public void fetchHistoryDataInBackground(String username, String currentSentence, final GetCallback callback){
-        this.progressDialog.setCancelable(false);
-        this.progressDialog.setCanceledOnTouchOutside(false);
         this.progressDialog.show();
 
         NetworkingTask networkingTask = new NetworkingTask(callback, this.progressDialog);

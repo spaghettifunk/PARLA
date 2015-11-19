@@ -60,7 +60,7 @@ public class NetworkingTask extends AsyncTask {
 
             switch ((int) params[0]) {
                 case Constants.NETWORKING_LOGIN_STATE:
-
+                    //region LOGIN
                     this.currentNetworkingState = Constants.NETWORKING_LOGIN_STATE;
 
                     User loggedUser = (User) params[1];
@@ -69,9 +69,9 @@ public class NetworkingTask extends AsyncTask {
                     postParams.put("Password", loggedUser.GetPassword());
 
                     return performPostCall(Constants.SERVER_URL + Constants.LOGIN_URL, postParams);
-
+                //endregion
                 case Constants.NETWORKING_REGISTER_STATE:
-
+                    //region REGISTER
                     this.currentNetworkingState = Constants.NETWORKING_REGISTER_STATE;
 
                     User registeredUser = (User) params[1];
@@ -83,9 +83,9 @@ public class NetworkingTask extends AsyncTask {
                     postParams.put("Occupation", registeredUser.GetOccupation());
 
                     return performPostCall(Constants.SERVER_URL + Constants.REGISTRATION_URL, postParams);
-
+                    //endregion
                 case Constants.NETWORKING_HANDLE_RECORDED_VOICE:
-
+                    //region RECORD
                     this.currentNetworkingState = Constants.NETWORKING_HANDLE_RECORDED_VOICE;
 
                     // Treat wav file to send to server
@@ -102,9 +102,9 @@ public class NetworkingTask extends AsyncTask {
                     postParams.put("Sentence", currentSentence);
 
                     return performPostCall(Constants.SERVER_URL + Constants.HANDLE_RECORDING_URL, postParams);
-
+                    //endregion
                 case Constants.NETWORKING_FETCH_HISTORY:
-
+                    //region HISTORY
                     this.currentNetworkingState = Constants.NETWORKING_FETCH_HISTORY;
 
                     // handle request here
@@ -115,7 +115,7 @@ public class NetworkingTask extends AsyncTask {
                     postParams.put("Sentence", sentence);
 
                     return performPostCall(Constants.SERVER_URL + Constants.HANDLE_FETCH_HISTORY_URL, postParams);
-
+                    //endregion
                 default:
                     Logger.Log(Constants.CONNECTION_ACTIVITY, Constants.GENERAL_ERROR_REQUEST);
                     break;
@@ -184,7 +184,7 @@ public class NetworkingTask extends AsyncTask {
 
                         // handle response here
                         ArrayList<String> phonemes = (ArrayList<String>) responseObject.get(Constants.GET_PHONEMES_POST);
-                        ArrayList<ArrayList<String>> vowelStressObject = (ArrayList<ArrayList<String>>) responseObject.get(Constants.GET_VOWELSTRESS_POST);
+                        ArrayList<ArrayList<String>> vowelStressObject = (ArrayList<ArrayList<String>>) responseObject.get(Constants.GET_VOWEL_STRESS_POST);
 
                         ArrayList<Tuple> vowelStress = new ArrayList<Tuple>();
                         for (ArrayList<String> vs : vowelStressObject) {
@@ -210,11 +210,22 @@ public class NetworkingTask extends AsyncTask {
                         ArrayList<CardTuple> history = new ArrayList<CardTuple>();
 
                         // handle all the data retrieved from server here
+                        ArrayList<String> vowelsDates = (ArrayList<String>) responseObject.get(Constants.GET_VOWEL_HISTORY_DATE);
+                        ArrayList<String> vowelsChartsHistory = (ArrayList<String>) responseObject.get(Constants.GET_VOWEL_HISTORY);
+
+                        int index = 0;
+                        for (String chart : vowelsChartsHistory){
+                            String tempDate = vowelsDates.get(index);
+                            byte[] tempChart = Base64.decode(chart, Base64.DEFAULT);
+
+                            history.add(new CardTuple(tempDate, tempChart));
+                            index++;
+                        }
 
                         userCallback.done(history);
 
                         break;
-                        //endregion
+                    //endregion
 
                     default:
                         Logger.Log(Constants.CONNECTION_ACTIVITY, Constants.GENERAL_ERROR_RESPONSE);

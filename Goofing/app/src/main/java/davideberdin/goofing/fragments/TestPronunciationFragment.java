@@ -182,7 +182,7 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
 
                                     Intent intent = new Intent(getActivity(), FeedbacksActivity.class);
                                     intent.putExtra(Constants.GET_PHONEMES_POST, phonemes);
-                                    intent.putExtra(Constants.GET_VOWELSTRESS_POST, vowelStress);
+                                    intent.putExtra(Constants.GET_VOWEL_STRESS_POST, vowelStress);
                                     intent.putExtra(Constants.GET_WER_POST, resultWER);
                                     intent.putExtra(Constants.GET_PITCH_CHART_POST, pitch_chart_byte);
                                     intent.putExtra(Constants.GET_VOWEL_CHART_POST, vowel_chart_byte);

@@ -19,7 +19,7 @@ public class Constants {
     public static final String PHONE_SEARCH = "phones";
 
     // Network stuff
-    public static final String SERVER_URL = "http://10.0.2.2:8000/goofy/";
+    public static final String SERVER_URL = "http://192.168.1.137:8000/goofy/"; //10.0.2.2:8000/goofy/";
     public static final String LOGIN_URL = "login/";
     public static final String REGISTRATION_URL = "register/";
     public static final String HANDLE_RECORDING_URL = "pronunciation/";
@@ -38,7 +38,7 @@ public class Constants {
     public static final String GET_PHONETIC_POST = "Phonetic";
     public static final String GET_PHONEMES_POST = "Phonemes";
     public static final String GET_WER_POST = "WER";
-    public static final String GET_VOWELSTRESS_POST = "VowelStress";
+    public static final String GET_VOWEL_STRESS_POST = "VowelStress";
     public static final String GET_PITCH_CHART_POST = "PitchChart";
     public static final String GET_VOWEL_CHART_POST = "VowelChart";
 
@@ -46,8 +46,9 @@ public class Constants {
     public static final String TOAST_ERROR_LOGIN_ERROR = "Authentication failed";
     public static final String GENERAL_ERROR_REQUEST = "Unknown behaviour during REQUEST";
     public static final String GENERAL_ERROR_RESPONSE = "Unknown behaviour during RESPONSE";
-    public static final String DIALOG_INFO_FEEDBACKS_TITLE = "Meaning";
     public static final String ERROR_WRONG_WORDS = "You haven't spelled the sentence correctly, try again...";
+    public static final String FETCHING_HISTORY_TITLE = "Processing";
+    public static final String FETCHING_HISTORY = "Fetching history...";
 
     // Username json keys
     public static final String GET_USERNAME_POST = "Username";
@@ -55,6 +56,8 @@ public class Constants {
     public static final String GET_GENDER_POST = "Gender";
     public static final String GET_NATIONALITY_POST = "Nationality";
     public static final String GET_OCCUPATION_POST = "Occupation";
+    public static final String GET_VOWEL_HISTORY_DATE = "VowelsDate";
+    public static final String GET_VOWEL_HISTORY = "VowelsImages";
 
     // sentences - KEEP THE SAME ORDER
     public static HashMap<String, SentenceTuple<String, String, ArrayList<Tuple>>> nativeSentenceInfo = new HashMap<>();

@@ -84,7 +84,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 username = etUsername.getText().toString();
                 password = etPassword.getText().toString();
 
-                if (Debug.debugging)
+                if (Debug.debugging == false)
                 {
                     User u = new User("test" , "test", "m", "italian", "student", Constants.nativeSentences[0], Constants.nativePhonetics[0]);
                     userLocalStore.storeUserData(u);

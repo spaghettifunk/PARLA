@@ -67,7 +67,7 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
 
         this.resultWER = b.getString(Constants.GET_WER_POST);
         this.phonemes = b.getStringArrayList(Constants.GET_PHONEMES_POST);
-        this.vowelStress = b.getParcelableArrayList(Constants.GET_VOWELSTRESS_POST);
+        this.vowelStress = b.getParcelableArrayList(Constants.GET_VOWEL_STRESS_POST);
         this.pitchChartByte = b.getByteArray(Constants.GET_PITCH_CHART_POST);
         this.vowelChartByte = b.getByteArray(Constants.GET_VOWEL_CHART_POST);
 

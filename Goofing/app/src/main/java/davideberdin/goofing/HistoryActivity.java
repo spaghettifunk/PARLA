@@ -16,13 +16,26 @@ import davideberdin.goofing.controllers.CardTuple;
 import davideberdin.goofing.controllers.HistoryCard;
 import davideberdin.goofing.controllers.HistoryCardsAdapter;
 import davideberdin.goofing.controllers.Tuple;
+import davideberdin.goofing.controllers.User;
+import davideberdin.goofing.networking.GetCallback;
+import davideberdin.goofing.networking.NetworkingTask;
+import davideberdin.goofing.networking.ServerRequest;
+import davideberdin.goofing.utilities.Constants;
+import davideberdin.goofing.utilities.UserLocalStore;
 
 public class HistoryActivity extends AppCompatActivity {
+
+    private ArrayList<CardTuple> historyData;
+    private HistoryCardsAdapter historyCardsAdapter;
+    private User loggedUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
+
+        UserLocalStore localStore = new UserLocalStore(this);
+        this.loggedUser = localStore.getLoggedUser();
 
         RecyclerView recList = (RecyclerView) findViewById(R.id.cardList);
         recList.setHasFixedSize(true);
@@ -30,14 +43,33 @@ public class HistoryActivity extends AppCompatActivity {
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
 
-        // request here for history data
-        ArrayList<CardTuple> historyData = new ArrayList<>();
-
-
-        HistoryCardsAdapter historyCardsAdapter = new HistoryCardsAdapter(createList(historyData));
+        // create listener for cards history
+        this.historyData = new ArrayList<>();
+        historyCardsAdapter = new HistoryCardsAdapter(createList(this.historyData));
         recList.setAdapter(historyCardsAdapter);
 
         recList.setLayoutManager(llm);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // request for fetching history data
+        ServerRequest historyRequest = new ServerRequest(this, Constants.FETCHING_HISTORY_TITLE, Constants.FETCHING_HISTORY);
+        historyRequest.fetchHistoryDataInBackground(this.loggedUser.GetUsername(),
+                this.loggedUser.GetCurrentSentence(),
+                new GetCallback() {
+                    @Override
+                    public void done(Object... params) {
+                        // handle historyData here
+                        ArrayList<CardTuple> tempHistory = (ArrayList<CardTuple>) params[0];
+                        for(CardTuple ct : tempHistory)
+                            historyData.add(ct);
+
+                        historyCardsAdapter.notifyDataSetChanged(); // update the adapter
+                    }
+                });
     }
 
     @Override
