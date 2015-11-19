@@ -12,6 +12,7 @@ public class Constants {
     public static final String CONNECTION_ACTIVITY = "ConnectionActivity";
     public static final String REGISTRATION_ACTIVITY = "RegistrationActivity";
     public static final String PRONUNCIATION_ACTIVITY = "PronunciationActivity";
+    public static final String HISTORY_ACTIVITY = "HistoryActivity";
 
     // recognition CMU Sphinxs
     public static final String SENTENCES_SEARCH = "sentences";
@@ -22,11 +23,13 @@ public class Constants {
     public static final String LOGIN_URL = "login/";
     public static final String REGISTRATION_URL = "register/";
     public static final String HANDLE_RECORDING_URL = "pronunciation/";
+    public static final String HANDLE_FETCH_HISTORY_URL = "history/";
 
     // Network states
     public static final int NETWORKING_LOGIN_STATE = 0;
     public static final int NETWORKING_REGISTER_STATE = 1;
     public static final int NETWORKING_HANDLE_RECORDED_VOICE = 2;
+    public static final int NETWORKING_FETCH_HISTORY = 3;
 
     // POST strings
     public static final String SUCCESS_POST = "SUCCESS";

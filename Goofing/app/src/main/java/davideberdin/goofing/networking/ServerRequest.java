@@ -145,4 +145,13 @@ public class ServerRequest {
         NetworkingTask networkingTask = new NetworkingTask(callback, this.progressDialog);
         networkingTask.execute(Constants.NETWORKING_HANDLE_RECORDED_VOICE, loggedUser, fileAudioByte, currentSentence);
     }
+
+    public void fetchHistoryDataInBackground(String username, String currentSentence, final GetCallback callback){
+        this.progressDialog.setCancelable(false);
+        this.progressDialog.setCanceledOnTouchOutside(false);
+        this.progressDialog.show();
+
+        NetworkingTask networkingTask = new NetworkingTask(callback, this.progressDialog);
+        networkingTask.execute(Constants.NETWORKING_FETCH_HISTORY, username, currentSentence);
+    }
 }

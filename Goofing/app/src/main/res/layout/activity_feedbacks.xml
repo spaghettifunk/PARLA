@@ -169,6 +169,16 @@
                 android:contentDescription="@string/vowelChartImageView"
                 android:cropToPadding="false" />
 
+            <Space
+                android:layout_width="fill_parent"
+                android:layout_height="30dp" />
+
+            <Button
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="See History"
+                android:id="@+id/historyButton" />
+
         </LinearLayout>
     </RelativeLayout>
 

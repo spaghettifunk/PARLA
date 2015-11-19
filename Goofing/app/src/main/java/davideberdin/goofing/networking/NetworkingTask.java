@@ -25,6 +25,7 @@ import java.util.Map;
 import javax.net.ssl.HttpsURLConnection;
 
 // My imports
+import davideberdin.goofing.controllers.CardTuple;
 import davideberdin.goofing.controllers.Tuple;
 import davideberdin.goofing.controllers.User;
 import davideberdin.goofing.utilities.Constants;
@@ -101,6 +102,19 @@ public class NetworkingTask extends AsyncTask {
                     postParams.put("Sentence", currentSentence);
 
                     return performPostCall(Constants.SERVER_URL + Constants.HANDLE_RECORDING_URL, postParams);
+
+                case Constants.NETWORKING_FETCH_HISTORY:
+
+                    this.currentNetworkingState = Constants.NETWORKING_FETCH_HISTORY;
+
+                    // handle request here
+                    String username = (String) params[1];
+                    String sentence = (String) params[2];
+
+                    postParams.put("Username", username);
+                    postParams.put("Sentence", sentence);
+
+                    return performPostCall(Constants.SERVER_URL + Constants.HANDLE_FETCH_HISTORY_URL, postParams);
 
                 default:
                     Logger.Log(Constants.CONNECTION_ACTIVITY, Constants.GENERAL_ERROR_REQUEST);
@@ -188,6 +202,19 @@ public class NetworkingTask extends AsyncTask {
                         userCallback.done(phonemes, vowelStress, resultWER, pitchChartByte, vowelChartByte);
                         break;
                     //endregion
+
+                    case Constants.NETWORKING_FETCH_HISTORY:
+                        //region HISTORY
+                        Logger.Log(Constants.CONNECTION_ACTIVITY, Constants.HISTORY_ACTIVITY);
+
+                        ArrayList<CardTuple> history = new ArrayList<CardTuple>();
+
+                        // handle all the data retrieved from server here
+
+                        userCallback.done(history);
+
+                        break;
+                        //endregion
 
                     default:
                         Logger.Log(Constants.CONNECTION_ACTIVITY, Constants.GENERAL_ERROR_RESPONSE);

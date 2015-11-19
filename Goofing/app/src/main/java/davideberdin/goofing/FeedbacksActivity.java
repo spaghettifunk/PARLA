@@ -10,6 +10,7 @@ import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -50,6 +51,8 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
 
     private ImageButton infoFeedbacksButton;
     private RelativeLayout feedbacksRelativeLayout;
+
+    private Button historyButton;
     //endregion
 
     @Override
@@ -109,6 +112,10 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
         this.vowelChart.setImageBitmap(vowelBitmap);
         this.vowelChart.setOnClickListener(this);
 
+        // History Button
+        this.historyButton = (Button) findViewById(R.id.historyButton);
+        this.historyButton.setOnClickListener(this);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
@@ -132,6 +139,12 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
             case R.id.infoImageButton:
 
                 AppWindowManager.showInfoFeedbacksDialog(this, this.loggedUser.GetCurrentSentence());
+
+                break;
+            case R.id.historyButton:
+                Intent historyIntent = new Intent(FeedbacksActivity.this, HistoryActivity.class);
+                historyIntent.putExtra("sentence", this.loggedUser.GetCurrentSentence());
+                startActivity(historyIntent);
 
                 break;
             default:
