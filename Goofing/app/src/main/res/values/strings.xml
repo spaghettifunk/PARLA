@@ -71,4 +71,5 @@
     <string name="infoMeaningTextView">Meaning</string>
     <string name="infoExampleTextView">Example</string>
     <string name="rememberMeCheckbox">Remember me</string>
+    <string name="historyImage">vowel prediction of that day/time</string>
 </resources>

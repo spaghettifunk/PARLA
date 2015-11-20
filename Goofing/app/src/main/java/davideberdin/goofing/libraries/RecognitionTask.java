@@ -26,6 +26,8 @@ public class RecognitionTask extends AsyncTask<Void, Void, Exception> implements
     private ServerRequest request;
     private User loggedUser;
 
+    // I can use this class to adapt the voice of the user
+    // on server -> im not sure if possible - currently in researching
     public RecognitionTask(Activity activity, User loggedUser){
         this.currActivity = activity;
         this.loggedUser = loggedUser;

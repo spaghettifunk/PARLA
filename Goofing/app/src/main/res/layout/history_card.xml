@@ -35,7 +35,7 @@
                 android:id="@+id/cardImage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:contentDescription="vowel prediction of that day/time" />
+                android:contentDescription="@string/historyImage" />
 
         </LinearLayout>
 
