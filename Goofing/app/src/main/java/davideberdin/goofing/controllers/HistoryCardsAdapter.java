@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import davideberdin.goofing.R;
@@ -16,9 +17,9 @@ import davideberdin.goofing.R;
 
 public class HistoryCardsAdapter extends RecyclerView.Adapter<HistoryCardsAdapter.CardViewHolder> {
 
-    private List<HistoryCard> cardsList;
+    private ArrayList<HistoryCard> cardsList;
 
-    public HistoryCardsAdapter(List<HistoryCard> contactList) {
+    public HistoryCardsAdapter(ArrayList<HistoryCard> contactList) {
         this.cardsList = contactList;
     }
 
@@ -35,6 +36,11 @@ public class HistoryCardsAdapter extends RecyclerView.Adapter<HistoryCardsAdapte
         byte[] imageByte = cl.getImageByteArray();
         Bitmap cardBitmap = BitmapFactory.decodeByteArray(imageByte, 0, imageByte.length);
         cardViewHolder.image.setImageBitmap(cardBitmap);
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
     }
 
     @Override

@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,8 +26,9 @@ import davideberdin.goofing.utilities.UserLocalStore;
 
 public class HistoryActivity extends AppCompatActivity {
 
-    private ArrayList<CardTuple> historyData;
+    private ArrayList<HistoryCard> historyCardsAdapterList;
     private HistoryCardsAdapter historyCardsAdapter;
+    private RecyclerView recList;
     private User loggedUser;
 
     @Override
@@ -37,23 +39,16 @@ public class HistoryActivity extends AppCompatActivity {
         UserLocalStore localStore = new UserLocalStore(this);
         this.loggedUser = localStore.getLoggedUser();
 
-        RecyclerView recList = (RecyclerView) findViewById(R.id.cardList);
-        recList.setHasFixedSize(true);
+        this.recList = (RecyclerView) findViewById(R.id.cardList);
+        this.recList.setHasFixedSize(true);
+
+        this.historyCardsAdapterList = new ArrayList<>();
+        historyCardsAdapter = new HistoryCardsAdapter(this.historyCardsAdapterList);
 
         LinearLayoutManager llm = new LinearLayoutManager(this);
         llm.setOrientation(LinearLayoutManager.VERTICAL);
-
-        // create listener for cards history
-        this.historyData = new ArrayList<>();
-        historyCardsAdapter = new HistoryCardsAdapter(createList(this.historyData));
-        recList.setAdapter(historyCardsAdapter);
-
-        recList.setLayoutManager(llm);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
+        this.recList.setLayoutManager(llm);
+        this.recList.setAdapter(historyCardsAdapter);
 
         // request for fetching history data
         ServerRequest historyRequest = new ServerRequest(this, Constants.FETCHING_HISTORY_TITLE, Constants.FETCHING_HISTORY);
@@ -64,10 +59,13 @@ public class HistoryActivity extends AppCompatActivity {
                     public void done(Object... params) {
                         // handle historyData here
                         ArrayList<CardTuple> tempHistory = (ArrayList<CardTuple>) params[0];
-                        for(CardTuple ct : tempHistory)
-                            historyData.add(ct);
+                        ArrayList<CardTuple> historyCards = new ArrayList<CardTuple>();
+                        for (CardTuple ct : tempHistory)
+                            historyCards.add(ct);
 
-                        historyCardsAdapter.notifyDataSetChanged(); // update the adapter
+                        // create listener for cards history
+                        createList(historyCards);
+                        historyCardsAdapter.notifyDataSetChanged();
                     }
                 });
     }
@@ -85,18 +83,15 @@ public class HistoryActivity extends AppCompatActivity {
     }
 
     @SuppressWarnings("deprecation")
-    private List<HistoryCard> createList(ArrayList<CardTuple> historyData) {
+    private void createList(ArrayList<CardTuple> historyData) {
 
-        List<HistoryCard> result = new ArrayList<>();
         for (CardTuple data : historyData) {
             HistoryCard hc = new HistoryCard();
 
             hc.setCardDate(data.getDate());
             hc.setImageByteArray(data.getImage());
 
-            result.add(hc);
+            historyCardsAdapterList.add(hc);
         }
-
-        return result;
     }
 }
