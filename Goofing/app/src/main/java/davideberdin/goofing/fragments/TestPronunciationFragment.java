@@ -18,22 +18,16 @@ import java.util.ArrayList;
 import davideberdin.goofing.FeedbacksActivity;
 import davideberdin.goofing.R;
 import davideberdin.goofing.controllers.User;
-import davideberdin.goofing.libraries.RecognitionTask;
 import davideberdin.goofing.networking.GetCallback;
 import davideberdin.goofing.networking.ServerRequest;
+import davideberdin.goofing.utilities.AppWindowManager;
 import davideberdin.goofing.utilities.Constants;
 import davideberdin.goofing.utilities.IOUtilities;
-import davideberdin.goofing.utilities.Logger;
 import davideberdin.goofing.utilities.UserLocalStore;
-
-import edu.cmu.pocketsphinx.SpeechRecognizer;
 
 public class TestPronunciationFragment extends Fragment implements View.OnClickListener {
     //region VARIABLES
-    public static SpeechRecognizer recognizer;
-    public static String recognizedPhonemes = "";
     private ServerRequest recordingRequest = null;
-    private RecognitionTask recognitionTask;
 
     private View testPronunciationView = null;
     private FloatingActionButton startButton = null;
@@ -74,12 +68,6 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
         String phonetic = this.loggedUser.GetCurrentPhonetic();
         this.tvPhonemes.setText("/ " + phonetic + " /");
 
-        // TODO: need lot of testing because of the events
-        if (recognizer == null) {
-            this.recognitionTask = new RecognitionTask(getActivity(), this.loggedUser);
-            this.recognitionTask.execute();
-        }
-
         return this.testPronunciationView;
     }
 
@@ -87,11 +75,6 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
     @Override
     public void onResume() {
         super.onResume();
-        if (recognizer != null) {
-            recognizer.cancel();
-            recognizer.shutdown();
-        }
-
         try {
             IOUtilities.readUserAudio(getActivity());
         } catch (IOException e) {
@@ -104,11 +87,6 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
     @Override
     public void onStop() {
         super.onStop();
-        if (recognizer != null) {
-            recognizer.cancel();
-            recognizer.shutdown();
-        }
-
         try {
             IOUtilities.writeUserAudio(getActivity());
         } catch (IOException e) {
@@ -119,11 +97,6 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
     @Override
     public void onPause() {
         super.onPause();
-        if (recognizer != null) {
-            recognizer.cancel();
-            recognizer.shutdown();
-        }
-
         try {
             IOUtilities.writeUserAudio(getActivity());
         } catch (IOException e) {
@@ -134,11 +107,6 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (recognizer != null) {
-            recognizer.cancel();
-            recognizer.shutdown();
-        }
-
         try {
             IOUtilities.writeUserAudio(getActivity());
         } catch (IOException e) {
@@ -151,19 +119,26 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
     public void onClick(View v) {
         this.recordingRequest = new ServerRequest(this.getActivity(), "Recording", "Say the sentence");
 
-        if(this.recognitionTask == null){
-            this.recognitionTask = new RecognitionTask(getActivity(), this.loggedUser);
-            this.recognitionTask.execute();
-        } else {
-            this.recognitionTask.setServerRequest(this.recordingRequest);
-        }
-
         switch (v.getId()) {
             case R.id.fabStartRecording:
                 String currentSentence = ((loggedUser.GetCurrentSentence()).toLowerCase()).replace(" ", "_");
                 recordingRequest.recordingAudioInBackground(testPronunciationView.getContext(), currentSentence, new GetCallback() {
                     @Override
                     public void done(Object... params) {
+
+                        // TODO: TESTING REQUIRED
+                        //region ERROR
+                        if (params[0] instanceof String){
+                            String error = (String) params[0];
+
+                            if (error.equals(Constants.FAILED_POST)){
+                                recordingRequest.dismissProgress();
+                                AppWindowManager.showErrorMessage(getActivity(), Constants.FUNNY_ERROR_MESSAGE);
+                                return;
+                            }
+                        }
+                        //endregion
+
                         if (recordingRequest.sendData) {
                             //region SEND DATA
                             final byte[] fileAudioByte = (byte[]) params[0];
@@ -175,12 +150,38 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
                             request.fetchPhonemesInBackground(loggedUser, fileAudioByte, new GetCallback() {
                                 @Override
                                 public void done(Object... params) {
-                                    String phonemes = (String) params[0];
+
+                                    // TODO: TESTING REQUIRED
+                                    //region ERROR
+                                    if (params[0] instanceof String){
+                                        String error = (String) params[0];
+
+                                        if (error.equals(Constants.FAILED_POST)){
+                                            recordingRequest.dismissProgress();
+                                            AppWindowManager.showErrorMessage(getActivity(), Constants.FUNNY_ERROR_MESSAGE);
+                                            return;
+                                        }
+                                    }
+                                    //endregion
 
                                     // Django request
-                                    request.sendRecordedAudioToServer(loggedUser, fileAudioByte, phonemes, currentSentence, new GetCallback() {
+                                    request.sendRecordedAudioToServer(loggedUser, fileAudioByte, (String) params[0], currentSentence, new GetCallback() {
                                         @Override
                                         public void done(Object... params) {
+
+                                            // TODO: TESTING REQUIRED
+                                            //region ERROR
+                                            if (params[0] instanceof String){
+                                                String error = (String) params[0];
+
+                                                if (error.equals(Constants.FAILED_POST)){
+                                                    recordingRequest.dismissProgress();
+                                                    AppWindowManager.showErrorMessage(getActivity(), Constants.FUNNY_ERROR_MESSAGE);
+                                                    return;
+                                                }
+                                            }
+                                            //endregion
+
                                             ArrayList<String> phonemes = (ArrayList<String>) params[0];
                                             ArrayList<ArrayList<String>> vowelStress = (ArrayList<ArrayList<String>>) params[1];
 
@@ -210,7 +211,7 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
                 // play audio
                 try {
                     String fileAudio = ((this.loggedUser.GetCurrentSentence()).toLowerCase()).replace(" ", "_");
-                    if (this.loggedUser.GetGender() == "Male")
+                    if (this.loggedUser.GetGender().equals("Male"))
                         fileAudio = "m_" + fileAudio;
                     else
                         fileAudio = "f_" + fileAudio;

@@ -15,7 +15,6 @@ public class Constants {
     public static final String HISTORY_ACTIVITY = "HistoryActivity";
 
     // recognition CMU Sphinxs
-    public static final String SENTENCES_SEARCH = "sentences";
     public static final String PHONE_SEARCH = "phones";
 
     // Network stuff
@@ -50,9 +49,11 @@ public class Constants {
     public static final String TOAST_ERROR_LOGIN_ERROR = "Authentication failed";
     public static final String GENERAL_ERROR_REQUEST = "Unknown behaviour during REQUEST";
     public static final String GENERAL_ERROR_RESPONSE = "Unknown behaviour during RESPONSE";
-    public static final String ERROR_WRONG_WORDS = "You haven't spelled the sentence correctly, try again...";
     public static final String FETCHING_HISTORY_TITLE = "Processing";
     public static final String FETCHING_HISTORY = "Fetching history...";
+
+    // Error messages
+    public static final String FUNNY_ERROR_MESSAGE = "Something went wrong. A squad of well-trained sloth have been sent to fix the problem! Try later";
 
     // Username json keys
     public static final String GET_USERNAME_POST = "Username";

@@ -76,7 +76,7 @@ public class ServerRequest {
         networkingTask.execute(Constants.NETWORKING_REGISTER_STATE, user);
     }
 
-    public void fetchPhonemesInBackground(User user, byte[] audioFile, GetCallback callback){
+    public void fetchPhonemesInBackground(User user, byte[] audioFile, GetCallback callback) {
         this.progressDialog.show();
         NetworkingTask networkingTask = new NetworkingTask(callback, progressDialog);
         networkingTask.execute(Constants.NETWORKING_FETCH_PHONEMES, user, audioFile);
@@ -94,7 +94,6 @@ public class ServerRequest {
 
         if (Debug.debugging) {
             Recording.startRecording(context, audioFilename);
-            //TestPronunciationFragment.recognizer.startListening(Constants.SENTENCES_SEARCH, 10000);
         }
 
         this.progressDialog.setButton("Stop", new DialogInterface.OnClickListener() {
@@ -104,7 +103,6 @@ public class ServerRequest {
                     InputStream inStream;
                     if (Debug.debugging) {
                         Recording.stopRecording();
-                        //TestPronunciationFragment.recognizer.stop();
                         inStream = context.openFileInput(audioFilename);
 
                     } else {
@@ -149,7 +147,7 @@ public class ServerRequest {
         networkingTask.execute(Constants.NETWORKING_HANDLE_RECORDED_VOICE, loggedUser, fileAudioByte, predictedPhonemes, currentSentence);
     }
 
-    public void fetchHistoryDataInBackground(String username, String currentSentence, final GetCallback callback){
+    public void fetchHistoryDataInBackground(String username, String currentSentence, final GetCallback callback) {
         this.progressDialog.show();
 
         NetworkingTask networkingTask = new NetworkingTask(callback, this.progressDialog);

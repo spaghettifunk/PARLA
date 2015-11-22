@@ -53,10 +53,6 @@ public class NetworkingTask extends AsyncTask {
         this.progressDialog = progressDialog;
     }
 
-    public NetworkingTask(GetCallback userCallback){
-        this.userCallback = userCallback;
-    }
-
     @Override
     protected Object doInBackground(Object[] params) {
         HashMap<String, String> postParams = new HashMap<>();
@@ -87,7 +83,7 @@ public class NetworkingTask extends AsyncTask {
                     postParams.put("Occupation", registeredUser.GetOccupation());
 
                     return performPostCall(Constants.SERVER_URL + Constants.REGISTRATION_URL, postParams);
-                    //endregion
+                //endregion
                 case Constants.NETWORKING_HANDLE_RECORDED_VOICE:
                     //region RECORD
                     this.currentNetworkingState = Constants.NETWORKING_HANDLE_RECORDED_VOICE;
@@ -108,7 +104,7 @@ public class NetworkingTask extends AsyncTask {
                     postParams.put("Sentence", currentSentence);
 
                     return performPostCall(Constants.SERVER_URL + Constants.HANDLE_RECORDING_URL, postParams);
-                    //endregion
+                //endregion
                 case Constants.NETWORKING_FETCH_HISTORY:
                     //region HISTORY
                     this.currentNetworkingState = Constants.NETWORKING_FETCH_HISTORY;
@@ -121,7 +117,7 @@ public class NetworkingTask extends AsyncTask {
                     postParams.put("Sentence", sentence);
 
                     return performPostCall(Constants.SERVER_URL + Constants.HANDLE_FETCH_HISTORY_URL, postParams);
-                    //endregion
+                //endregion
                 case Constants.NETWORKING_FETCH_PHONEMES:
                     //region PHONEMES SERVICE
                     this.currentNetworkingState = Constants.NETWORKING_FETCH_PHONEMES;
@@ -138,15 +134,15 @@ public class NetworkingTask extends AsyncTask {
 
                     return performPostCall(Constants.PHONEME_SERVICE_URL, postParams, true);
 
-                    //endregion
+                //endregion
                 default:
                     Logger.Log(Constants.CONNECTION_ACTIVITY, Constants.GENERAL_ERROR_REQUEST);
-                    break;
+                    return null;
             }
         } catch (Exception ex) {
             Logger.Log(Constants.CONNECTION_ACTIVITY, "Error in NETWORKING!");
+            return null;
         }
-        return null;
     }
 
     @Override
@@ -166,7 +162,6 @@ public class NetworkingTask extends AsyncTask {
             if (response.equals(Constants.FAILED_POST) || response.isEmpty()) {
                 this.userCallback.done(jsonObject);
             } else {
-                assert response.equals(Constants.SUCCESS_POST);
 
                 HashMap<String, Object> responseObject = (HashMap<String, Object>) jsonToMap(jsonObject);
 
@@ -237,7 +232,7 @@ public class NetworkingTask extends AsyncTask {
                         ArrayList<String> vowelsChartsHistory = (ArrayList<String>) responseObject.get(Constants.GET_VOWEL_HISTORY);
 
                         int index = 0;
-                        for (String chart : vowelsChartsHistory){
+                        for (String chart : vowelsChartsHistory) {
                             String tempDate = vowelsDates.get(index);
                             byte[] tempChart = Base64.decode(chart, Base64.DEFAULT);
 
@@ -263,12 +258,11 @@ public class NetworkingTask extends AsyncTask {
             }
         } catch (JSONException e) {
             e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
+            userCallback.done(Constants.FAILED_POST);
         }
     }
 
-    public String performPostCall(String requestURL, HashMap<String, String> postDataParams, boolean...params) {
+    public String performPostCall(String requestURL, HashMap<String, String> postDataParams, boolean... params) {
         URL url;
         String response = "";
 
@@ -298,17 +292,19 @@ public class NetworkingTask extends AsyncTask {
             writer.close();
             os.close();
 
-            if (conn.getResponseCode() == HttpsURLConnection.HTTP_OK) {
+            int resultConnection = conn.getResponseCode();
+            if (resultConnection == HttpsURLConnection.HTTP_OK) {
                 String line;
                 BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 while ((line = br.readLine()) != null) {
                     response += line;
                 }
             } else {
-                response = "FAILED";
+                return "{ \"Response\" : \"FAILED\", \"Reason\" : Error: " + resultConnection + "\" }";
             }
         } catch (Exception e) {
             Logger.Log(Constants.CONNECTION_ACTIVITY, e.getMessage());
+            return "{ \"Response\" : \"FAILED\", \"Reason\" : " + e.getMessage() + "\" }";
         }
 
         return response;
