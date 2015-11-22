@@ -111,8 +111,6 @@ public class ServerRequest {
                         inStream = context.getResources().openRawResource(R.raw.test_audio);
                     }
 
-                    // TODO: convert the wav file to 8KHz sample rate, MONO
-
                     ByteArrayOutputStream out = new ByteArrayOutputStream();
                     BufferedInputStream in = new BufferedInputStream(inStream);
 
