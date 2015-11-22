@@ -76,6 +76,12 @@ public class ServerRequest {
         networkingTask.execute(Constants.NETWORKING_REGISTER_STATE, user);
     }
 
+    public void fetchPhonemesInBackground(User user, byte[] audioFile, GetCallback callback){
+        this.progressDialog.show();
+        NetworkingTask networkingTask = new NetworkingTask(callback, progressDialog);
+        networkingTask.execute(Constants.NETWORKING_FETCH_PHONEMES, user, audioFile);
+    }
+
     @SuppressWarnings("deprecation")
     public void recordingAudioInBackground(final Context context, String currentSentence, final GetCallback callback) {
         final String audioFilename = "recorded_" + currentSentence; // overwrite the file for each sentence
@@ -104,6 +110,8 @@ public class ServerRequest {
                     } else {
                         inStream = context.getResources().openRawResource(R.raw.test_audio);
                     }
+
+                    // TODO: convert the wav file to 8KHz sample rate, MONO
 
                     ByteArrayOutputStream out = new ByteArrayOutputStream();
                     BufferedInputStream in = new BufferedInputStream(inStream);
@@ -138,11 +146,9 @@ public class ServerRequest {
         this.progressDialog.show();
     }
 
-    public void sendRecordedAudioToServer(User loggedUser, byte[] fileAudioByte, String currentSentence, GetCallback callback) {
-        this.progressDialog.show();
-
+    public void sendRecordedAudioToServer(User loggedUser, byte[] fileAudioByte, String predictedPhonemes, String currentSentence, GetCallback callback) {
         NetworkingTask networkingTask = new NetworkingTask(callback, this.progressDialog);
-        networkingTask.execute(Constants.NETWORKING_HANDLE_RECORDED_VOICE, loggedUser, fileAudioByte, currentSentence);
+        networkingTask.execute(Constants.NETWORKING_HANDLE_RECORDED_VOICE, loggedUser, fileAudioByte, predictedPhonemes, currentSentence);
     }
 
     public void fetchHistoryDataInBackground(String username, String currentSentence, final GetCallback callback){

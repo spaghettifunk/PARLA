@@ -21,6 +21,7 @@ public class Constants {
     // Network stuff
     //public static final String SERVER_URL = "http://192.168.1.137:8000/goofy/";
     public static final String SERVER_URL = "http://10.0.2.2:8000/goofy/";
+    public static final String PHONEME_SERVICE_URL = "http://10.0.2.2:9099/phonemes/transcription/";
 
     public static final String LOGIN_URL = "login/";
     public static final String REGISTRATION_URL = "register/";
@@ -32,6 +33,7 @@ public class Constants {
     public static final int NETWORKING_REGISTER_STATE = 1;
     public static final int NETWORKING_HANDLE_RECORDED_VOICE = 2;
     public static final int NETWORKING_FETCH_HISTORY = 3;
+    public static final int NETWORKING_FETCH_PHONEMES = 4;
 
     // POST strings
     public static final String SUCCESS_POST = "SUCCESS";
@@ -60,6 +62,7 @@ public class Constants {
     public static final String GET_OCCUPATION_POST = "Occupation";
     public static final String GET_VOWEL_HISTORY_DATE = "VowelsDate";
     public static final String GET_VOWEL_HISTORY = "VowelsImages";
+    public static final String GET_RESULT_PHONEMES_SERVICE = "Phonemes";
 
     // sentences - KEEP THE SAME ORDER
     public static HashMap<String, SentenceTuple<String, String, ArrayList<Tuple>>> nativeSentenceInfo = new HashMap<>();

@@ -23,6 +23,7 @@ import davideberdin.goofing.networking.GetCallback;
 import davideberdin.goofing.networking.ServerRequest;
 import davideberdin.goofing.utilities.Constants;
 import davideberdin.goofing.utilities.IOUtilities;
+import davideberdin.goofing.utilities.Logger;
 import davideberdin.goofing.utilities.UserLocalStore;
 
 import edu.cmu.pocketsphinx.SpeechRecognizer;
@@ -165,29 +166,39 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
                     public void done(Object... params) {
                         if (recordingRequest.sendData) {
                             //region SEND DATA
-                            byte[] fileAudioByte = (byte[]) params[0];
-                            String currentSentence = loggedUser.GetCurrentSentence();
+                            final byte[] fileAudioByte = (byte[]) params[0];
+                            final String currentSentence = loggedUser.GetCurrentSentence();
 
-                            ServerRequest request = new ServerRequest(getActivity(), "Analyzing audio", "Please wait...");
-                            request.sendRecordedAudioToServer(loggedUser, fileAudioByte, currentSentence, new GetCallback() {
+                            final ServerRequest request = new ServerRequest(getActivity(), "Analyzing audio", "Please wait...");
+
+                            // Java Service
+                            request.fetchPhonemesInBackground(loggedUser, fileAudioByte, new GetCallback() {
                                 @Override
                                 public void done(Object... params) {
-                                    ArrayList<String> phonemes = (ArrayList<String>) params[0];
-                                    ArrayList<ArrayList<String>> vowelStress = (ArrayList<ArrayList<String>>) params[1];
+                                    String phonemes = (String) params[0];
 
-                                    String resultWER = (String) params[2];
+                                    // Django request
+                                    request.sendRecordedAudioToServer(loggedUser, fileAudioByte, phonemes, currentSentence, new GetCallback() {
+                                        @Override
+                                        public void done(Object... params) {
+                                            ArrayList<String> phonemes = (ArrayList<String>) params[0];
+                                            ArrayList<ArrayList<String>> vowelStress = (ArrayList<ArrayList<String>>) params[1];
 
-                                    byte[] pitch_chart_byte = (byte[]) params[3];
-                                    byte[] vowel_chart_byte = (byte[]) params[4];
+                                            String resultWER = (String) params[2];
 
-                                    Intent intent = new Intent(getActivity(), FeedbacksActivity.class);
-                                    intent.putExtra(Constants.GET_PHONEMES_POST, phonemes);
-                                    intent.putExtra(Constants.GET_VOWEL_STRESS_POST, vowelStress);
-                                    intent.putExtra(Constants.GET_WER_POST, resultWER);
-                                    intent.putExtra(Constants.GET_PITCH_CHART_POST, pitch_chart_byte);
-                                    intent.putExtra(Constants.GET_VOWEL_CHART_POST, vowel_chart_byte);
+                                            byte[] pitch_chart_byte = (byte[]) params[3];
+                                            byte[] vowel_chart_byte = (byte[]) params[4];
 
-                                    startActivity(intent);
+                                            Intent intent = new Intent(getActivity(), FeedbacksActivity.class);
+                                            intent.putExtra(Constants.GET_PHONEMES_POST, phonemes);
+                                            intent.putExtra(Constants.GET_VOWEL_STRESS_POST, vowelStress);
+                                            intent.putExtra(Constants.GET_WER_POST, resultWER);
+                                            intent.putExtra(Constants.GET_PITCH_CHART_POST, pitch_chart_byte);
+                                            intent.putExtra(Constants.GET_VOWEL_CHART_POST, vowel_chart_byte);
+
+                                            startActivity(intent);
+                                        }
+                                    });
                                 }
                             });
                             //endregion

@@ -53,6 +53,10 @@ public class NetworkingTask extends AsyncTask {
         this.progressDialog = progressDialog;
     }
 
+    public NetworkingTask(GetCallback userCallback){
+        this.userCallback = userCallback;
+    }
+
     @Override
     protected Object doInBackground(Object[] params) {
         HashMap<String, String> postParams = new HashMap<>();
@@ -91,7 +95,8 @@ public class NetworkingTask extends AsyncTask {
                     // Treat wav file to send to server
                     User currentUser = (User) params[1];
                     byte[] fileAudio = (byte[]) params[2];
-                    String currentSentence = (String) params[3];
+                    String predictedPhonemes = (String) params[3];
+                    String currentSentence = (String) params[4];
 
                     //String decoded = new String(fileAudio, "UTF-8");
                     String audioFileAsString = Base64.encodeToString(fileAudio, Base64.DEFAULT);
@@ -99,6 +104,7 @@ public class NetworkingTask extends AsyncTask {
                     String u = toJSON(currentUser);
                     postParams.put("User", u);
                     postParams.put("FileAudio", audioFileAsString);
+                    postParams.put("PredictedPhonemes", predictedPhonemes);
                     postParams.put("Sentence", currentSentence);
 
                     return performPostCall(Constants.SERVER_URL + Constants.HANDLE_RECORDING_URL, postParams);
@@ -116,6 +122,23 @@ public class NetworkingTask extends AsyncTask {
 
                     return performPostCall(Constants.SERVER_URL + Constants.HANDLE_FETCH_HISTORY_URL, postParams);
                     //endregion
+                case Constants.NETWORKING_FETCH_PHONEMES:
+                    //region PHONEMES SERVICE
+                    this.currentNetworkingState = Constants.NETWORKING_FETCH_PHONEMES;
+
+                    // Treat wav file to send to server
+                    User user = (User) params[1];
+                    byte[] audioFile = (byte[]) params[2];
+
+                    //String decoded = new String(fileAudio, "UTF-8");
+                    String decodedAudio = Base64.encodeToString(audioFile, Base64.DEFAULT);
+
+                    postParams.put("User", user.GetUsername());
+                    postParams.put("FileAudio", decodedAudio);
+
+                    return performPostCall(Constants.PHONEME_SERVICE_URL, postParams, true);
+
+                    //endregion
                 default:
                     Logger.Log(Constants.CONNECTION_ACTIVITY, Constants.GENERAL_ERROR_REQUEST);
                     break;
@@ -128,7 +151,6 @@ public class NetworkingTask extends AsyncTask {
 
     @Override
     protected void onPostExecute(Object result) {
-        this.progressDialog.dismiss();
 
         // Handle every response here
         try {
@@ -152,6 +174,7 @@ public class NetworkingTask extends AsyncTask {
                     case Constants.NETWORKING_LOGIN_STATE:
                         //region LOGIN
                         Logger.Log(Constants.CONNECTION_ACTIVITY, Constants.LOGIN_ACTIVITY);
+                        this.progressDialog.dismiss();
 
                         String username = ((String) responseObject.get(Constants.GET_USERNAME_POST));
                         String password = ((String) responseObject.get(Constants.GET_PASSWORD_POST));
@@ -166,10 +189,10 @@ public class NetworkingTask extends AsyncTask {
                         this.userCallback.done(loggedUser);
                         break;
                     //endregion
-
                     case Constants.NETWORKING_REGISTER_STATE:
                         //region REGISTER
                         Logger.Log(Constants.CONNECTION_ACTIVITY, Constants.REGISTRATION_ACTIVITY);
+                        this.progressDialog.dismiss();
 
                         String sentenceReg = (String) responseObject.get(Constants.GET_SENTENCE_POST);
                         String phoneticReg = (String) responseObject.get(Constants.GET_PHONETIC_POST);
@@ -177,10 +200,10 @@ public class NetworkingTask extends AsyncTask {
                         this.userCallback.done(sentenceReg, phoneticReg);
                         break;
                     //endregion
-
                     case Constants.NETWORKING_HANDLE_RECORDED_VOICE:
-                        //region CLASSIFICATION
+                        //region RECORD
                         Logger.Log(Constants.CONNECTION_ACTIVITY, Constants.PRONUNCIATION_ACTIVITY);
+                        this.progressDialog.dismiss();
 
                         // handle response here
                         ArrayList<String> phonemes = (ArrayList<String>) responseObject.get(Constants.GET_PHONEMES_POST);
@@ -202,10 +225,10 @@ public class NetworkingTask extends AsyncTask {
                         userCallback.done(phonemes, vowelStress, resultWER, pitchChartByte, vowelChartByte);
                         break;
                     //endregion
-
                     case Constants.NETWORKING_FETCH_HISTORY:
                         //region HISTORY
                         Logger.Log(Constants.CONNECTION_ACTIVITY, Constants.HISTORY_ACTIVITY);
+                        this.progressDialog.dismiss();
 
                         ArrayList<CardTuple> history = new ArrayList<CardTuple>();
 
@@ -226,7 +249,13 @@ public class NetworkingTask extends AsyncTask {
 
                         break;
                     //endregion
+                    case Constants.NETWORKING_FETCH_PHONEMES:
+                        //region PHONEMES
+                        Logger.Log(Constants.CONNECTION_ACTIVITY, Constants.PHONE_SEARCH);
+                        String phonemesResult = (String) responseObject.get(Constants.GET_RESULT_PHONEMES_SERVICE);
 
+                        userCallback.done(phonemesResult);
+                        //endregion
                     default:
                         Logger.Log(Constants.CONNECTION_ACTIVITY, Constants.GENERAL_ERROR_RESPONSE);
                         break;
@@ -239,7 +268,7 @@ public class NetworkingTask extends AsyncTask {
         }
     }
 
-    public String performPostCall(String requestURL, HashMap<String, String> postDataParams) {
+    public String performPostCall(String requestURL, HashMap<String, String> postDataParams, boolean...params) {
         URL url;
         String response = "";
 
@@ -250,6 +279,14 @@ public class NetworkingTask extends AsyncTask {
             conn.setReadTimeout(15000);
             conn.setConnectTimeout(15000);
             conn.setRequestMethod("POST");
+
+            // add this when calling java service
+            if (params.length > 0) {
+                conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                conn.setUseCaches(false);
+                conn.setRequestProperty("Connection", "Keep-Alive");
+            }
+
             conn.setDoInput(true);
             conn.setDoOutput(true);
 
@@ -260,9 +297,8 @@ public class NetworkingTask extends AsyncTask {
             writer.flush();
             writer.close();
             os.close();
-            int responseCode = conn.getResponseCode();
 
-            if (responseCode == HttpsURLConnection.HTTP_OK) {
+            if (conn.getResponseCode() == HttpsURLConnection.HTTP_OK) {
                 String line;
                 BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 while ((line = br.readLine()) != null) {
@@ -345,4 +381,3 @@ public class NetworkingTask extends AsyncTask {
         return list;
     }
 }
-
