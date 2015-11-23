@@ -1,7 +1,5 @@
 package davideberdin.goofing.controllers;
 
-import java.util.Date;
-
 public class HistoryCard {
     private String cardId;
     private String cardDate;

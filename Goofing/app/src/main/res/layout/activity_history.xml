@@ -18,19 +18,15 @@
 
         </android.support.v7.widget.RecyclerView>
 
-        <TextView
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/cardListTrend"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:text="COMING SOON - Goofy is the best"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:scrollbars="horizontal">
+
+        </android.support.v7.widget.RecyclerView>
 
     </LinearLayout>
-
-    <!--<android.support.v7.widget.RecyclerView-->
-        <!--android:id="@+id/cardList"-->
-        <!--android:layout_width="fill_parent"-->
-        <!--android:layout_height="wrap_content">-->
-
-    <!--</android.support.v7.widget.RecyclerView>-->
 
 </RelativeLayout>

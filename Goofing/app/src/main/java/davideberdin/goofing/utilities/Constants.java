@@ -64,6 +64,11 @@ public class Constants {
     public static final String GET_VOWEL_HISTORY_ID = "ChartId";
     public static final String GET_VOWEL_HISTORY_DATE = "VowelsDate";
     public static final String GET_VOWEL_HISTORY = "VowelsImages";
+
+    public static final String GET_VOWEL_TREND_ID = "TrendChartId";
+    public static final String GET_VOWEL_TREND_LAST_DATE = "TrendLastEdit";
+    public static final String GET_VOWEL_TREND = "TrendImages";
+
     public static final String GET_RESULT_PHONEMES_SERVICE = "Phonemes";
 
     // sentences - KEEP THE SAME ORDER

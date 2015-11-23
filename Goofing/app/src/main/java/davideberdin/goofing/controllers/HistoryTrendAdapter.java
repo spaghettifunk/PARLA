@@ -17,11 +17,11 @@ import davideberdin.goofing.FullscreenImageActivity;
 import davideberdin.goofing.R;
 
 
-public class HistoryCardsAdapter extends RecyclerView.Adapter<HistoryCardsAdapter.CardViewHolder> {
+public class HistoryTrendAdapter extends RecyclerView.Adapter<HistoryTrendAdapter.CardViewHolder> {
 
     private ArrayList<HistoryCard> cardsList;
 
-    public HistoryCardsAdapter(ArrayList<HistoryCard> contactList) {
+    public HistoryTrendAdapter(ArrayList<HistoryCard> contactList) {
         this.cardsList = contactList;
     }
 

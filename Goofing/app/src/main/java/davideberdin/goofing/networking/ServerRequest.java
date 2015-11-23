@@ -13,6 +13,7 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import davideberdin.goofing.R;
@@ -147,10 +148,10 @@ public class ServerRequest {
         networkingTask.execute(Constants.NETWORKING_HANDLE_RECORDED_VOICE, loggedUser, fileAudioByte, predictedPhonemes, currentSentence);
     }
 
-    public void fetchHistoryDataInBackground(String username, String currentSentence, final GetCallback callback) {
+    public void fetchHistoryDataInBackground(String username, String currentSentence, String vowels, final GetCallback callback) {
         this.progressDialog.show();
 
         NetworkingTask networkingTask = new NetworkingTask(callback, this.progressDialog);
-        networkingTask.execute(Constants.NETWORKING_FETCH_HISTORY, username, currentSentence);
+        networkingTask.execute(Constants.NETWORKING_FETCH_HISTORY, username, currentSentence, vowels);
     }
 }

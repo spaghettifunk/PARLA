@@ -17,6 +17,7 @@ import java.lang.reflect.Field;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -112,9 +113,11 @@ public class NetworkingTask extends AsyncTask {
                     // handle request here
                     String username = (String) params[1];
                     String sentence = (String) params[2];
+                    String vowels = (String) params[3];
 
                     postParams.put("Username", username);
                     postParams.put("Sentence", sentence);
+                    postParams.put("Vowels", vowels);
 
                     return performPostCall(Constants.SERVER_URL + Constants.HANDLE_FETCH_HISTORY_URL, postParams);
                 //endregion
@@ -225,9 +228,8 @@ public class NetworkingTask extends AsyncTask {
                         Logger.Log(Constants.CONNECTION_ACTIVITY, Constants.HISTORY_ACTIVITY);
                         this.progressDialog.dismiss();
 
+                        //region History
                         ArrayList<CardTuple> history = new ArrayList<CardTuple>();
-
-                        // handle all the data retrieved from server here
                         ArrayList<String> vowelsId = (ArrayList<String>) responseObject.get(Constants.GET_VOWEL_HISTORY_ID);
                         ArrayList<String> vowelsDates = (ArrayList<String>) responseObject.get(Constants.GET_VOWEL_HISTORY_DATE);
                         ArrayList<String> vowelsChartsHistory = (ArrayList<String>) responseObject.get(Constants.GET_VOWEL_HISTORY);
@@ -241,8 +243,24 @@ public class NetworkingTask extends AsyncTask {
                             history.add(new CardTuple(tempId, tempDate, tempChart));
                             index++;
                         }
+                        //endregion
 
-                        userCallback.done(history);
+                        //region Trend
+                        ArrayList<CardTuple> trend = new ArrayList<CardTuple>();
+                        ArrayList<String> trendCharts = (ArrayList<String>) responseObject.get(Constants.GET_VOWEL_TREND);
+
+                        index = 0;
+                        for (String chart : trendCharts) {
+                            String tempId = "-1";
+                            String tempDate = new Date().toString();
+                            byte[] tempChart = Base64.decode(chart, Base64.DEFAULT);
+
+                            trend.add(new CardTuple(tempId, tempDate, tempChart));
+                            index++;
+                        }
+                        //endregion
+
+                        userCallback.done(history, trend);
 
                         break;
                     //endregion
