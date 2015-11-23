@@ -228,15 +228,17 @@ public class NetworkingTask extends AsyncTask {
                         ArrayList<CardTuple> history = new ArrayList<CardTuple>();
 
                         // handle all the data retrieved from server here
+                        ArrayList<String> vowelsId = (ArrayList<String>) responseObject.get(Constants.GET_VOWEL_HISTORY_ID);
                         ArrayList<String> vowelsDates = (ArrayList<String>) responseObject.get(Constants.GET_VOWEL_HISTORY_DATE);
                         ArrayList<String> vowelsChartsHistory = (ArrayList<String>) responseObject.get(Constants.GET_VOWEL_HISTORY);
 
                         int index = 0;
                         for (String chart : vowelsChartsHistory) {
+                            String tempId = vowelsId.get(index);
                             String tempDate = vowelsDates.get(index);
                             byte[] tempChart = Base64.decode(chart, Base64.DEFAULT);
 
-                            history.add(new CardTuple(tempDate, tempChart));
+                            history.add(new CardTuple(tempId, tempDate, tempChart));
                             index++;
                         }
 

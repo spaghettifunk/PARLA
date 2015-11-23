@@ -61,6 +61,7 @@ public class Constants {
     public static final String GET_GENDER_POST = "Gender";
     public static final String GET_NATIONALITY_POST = "Nationality";
     public static final String GET_OCCUPATION_POST = "Occupation";
+    public static final String GET_VOWEL_HISTORY_ID = "ChartId";
     public static final String GET_VOWEL_HISTORY_DATE = "VowelsDate";
     public static final String GET_VOWEL_HISTORY = "VowelsImages";
     public static final String GET_RESULT_PHONEMES_SERVICE = "Phonemes";

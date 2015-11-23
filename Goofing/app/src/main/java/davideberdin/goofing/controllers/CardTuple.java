@@ -5,17 +5,19 @@ import android.os.Parcelable;
 
 
 public class CardTuple implements Parcelable {
+
+    private String id;
     private String date;
     private byte[] image;
 
-    public CardTuple(String first, byte[] second) {
+    public CardTuple(String id, String first, byte[] second) {
+        this.id = id;
         this.date = first;
         this.image = second;
     }
 
-    public String getDate() {
-        return date;
-    }
+    public String getId() { return this.id; }
+    public String getDate() { return date; }
     public byte[] getImage() { return image; }
 
     //region Parcelable
@@ -35,6 +37,7 @@ public class CardTuple implements Parcelable {
     };
 
     public void readFromParcel(Parcel in) {
+        this.id = in.readString();
         this.date = in.readString();
         this.image = in.createByteArray();
     }
@@ -46,6 +49,7 @@ public class CardTuple implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.id);
         dest.writeString(this.date);
         dest.writeByteArray(this.image);
     }

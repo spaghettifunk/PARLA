@@ -45,8 +45,7 @@ public class HistoryActivity extends AppCompatActivity {
         this.historyCardsAdapterList = new ArrayList<>();
         historyCardsAdapter = new HistoryCardsAdapter(this.historyCardsAdapterList);
 
-        LinearLayoutManager llm = new LinearLayoutManager(this);
-        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        LinearLayoutManager llm = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         this.recList.setLayoutManager(llm);
         this.recList.setAdapter(historyCardsAdapter);
 
@@ -68,6 +67,9 @@ public class HistoryActivity extends AppCompatActivity {
                         historyCardsAdapter.notifyDataSetChanged();
                     }
                 });
+
+        // back arrow
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -88,6 +90,7 @@ public class HistoryActivity extends AppCompatActivity {
         for (CardTuple data : historyData) {
             HistoryCard hc = new HistoryCard();
 
+            hc.setCardId(data.getId());
             hc.setCardDate(data.getDate());
             hc.setImageByteArray(data.getImage());
 
