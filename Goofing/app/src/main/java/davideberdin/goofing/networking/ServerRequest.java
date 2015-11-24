@@ -12,6 +12,8 @@ import android.support.annotation.Nullable;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -90,8 +92,8 @@ public class ServerRequest {
         // add sentence when recording
         String sentenceTV = currentSentence.replace("_", " ");
         sentenceTV = Character.toString(sentenceTV.charAt(0)).toUpperCase() + sentenceTV.substring(1);
-        if (!Constants.userSentences.contains(sentenceTV))
-            Constants.userSentences.add(sentenceTV);
+        if (!IOUtilities.audioFiles.contains(sentenceTV))
+            IOUtilities.audioFiles.add(sentenceTV);
 
         if (Debug.debugging) {
             Recording.startRecording(context, audioFilename);
@@ -121,6 +123,18 @@ public class ServerRequest {
                     out.flush();
 
                     byte[] recordedAudio = out.toByteArray();
+
+                    // save recorded audio here!
+                    String directory = context.getFilesDir() + File.separator + Constants.RECORDED_AUDIO_PATH;
+                    File file = new File(directory);
+                    if (!file.exists())
+                        file.mkdir();
+
+                    String filePath = file.getAbsolutePath() + File.separator + audioFilename + ".wav";
+                    FileOutputStream fileOutputStreamos = new FileOutputStream(filePath);
+                    fileOutputStreamos.write(recordedAudio);
+                    fileOutputStreamos.flush();
+                    fileOutputStreamos.close();
 
                     dismissProgress();
 

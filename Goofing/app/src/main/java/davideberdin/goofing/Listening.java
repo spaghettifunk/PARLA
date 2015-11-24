@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -81,7 +82,7 @@ public class Listening extends AppCompatActivity {
 
                     MediaPlayer mediaPlayer = null;
                     String fileAudio = ((loggedUser.GetCurrentSentence()).toLowerCase()).replace(" ", "_");
-                    if( Listening.listeningNative) {
+                    if(Listening.listeningNative) {
                         if (loggedUser.GetGender().equals("Male"))
                             fileAudio = "m_" + fileAudio;
                         else
@@ -90,10 +91,8 @@ public class Listening extends AppCompatActivity {
                         int resID = getResources().getIdentifier(fileAudio, "raw", getPackageName());
                         mediaPlayer = MediaPlayer.create(getApplicationContext(), resID);
                     } else {
-                        fileAudio = "recorded_" + fileAudio;
-                        String fileAudioPath = IOUtilities.audioFilesPath.get(fileAudio);
-                        mediaPlayer = MediaPlayer.create(getApplicationContext(), Uri.parse(fileAudioPath));
-                        mediaPlayer.setDataSource(fileAudioPath);
+                        fileAudio = v.getContext().getFilesDir() + File.separator + Constants.RECORDED_AUDIO_PATH + File.separator + "recorded_" + fileAudio + ".wav";
+                        mediaPlayer = MediaPlayer.create(getApplicationContext(), Uri.parse(fileAudio));
                     }
 
                     mediaPlayer.start();

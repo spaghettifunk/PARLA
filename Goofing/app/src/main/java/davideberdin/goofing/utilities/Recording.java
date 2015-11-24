@@ -20,7 +20,8 @@ public class Recording
             currentFile = new File(context.getFilesDir(), filename);
 
             // save to internal storage
-            IOUtilities.audioFilesPath.put(filename, currentFile.getAbsolutePath());
+            if (!IOUtilities.audioFiles.contains(filename))
+                IOUtilities.audioFiles.add(filename);
 
             audioRecorder = ExtAudioRecorder.getInstanse(false);
             audioRecorder.setOutputFile(currentFile.getAbsolutePath());

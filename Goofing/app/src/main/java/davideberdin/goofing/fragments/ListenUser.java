@@ -17,6 +17,7 @@ import davideberdin.goofing.Listening;
 import davideberdin.goofing.R;
 import davideberdin.goofing.controllers.User;
 import davideberdin.goofing.utilities.Constants;
+import davideberdin.goofing.utilities.IOUtilities;
 import davideberdin.goofing.utilities.UserLocalStore;
 
 
@@ -37,7 +38,7 @@ public class ListenUser extends Fragment {
         this.userLocalStore = new UserLocalStore(this.getActivity());
 
         // Fill list view user sentences
-        ArrayAdapter<String> userAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, Constants.userSentences);
+        ArrayAdapter<String> userAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, IOUtilities.audioFiles);
         userAdapter.notifyDataSetChanged();
 
         this.userListView.setAdapter(userAdapter);

@@ -20,7 +20,8 @@ import java.util.HashMap;
 
 public class IOUtilities {
 
-    public static HashMap<String, String> audioFilesPath = new HashMap<String, String>();
+    public static TinyDB tinydb = null;
+    public static ArrayList<String> audioFiles = new ArrayList<>();
 
     public static byte[] convertStreamToByteArray(InputStream is) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -60,40 +61,17 @@ public class IOUtilities {
         return buffer;
     }
 
-    // USAGE:  writeUserAudio(context, HashMap<String, String> );
-    // HashMap: key = filename, value = path-to-file
     public static void writeUserAudio(Context context) throws IOException {
-        File directory = new File(context.getFilesDir().getAbsolutePath() + File.separator + "serialization");
-        if (!directory.exists()) {
-            if (!directory.mkdirs())
-                throw new IOException("mkdirs() function did not work");
-        }
+        if (tinydb == null)
+            tinydb = new TinyDB(context);
 
-        try {
-            String filename = "userAudioList.srl";
-            ObjectOutput out = new ObjectOutputStream(new FileOutputStream(directory + File.separator + filename));
-            out.writeObject(audioFilesPath);
-            out.close();
-        } catch (Exception e) {
-            Logger.Log("Saving Users audio files", e.getMessage());
-        }
+        tinydb.putListString(Constants.SHARED_PREFERENCES_RECORDED_AUDIO_NAME, audioFiles);
     }
 
-    // USAGE: ArrayList<String> list =  readUserAudio( context)
-    public static HashMap<String, String> readUserAudio(Context context) throws IOException, ClassNotFoundException {
+    public static void readUserAudio(Context context) throws IOException, ClassNotFoundException {
+        if (tinydb == null)
+            tinydb = new TinyDB(context);
 
-        File directory = new File(context.getFilesDir().getAbsolutePath() + File.separator + "serialization");
-
-        try {
-            String filename = "userAudioList.srl";
-            ObjectInputStream input = new ObjectInputStream(new FileInputStream(directory + File.separator + filename));
-            audioFilesPath = (HashMap<String, String>) input.readObject();
-            input.close();
-
-        } catch (Exception e) {
-            Logger.Log("Reading Users audio files", e.getMessage());
-        }
-
-        return audioFilesPath;
+        audioFiles = tinydb.getListString(Constants.SHARED_PREFERENCES_RECORDED_AUDIO_NAME);
     }
 }

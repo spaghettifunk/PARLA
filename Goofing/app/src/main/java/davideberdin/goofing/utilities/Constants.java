@@ -2,6 +2,7 @@ package davideberdin.goofing.utilities;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.StringTokenizer;
 
 import davideberdin.goofing.controllers.SentenceTuple;
 import davideberdin.goofing.controllers.Tuple;
@@ -51,6 +52,8 @@ public class Constants {
     public static final String GENERAL_ERROR_RESPONSE = "Unknown behaviour during RESPONSE";
     public static final String FETCHING_HISTORY_TITLE = "Processing";
     public static final String FETCHING_HISTORY = "Fetching history...";
+    public static final String RECORDED_AUDIO_PATH = "recorded_audio";
+    public static final String SHARED_PREFERENCES_RECORDED_AUDIO_NAME = "RecordedAudio";
 
     // Error messages
     public static final String FUNNY_ERROR_MESSAGE = "Something went wrong. A squad of well-trained sloth have been sent to fix the problem! Try later";
@@ -138,9 +141,6 @@ public class Constants {
             "He needs to mellow out a little.",
             "Of course I'm not going to buy a sports car. I was just pulling your leg!",
             "I'm thinking out loud now, but it looks as if I can meet you Tuesday."};
-
-    // just for testing
-    public static ArrayList<String> userSentences = new ArrayList<>();
 
     public static String getColoredSpanned(String text, int color) {
         String hexColor = "#" + Integer.toHexString(color).substring(2);
