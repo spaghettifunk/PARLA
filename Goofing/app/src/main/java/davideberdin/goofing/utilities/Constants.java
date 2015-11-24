@@ -57,8 +57,8 @@ public class Constants {
     public static final String LOGIN_TIMESTAMP = "LoginTimestamp";
 
     // Notification strings
-    public static final String NOTIFICATION_TITLE = "Title";
-    public static final String NOTIFICATION_MESSAGE = "message";
+    public static final String NOTIFICATION_TITLE = "Training time";
+    public static final String NOTIFICATION_MESSAGE = "Hey, it' time for practising your pronunciation";
     public static final String NOTIFICATION_ALARM_TEXT = "Alarm Text";
 
     // Error messages
