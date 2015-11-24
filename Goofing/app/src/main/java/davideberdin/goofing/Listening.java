@@ -150,6 +150,7 @@ public class Listening extends AppCompatActivity {
 
         try {
             IOUtilities.readUserAudio(this);
+            IOUtilities.readUsageTimestamp(this);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -163,6 +164,7 @@ public class Listening extends AppCompatActivity {
 
         try {
             IOUtilities.writeUserAudio(this);
+            IOUtilities.writeUsageTimestamp(this);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -174,6 +176,7 @@ public class Listening extends AppCompatActivity {
 
         try {
             IOUtilities.writeUserAudio(this);
+            IOUtilities.writeUsageTimestamp(this);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -184,6 +187,7 @@ public class Listening extends AppCompatActivity {
         super.onDestroy();
         try {
             IOUtilities.writeUserAudio(this);
+            IOUtilities.writeUsageTimestamp(this);
         } catch (IOException e) {
             e.printStackTrace();
         }

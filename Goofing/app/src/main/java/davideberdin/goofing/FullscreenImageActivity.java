@@ -183,6 +183,7 @@ public class FullscreenImageActivity extends AppCompatActivity implements View.O
 
         try {
             IOUtilities.readUserAudio(this);
+            IOUtilities.readUsageTimestamp(this);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -207,6 +208,7 @@ public class FullscreenImageActivity extends AppCompatActivity implements View.O
 
         try {
             IOUtilities.writeUserAudio(this);
+            IOUtilities.writeUsageTimestamp(this);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -217,6 +219,7 @@ public class FullscreenImageActivity extends AppCompatActivity implements View.O
         super.onDestroy();
         try {
             IOUtilities.writeUserAudio(this);
+            IOUtilities.writeUsageTimestamp(this);
         } catch (IOException e) {
             e.printStackTrace();
         }

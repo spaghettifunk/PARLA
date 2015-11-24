@@ -98,21 +98,6 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
@@ -138,6 +123,21 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     //region APP EVENTS
     @Override
     public void onResume() {
@@ -145,6 +145,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
 
         try {
             IOUtilities.readUserAudio(this);
+            IOUtilities.readUsageTimestamp(this);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -158,6 +159,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
 
         try {
             IOUtilities.writeUserAudio(this);
+            IOUtilities.writeUsageTimestamp(this);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -169,6 +171,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
 
         try {
             IOUtilities.writeUserAudio(this);
+            IOUtilities.writeUsageTimestamp(this);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -179,6 +182,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         super.onDestroy();
         try {
             IOUtilities.writeUserAudio(this);
+            IOUtilities.writeUsageTimestamp(this);
         } catch (IOException e) {
             e.printStackTrace();
         }

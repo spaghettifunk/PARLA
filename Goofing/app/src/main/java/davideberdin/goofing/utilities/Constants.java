@@ -54,6 +54,12 @@ public class Constants {
     public static final String FETCHING_HISTORY = "Fetching history...";
     public static final String RECORDED_AUDIO_PATH = "recorded_audio";
     public static final String SHARED_PREFERENCES_RECORDED_AUDIO_NAME = "RecordedAudio";
+    public static final String LOGIN_TIMESTAMP = "LoginTimestamp";
+
+    // Notification strings
+    public static final String NOTIFICATION_TITLE = "Title";
+    public static final String NOTIFICATION_MESSAGE = "message";
+    public static final String NOTIFICATION_ALARM_TEXT = "Alarm Text";
 
     // Error messages
     public static final String FUNNY_ERROR_MESSAGE = "Something went wrong. A squad of well-trained sloth have been sent to fix the problem! Try later";

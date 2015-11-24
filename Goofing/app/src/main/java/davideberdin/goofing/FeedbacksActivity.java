@@ -183,6 +183,7 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
 
         try {
             IOUtilities.readUserAudio(this);
+            IOUtilities.readUsageTimestamp(this);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -196,6 +197,7 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
 
         try {
             IOUtilities.writeUserAudio(this);
+            IOUtilities.writeUsageTimestamp(this);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -207,6 +209,7 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
 
         try {
             IOUtilities.writeUserAudio(this);
+            IOUtilities.writeUsageTimestamp(this);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -217,6 +220,7 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
         super.onDestroy();
         try {
             IOUtilities.writeUserAudio(this);
+            IOUtilities.writeUsageTimestamp(this);
         } catch (IOException e) {
             e.printStackTrace();
         }

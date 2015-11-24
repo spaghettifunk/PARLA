@@ -1,6 +1,9 @@
 package davideberdin.goofing.fragments;
 
+import android.app.AlarmManager;
 import android.app.Fragment;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -14,9 +17,12 @@ import android.widget.TextView;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import davideberdin.goofing.FeedbacksActivity;
 import davideberdin.goofing.R;
+import davideberdin.goofing.controllers.AlertReceiver;
 import davideberdin.goofing.controllers.User;
 import davideberdin.goofing.networking.GetCallback;
 import davideberdin.goofing.networking.ServerRequest;
@@ -68,6 +74,9 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
         String phonetic = this.loggedUser.GetCurrentPhonetic();
         this.tvPhonemes.setText("/ " + phonetic + " /");
 
+        // set notification
+        setAlarm();
+
         return this.testPronunciationView;
     }
 
@@ -77,6 +86,7 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
         super.onResume();
         try {
             IOUtilities.readUserAudio(getActivity());
+            IOUtilities.readUsageTimestamp(getActivity());
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -89,6 +99,7 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
         super.onStop();
         try {
             IOUtilities.writeUserAudio(getActivity());
+            IOUtilities.writeUsageTimestamp(getActivity());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -99,6 +110,7 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
         super.onPause();
         try {
             IOUtilities.writeUserAudio(getActivity());
+            IOUtilities.writeUsageTimestamp(getActivity());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -109,6 +121,7 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
         super.onDestroy();
         try {
             IOUtilities.writeUserAudio(getActivity());
+            IOUtilities.writeUsageTimestamp(getActivity());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -208,6 +221,7 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
                 });
                 break;
             case R.id.listenSentence:
+
                 // play audio
                 try {
                     String fileAudio = ((this.loggedUser.GetCurrentSentence()).toLowerCase()).replace(" ", "_");
@@ -224,5 +238,24 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
                 }
                 break;
         }
+    }
+
+    // set user reminder
+    @SuppressWarnings("deprecation")
+    private void setAlarm() {
+
+        String lastLogin = IOUtilities.readUsageTimestamp(this.getActivity());
+        Date lastTimestamp = new Date(Long.parseLong(lastLogin));
+
+        int difference = ((int)((lastTimestamp.getTime()/(10 * 60 * 60 * 1000)) - (int)(new Date().getTime()/(10 * 60 * 60 * 1000))));
+        if (difference > 0){
+
+        }
+
+        Long alertTimer = new GregorianCalendar().getTimeInMillis() + 10 * 60 * 60 * 1000;
+        Intent alertIntent = new Intent(this.getActivity(), AlertReceiver.class);
+
+        AlarmManager alarmManager = (AlarmManager) this.getActivity().getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, alertTimer, PendingIntent.getBroadcast(this.getActivity(), 1, alertIntent, PendingIntent.FLAG_UPDATE_CURRENT));
     }
 }

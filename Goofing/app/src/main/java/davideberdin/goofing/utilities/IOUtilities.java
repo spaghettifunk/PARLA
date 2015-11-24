@@ -15,6 +15,7 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.StreamCorruptedException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 
@@ -22,6 +23,7 @@ public class IOUtilities {
 
     public static TinyDB tinydb = null;
     public static ArrayList<String> audioFiles = new ArrayList<>();
+    private static String loginTimestamp = "";
 
     public static byte[] convertStreamToByteArray(InputStream is) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -73,5 +75,22 @@ public class IOUtilities {
             tinydb = new TinyDB(context);
 
         audioFiles = tinydb.getListString(Constants.SHARED_PREFERENCES_RECORDED_AUDIO_NAME);
+    }
+
+    public static void writeUsageTimestamp(Context context) {
+        if (tinydb == null)
+            tinydb = new TinyDB(context);
+
+        long timestamp = new Date().getTime();
+        loginTimestamp = Long.toString(timestamp);
+
+        tinydb.putString(Constants.LOGIN_TIMESTAMP, loginTimestamp);
+    }
+
+    public static String readUsageTimestamp(Context context) {
+        if (tinydb == null)
+            tinydb = new TinyDB(context);
+
+        return tinydb.getString(Constants.LOGIN_TIMESTAMP);
     }
 }
