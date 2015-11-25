@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import davideberdin.goofing.Listening;
@@ -22,8 +23,6 @@ import davideberdin.goofing.utilities.UserLocalStore;
 
 
 public class ListenUser extends Fragment {
-    private View listenUserFragment;
-    private ListView userListView = null;
     private View previouslyUserSelectedItem = null;
 
     private UserLocalStore userLocalStore = null;
@@ -32,17 +31,17 @@ public class ListenUser extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.listenUserFragment = inflater.inflate(R.layout.fragment_listen_user, container, false);
+        View listenUserFragment = inflater.inflate(R.layout.fragment_listen_user, container, false);
 
-        this.userListView = (ListView) this.listenUserFragment.findViewById(R.id.userListView);
+        ListView userListView = (ListView) listenUserFragment.findViewById(R.id.userListView);
         this.userLocalStore = new UserLocalStore(this.getActivity());
 
         // Fill list view user sentences
         ArrayAdapter<String> userAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, IOUtilities.audioFiles);
         userAdapter.notifyDataSetChanged();
 
-        this.userListView.setAdapter(userAdapter);
-        this.userListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        userListView.setAdapter(userAdapter);
+        userListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (previouslyUserSelectedItem != null)
@@ -60,6 +59,54 @@ public class ListenUser extends Fragment {
             }
         });
 
-        return this.listenUserFragment;
+        return listenUserFragment;
     }
+
+    //region APP EVENTS
+    @Override
+    public void onResume() {
+        super.onResume();
+        try {
+            IOUtilities.readUserAudio(getActivity());
+            IOUtilities.readReport(getActivity());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        try {
+            IOUtilities.writeUserAudio(getActivity());
+            IOUtilities.writeReport(getActivity());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        try {
+            IOUtilities.writeUserAudio(getActivity());
+            IOUtilities.writeReport(getActivity());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        try {
+            IOUtilities.writeUserAudio(getActivity());
+            IOUtilities.writeReport(getActivity());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    //endregion
 }

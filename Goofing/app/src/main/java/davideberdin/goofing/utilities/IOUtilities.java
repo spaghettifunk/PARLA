@@ -23,7 +23,6 @@ public class IOUtilities {
 
     public static TinyDB tinydb = null;
     public static ArrayList<String> audioFiles = new ArrayList<>();
-    private static String loginTimestamp = "";
 
     public static byte[] convertStreamToByteArray(InputStream is) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -77,20 +76,18 @@ public class IOUtilities {
         audioFiles = tinydb.getListString(Constants.SHARED_PREFERENCES_RECORDED_AUDIO_NAME);
     }
 
-    public static void writeUsageTimestamp(Context context) {
+    public static void writeReport(Context context) {
         if (tinydb == null)
             tinydb = new TinyDB(context);
 
-        long timestamp = new Date().getTime();
-        loginTimestamp = Long.toString(timestamp);
-
-        tinydb.putString(Constants.LOGIN_TIMESTAMP, loginTimestamp);
+        tinydb.putString(Constants.REPORT_SHARED_PREFERENCES, Logger.GetReport());
     }
 
-    public static String readUsageTimestamp(Context context) {
+    public static void readReport(Context context) {
         if (tinydb == null)
             tinydb = new TinyDB(context);
 
-        return tinydb.getString(Constants.LOGIN_TIMESTAMP);
+        String loadedReport = tinydb.getString(Constants.REPORT_SHARED_PREFERENCES);
+        Logger.SetReport(loadedReport);
     }
 }

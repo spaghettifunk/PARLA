@@ -4,11 +4,13 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -27,6 +29,7 @@ import davideberdin.goofing.utilities.AppWindowManager;
 import davideberdin.goofing.utilities.AutoResizeTextView;
 import davideberdin.goofing.utilities.Constants;
 import davideberdin.goofing.utilities.IOUtilities;
+import davideberdin.goofing.utilities.Logger;
 import davideberdin.goofing.utilities.UserLocalStore;
 
 public class FeedbacksActivity extends AppCompatActivity implements View.OnClickListener {
@@ -123,6 +126,9 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.pitchChartImageView:
+
+                Logger.WriteOnReport("FeedbacksActivity", "Clicked on pitch chart BUTTON");
+
                 Intent pitchIntent = new Intent(FeedbacksActivity.this, FullscreenImageActivity.class);
                 pitchIntent.putExtra("isPitch", true);
                 pitchIntent.putExtra("pitchchart", this.pitchChartByte);
@@ -130,6 +136,9 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
                 break;
 
             case R.id.vowelChartImageView:
+
+                Logger.WriteOnReport("FeedbacksActivity", "Clicked on vocal chart BUTTON");
+
                 Intent vowelIntent = new Intent(FeedbacksActivity.this, FullscreenImageActivity.class);
                 vowelIntent.putExtra("isPitch", false);
                 vowelIntent.putExtra("vowelchart", this.vowelChartByte);
@@ -138,10 +147,14 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
 
             case R.id.infoImageButton:
 
+                Logger.WriteOnReport("FeedbacksActivity", "Clicked on info BUTTON");
                 AppWindowManager.showInfoFeedbacksDialog(this, this.loggedUser.GetCurrentSentence());
 
                 break;
             case R.id.historyButton:
+
+                Logger.WriteOnReport("FeedbacksActivity", "Clicked on history BUTTON");
+
                 Intent historyIntent = new Intent(FeedbacksActivity.this, HistoryActivity.class);
                 historyIntent.putExtra("sentence", this.loggedUser.GetCurrentSentence());
                 startActivity(historyIntent);
@@ -169,6 +182,7 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
         switch (id) {
             case android.R.id.home:
                 // app icon in action bar clicked; goto parent activity.
+                Logger.WriteOnReport("FeedbacksActivity", "Clicked on back BUTTON");
                 onBackPressed();
                 return true;
             default:
@@ -183,7 +197,7 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
 
         try {
             IOUtilities.readUserAudio(this);
-            IOUtilities.readUsageTimestamp(this);
+            IOUtilities.readReport(this);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -197,7 +211,7 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
 
         try {
             IOUtilities.writeUserAudio(this);
-            IOUtilities.writeUsageTimestamp(this);
+            IOUtilities.writeReport(this);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -209,7 +223,7 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
 
         try {
             IOUtilities.writeUserAudio(this);
-            IOUtilities.writeUsageTimestamp(this);
+            IOUtilities.writeReport(this);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -220,12 +234,41 @@ public class FeedbacksActivity extends AppCompatActivity implements View.OnClick
         super.onDestroy();
         try {
             IOUtilities.writeUserAudio(this);
-            IOUtilities.writeUsageTimestamp(this);
+            IOUtilities.writeReport(this);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
     //endregion
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        int action = MotionEventCompat.getActionMasked(event);
+
+        switch (action) {
+            case (MotionEvent.ACTION_DOWN):
+                Logger.WriteOnReport("FeedbacksActivity", "Action was DOWN");
+                return true;
+            case (MotionEvent.ACTION_MOVE):
+                Logger.WriteOnReport("FeedbacksActivity", "Action was MOVE");
+                return true;
+            case (MotionEvent.ACTION_UP):
+                Logger.WriteOnReport("FeedbacksActivity", "Action was UP");
+                return true;
+            case (MotionEvent.ACTION_CANCEL):
+                Logger.WriteOnReport("FeedbacksActivity", "Action was CANCEL");
+                return true;
+            case (MotionEvent.ACTION_OUTSIDE):
+                Logger.WriteOnReport("FeedbacksActivity", "Movement occurred outside bounds of current screen element");
+                return true;
+            case (MotionEvent.ACTION_SCROLL):
+                Logger.WriteOnReport("FeedbacksActivity", "Action was SCROLL");
+                return true;
+            default:
+                return super.onTouchEvent(event);
+        }
+    }
 
     private void fillNativeFeedbacks() {
         String currentSentence = this.loggedUser.GetCurrentSentence();

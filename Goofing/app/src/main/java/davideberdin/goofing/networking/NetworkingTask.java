@@ -58,7 +58,6 @@ public class NetworkingTask extends AsyncTask {
     protected Object doInBackground(Object[] params) {
         HashMap<String, String> postParams = new HashMap<>();
         try {
-
             switch ((int) params[0]) {
                 case Constants.NETWORKING_LOGIN_STATE:
                     //region LOGIN
@@ -138,6 +137,18 @@ public class NetworkingTask extends AsyncTask {
                     return performPostCall(Constants.PHONEME_SERVICE_URL, postParams, true);
 
                 //endregion
+                case Constants.NETWORKING_SEND_REPORT:
+                    //region REPORT
+                    this.currentNetworkingState = Constants.NETWORKING_SEND_REPORT;
+                    String currentUsername = (String) params[1];
+                    String report = Logger.GetReport();
+
+                    postParams.put("Username", currentUsername);
+                    postParams.put("Report", report);
+
+                    return performPostCall(Constants.SERVER_URL + Constants.REPORT_URL, postParams);
+
+                    //endregion
                 default:
                     Logger.Log(Constants.CONNECTION_ACTIVITY, Constants.GENERAL_ERROR_REQUEST);
                     return null;
@@ -150,10 +161,8 @@ public class NetworkingTask extends AsyncTask {
 
     @Override
     protected void onPostExecute(Object result) {
-
         // Handle every response here
         try {
-
             assert result != null;
             if (!(result instanceof String)) throw new AssertionError();
 
@@ -261,7 +270,6 @@ public class NetworkingTask extends AsyncTask {
                         //endregion
 
                         userCallback.done(history, trend);
-
                         break;
                     //endregion
                     case Constants.NETWORKING_FETCH_PHONEMES:
@@ -270,6 +278,15 @@ public class NetworkingTask extends AsyncTask {
                         String phonemesResult = (String) responseObject.get(Constants.GET_RESULT_PHONEMES_SERVICE);
 
                         userCallback.done(phonemesResult);
+                        break;
+                        //endregion
+                    case Constants.NETWORKING_SEND_REPORT:
+                        //region REPORT
+                        Logger.Log(Constants.CONNECTION_ACTIVITY, Constants.REPORT_ACTIVITY);
+
+                        this.progressDialog.dismiss();
+                        userCallback.done(true);
+                        break;
                         //endregion
                     default:
                         Logger.Log(Constants.CONNECTION_ACTIVITY, Constants.GENERAL_ERROR_RESPONSE);
@@ -330,6 +347,7 @@ public class NetworkingTask extends AsyncTask {
         return response;
     }
 
+    //region JSON Methods
     private String getPostDataString(HashMap<String, String> params) {
         JSONObject obj = new JSONObject();
         for (Map.Entry<String, String> entry : params.entrySet()) {
@@ -396,4 +414,5 @@ public class NetworkingTask extends AsyncTask {
         }
         return list;
     }
+    //endregion
 }

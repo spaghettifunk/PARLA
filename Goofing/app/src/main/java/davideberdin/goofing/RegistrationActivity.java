@@ -18,6 +18,7 @@ import davideberdin.goofing.controllers.User;
 import davideberdin.goofing.networking.GetCallback;
 import davideberdin.goofing.networking.ServerRequest;
 import davideberdin.goofing.utilities.AppWindowManager;
+import davideberdin.goofing.utilities.Logger;
 import davideberdin.goofing.utilities.UserLocalStore;
 
 public class RegistrationActivity extends AppCompatActivity implements View.OnClickListener
@@ -29,12 +30,6 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
     private Spinner genderSpinner;
     private Spinner nationalitySpinner;
     private Spinner occupationSpinner;
-
-    private String name_text;
-    private String password_text;
-    private String gender_text;
-    private String nationality_text;
-    private String occupation_text;
 
     private UserLocalStore userLocalStore = null;
 
@@ -76,11 +71,13 @@ public class RegistrationActivity extends AppCompatActivity implements View.OnCl
         {
             case R.id.registerButtonReg:
 
-                name_text = nameTextField.getText().toString();
-                password_text = passwordTextField.getText().toString();
-                gender_text = genderSpinner.getSelectedItem().toString();
-                nationality_text = nationalitySpinner.getSelectedItem().toString();
-                occupation_text = occupationSpinner.getSelectedItem().toString();
+                Logger.WriteOnReport("RegistrationActivity", "Clicked on Register BUTTON");
+
+                String name_text = nameTextField.getText().toString();
+                String password_text = passwordTextField.getText().toString();
+                String gender_text = genderSpinner.getSelectedItem().toString();
+                String nationality_text = nationalitySpinner.getSelectedItem().toString();
+                String occupation_text = occupationSpinner.getSelectedItem().toString();
 
                 if (name_text.isEmpty() || password_text.isEmpty()){
                     Toast.makeText(RegistrationActivity.this, R.string.emptyFields, Toast.LENGTH_SHORT).show();

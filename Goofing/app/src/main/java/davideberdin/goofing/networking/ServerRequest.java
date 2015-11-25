@@ -168,4 +168,12 @@ public class ServerRequest {
         NetworkingTask networkingTask = new NetworkingTask(callback, this.progressDialog);
         networkingTask.execute(Constants.NETWORKING_FETCH_HISTORY, username, currentSentence, vowels);
     }
+
+    // Send report
+    public void sendReportDataInBackground(String username, final GetCallback callback){
+        this.progressDialog.show();
+
+        NetworkingTask networkingTask = new NetworkingTask(callback, this.progressDialog);
+        networkingTask.execute(Constants.NETWORKING_SEND_REPORT, username);
+    }
 }

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 import davideberdin.goofing.FullscreenImageActivity;
 import davideberdin.goofing.R;
+import davideberdin.goofing.utilities.Logger;
 
 
 public class HistoryTrendAdapter extends RecyclerView.Adapter<HistoryTrendAdapter.CardViewHolder> {
@@ -73,6 +74,9 @@ public class HistoryTrendAdapter extends RecyclerView.Adapter<HistoryTrendAdapte
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+                    Logger.WriteOnReport("HistoryActivity", "Clicked on trend chart CARD");
+
                     // go full screen
                     Bitmap bm = image.getDrawingCache();
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();

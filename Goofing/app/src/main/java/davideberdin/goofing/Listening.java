@@ -3,6 +3,8 @@ package davideberdin.goofing;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Parcel;
+import android.support.v4.view.MotionEventCompat;
+import android.view.MotionEvent;
 import android.view.View.OnClickListener;
 import android.media.MediaPlayer;
 import android.support.design.widget.TabLayout;
@@ -32,6 +34,7 @@ import davideberdin.goofing.libraries.FloatingActionButton;
 import davideberdin.goofing.libraries.FloatingActionsMenu;
 import davideberdin.goofing.utilities.Constants;
 import davideberdin.goofing.utilities.IOUtilities;
+import davideberdin.goofing.utilities.Logger;
 import davideberdin.goofing.utilities.UserLocalStore;
 
 public class Listening extends AppCompatActivity {
@@ -77,6 +80,8 @@ public class Listening extends AppCompatActivity {
                 // play audio
                 try {
 
+                    Logger.WriteOnReport("ListeningActivity", "Clicked on listening BUTTON");
+
                     userLocalStore = new UserLocalStore(v.getContext());
                     loggedUser = userLocalStore.getLoggedUser();
 
@@ -107,6 +112,8 @@ public class Listening extends AppCompatActivity {
         fabTest.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                Logger.WriteOnReport("ListeningActivity", "Clicked on test pronunciation BUTTON");
+
                 Intent intent = new Intent(Listening.this, MenuActivity.class);
                 startActivity(intent);
             }
@@ -136,6 +143,7 @@ public class Listening extends AppCompatActivity {
         switch (id) {
             case android.R.id.home:
                 // app icon in action bar clicked; goto parent activity.
+                Logger.WriteOnReport("ListeningActivity", "Clicked on back BUTTON");
                 onBackPressed();
                 return true;
             default:
@@ -150,7 +158,7 @@ public class Listening extends AppCompatActivity {
 
         try {
             IOUtilities.readUserAudio(this);
-            IOUtilities.readUsageTimestamp(this);
+            IOUtilities.readReport(this);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -164,7 +172,7 @@ public class Listening extends AppCompatActivity {
 
         try {
             IOUtilities.writeUserAudio(this);
-            IOUtilities.writeUsageTimestamp(this);
+            IOUtilities.writeReport(this);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -176,7 +184,7 @@ public class Listening extends AppCompatActivity {
 
         try {
             IOUtilities.writeUserAudio(this);
-            IOUtilities.writeUsageTimestamp(this);
+            IOUtilities.writeReport(this);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -187,12 +195,41 @@ public class Listening extends AppCompatActivity {
         super.onDestroy();
         try {
             IOUtilities.writeUserAudio(this);
-            IOUtilities.writeUsageTimestamp(this);
+            IOUtilities.writeReport(this);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
     //endregion
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        int action = MotionEventCompat.getActionMasked(event);
+
+        switch (action) {
+            case (MotionEvent.ACTION_DOWN):
+                Logger.WriteOnReport("ListeningActivity", "Action was DOWN");
+                return true;
+            case (MotionEvent.ACTION_MOVE):
+                Logger.WriteOnReport("ListeningActivity", "Action was MOVE");
+                return true;
+            case (MotionEvent.ACTION_UP):
+                Logger.WriteOnReport("ListeningActivity", "Action was UP");
+                return true;
+            case (MotionEvent.ACTION_CANCEL):
+                Logger.WriteOnReport("ListeningActivity", "Action was CANCEL");
+                return true;
+            case (MotionEvent.ACTION_OUTSIDE):
+                Logger.WriteOnReport("ListeningActivity", "Movement occurred outside bounds of current screen element");
+                return true;
+            case (MotionEvent.ACTION_SCROLL):
+                Logger.WriteOnReport("ListeningActivity", "Action was SCROLL");
+                return true;
+            default:
+                return super.onTouchEvent(event);
+        }
+    }
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to

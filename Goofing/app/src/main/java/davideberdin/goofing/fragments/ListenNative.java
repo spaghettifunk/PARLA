@@ -11,20 +11,20 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import davideberdin.goofing.Listening;
 import davideberdin.goofing.R;
 import davideberdin.goofing.controllers.User;
 import davideberdin.goofing.utilities.Constants;
+import davideberdin.goofing.utilities.IOUtilities;
 import davideberdin.goofing.utilities.UserLocalStore;
 
 
 public class ListenNative extends Fragment
 {
     private View previouslyNativeSelectedItem = null;
-    private ListView nativeListView = null;
-    private View listenNativeFragment;
 
     private UserLocalStore userLocalStore = null;
     private User loggedUser = null;
@@ -32,16 +32,16 @@ public class ListenNative extends Fragment
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        this.listenNativeFragment = inflater.inflate(R.layout.fragment_listen_native, container, false);
+        View listenNativeFragment = inflater.inflate(R.layout.fragment_listen_native, container, false);
 
-        this.nativeListView = (ListView) this.listenNativeFragment.findViewById(R.id.nativeListView);
+        ListView nativeListView = (ListView) listenNativeFragment.findViewById(R.id.nativeListView);
         this.userLocalStore = new UserLocalStore(this.getActivity());
 
         // Fill list view native sentences
         ArrayList<String> nativeSentences = fillNativeList();
         ArrayAdapter<String> nativeAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1 , nativeSentences);
-        this.nativeListView.setAdapter(nativeAdapter);
-        this.nativeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        nativeListView.setAdapter(nativeAdapter);
+        nativeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (previouslyNativeSelectedItem != null)
@@ -59,7 +59,7 @@ public class ListenNative extends Fragment
             }
         });
 
-        return this.listenNativeFragment;
+        return listenNativeFragment;
     }
 
     private ArrayList<String> fillNativeList()
@@ -71,4 +71,52 @@ public class ListenNative extends Fragment
 
         return list;
     }
+
+    //region APP EVENTS
+    @Override
+    public void onResume() {
+        super.onResume();
+        try {
+            IOUtilities.readUserAudio(getActivity());
+            IOUtilities.readReport(getActivity());
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        try {
+            IOUtilities.writeUserAudio(getActivity());
+            IOUtilities.writeReport(getActivity());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        try {
+            IOUtilities.writeUserAudio(getActivity());
+            IOUtilities.writeReport(getActivity());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        try {
+            IOUtilities.writeUserAudio(getActivity());
+            IOUtilities.writeReport(getActivity());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    //endregion
 }

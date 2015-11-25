@@ -72,4 +72,7 @@
     <string name="infoExampleTextView">Example</string>
     <string name="rememberMeCheckbox">Remember me</string>
     <string name="historyImage">vowel prediction of that day/time</string>
+    <string name="reportNameTextView">Report Page</string>
+    <string name="thank_you_image">thank you image</string>
+    <string name="reportButton">Send Report</string>
 </resources>

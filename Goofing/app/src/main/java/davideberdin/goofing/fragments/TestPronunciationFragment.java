@@ -9,7 +9,9 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.MotionEventCompat;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -29,9 +31,10 @@ import davideberdin.goofing.networking.ServerRequest;
 import davideberdin.goofing.utilities.AppWindowManager;
 import davideberdin.goofing.utilities.Constants;
 import davideberdin.goofing.utilities.IOUtilities;
+import davideberdin.goofing.utilities.Logger;
 import davideberdin.goofing.utilities.UserLocalStore;
 
-public class TestPronunciationFragment extends Fragment implements View.OnClickListener {
+public class TestPronunciationFragment extends Fragment implements View.OnClickListener, View.OnTouchListener {
     //region VARIABLES
     private ServerRequest recordingRequest = null;
 
@@ -86,7 +89,7 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
         super.onResume();
         try {
             IOUtilities.readUserAudio(getActivity());
-            IOUtilities.readUsageTimestamp(getActivity());
+            IOUtilities.readReport(getActivity());
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -99,7 +102,7 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
         super.onStop();
         try {
             IOUtilities.writeUserAudio(getActivity());
-            IOUtilities.writeUsageTimestamp(getActivity());
+            IOUtilities.writeReport(getActivity());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -110,7 +113,7 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
         super.onPause();
         try {
             IOUtilities.writeUserAudio(getActivity());
-            IOUtilities.writeUsageTimestamp(getActivity());
+            IOUtilities.writeReport(getActivity());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -121,7 +124,7 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
         super.onDestroy();
         try {
             IOUtilities.writeUserAudio(getActivity());
-            IOUtilities.writeUsageTimestamp(getActivity());
+            IOUtilities.writeReport(getActivity());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -134,6 +137,9 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
 
         switch (v.getId()) {
             case R.id.fabStartRecording:
+
+                Logger.WriteOnReport("TestPronunciationActivity", "Clicked on test BUTTON");
+
                 String currentSentence = ((loggedUser.GetCurrentSentence()).toLowerCase()).replace(" ", "_");
                 recordingRequest.recordingAudioInBackground(testPronunciationView.getContext(), currentSentence, new GetCallback() {
                     @Override
@@ -222,6 +228,8 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
                 break;
             case R.id.listenSentence:
 
+                Logger.WriteOnReport("TestPronunciationActivity", "Clicked on listen sentence BUTTON");
+
                 // play audio
                 try {
                     String fileAudio = ((this.loggedUser.GetCurrentSentence()).toLowerCase()).replace(" ", "_");
@@ -244,18 +252,38 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
     @SuppressWarnings("deprecation")
     private void setAlarm() {
 
-        String lastLogin = IOUtilities.readUsageTimestamp(this.getActivity());
-        Date lastTimestamp = new Date(Long.parseLong(lastLogin));
-
-        int difference = ((int)((lastTimestamp.getTime()/(10 * 60 * 60 * 1000)) - (int)(new Date().getTime()/(10 * 60 * 60 * 1000))));
-        if (difference > 0){
-
-        }
-
         Long alertTimer = new GregorianCalendar().getTimeInMillis() + 10 * 60 * 60 * 1000;
         Intent alertIntent = new Intent(this.getActivity(), AlertReceiver.class);
 
         AlarmManager alarmManager = (AlarmManager) this.getActivity().getSystemService(Context.ALARM_SERVICE);
         alarmManager.set(AlarmManager.RTC_WAKEUP, alertTimer, PendingIntent.getBroadcast(this.getActivity(), 1, alertIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        int action = MotionEventCompat.getActionMasked(event);
+
+        switch (action) {
+            case (MotionEvent.ACTION_DOWN):
+                Logger.WriteOnReport("TestPronunciationActivity", "Action was DOWN");
+                return true;
+            case (MotionEvent.ACTION_MOVE):
+                Logger.WriteOnReport("TestPronunciationActivity", "Action was MOVE");
+                return true;
+            case (MotionEvent.ACTION_UP):
+                Logger.WriteOnReport("TestPronunciationActivity", "Action was UP");
+                return true;
+            case (MotionEvent.ACTION_CANCEL):
+                Logger.WriteOnReport("TestPronunciationActivity", "Action was CANCEL");
+                return true;
+            case (MotionEvent.ACTION_OUTSIDE):
+                Logger.WriteOnReport("TestPronunciationActivity", "Movement occurred outside bounds of current screen element");
+                return true;
+            case (MotionEvent.ACTION_SCROLL):
+                Logger.WriteOnReport("TestPronunciationActivity", "Action was SCROLL");
+                return true;
+            default:
+                return true;
+        }
     }
 }

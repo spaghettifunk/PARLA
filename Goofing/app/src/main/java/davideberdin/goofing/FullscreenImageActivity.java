@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.PointF;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,6 +19,7 @@ import android.widget.ImageView;
 import java.io.IOException;
 
 import davideberdin.goofing.utilities.IOUtilities;
+import davideberdin.goofing.utilities.Logger;
 
 public class FullscreenImageActivity extends AppCompatActivity implements View.OnTouchListener {
     private static final String TAG = "Touch";
@@ -106,6 +108,7 @@ public class FullscreenImageActivity extends AppCompatActivity implements View.O
         switch (id) {
             case android.R.id.home:
                 // app icon in action bar clicked; goto parent activity.
+                Logger.WriteOnReport("FullscreenImageActivity", "Clicked on back BUTTON");
                 onBackPressed();
                 return true;
             default:
@@ -147,6 +150,8 @@ public class FullscreenImageActivity extends AppCompatActivity implements View.O
                     midPoint(mid, event);
                     mode = ZOOM;
                     Log.d(TAG, "mode=ZOOM");
+
+                    Logger.WriteOnReport("FullscreenImageActivity", "pinch to ZOOM");
                 }
                 break;
 
@@ -176,6 +181,35 @@ public class FullscreenImageActivity extends AppCompatActivity implements View.O
         return true; // indicate event was handled
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        int action = MotionEventCompat.getActionMasked(event);
+
+        switch (action) {
+            case (MotionEvent.ACTION_DOWN):
+                Logger.WriteOnReport("FullscreenActivity", "Action was DOWN");
+                return true;
+            case (MotionEvent.ACTION_MOVE):
+                Logger.WriteOnReport("FullscreenActivity", "Action was MOVE");
+                return true;
+            case (MotionEvent.ACTION_UP):
+                Logger.WriteOnReport("FullscreenActivity", "Action was UP");
+                return true;
+            case (MotionEvent.ACTION_CANCEL):
+                Logger.WriteOnReport("FullscreenActivity", "Action was CANCEL");
+                return true;
+            case (MotionEvent.ACTION_OUTSIDE):
+                Logger.WriteOnReport("FullscreenActivity", "Movement occurred outside bounds of current screen element");
+                return true;
+            case (MotionEvent.ACTION_SCROLL):
+                Logger.WriteOnReport("FullscreenActivity", "Action was SCROLL");
+                return true;
+            default:
+                return super.onTouchEvent(event);
+        }
+    }
+
     //region APP EVENTS
     @Override
     public void onResume() {
@@ -183,7 +217,7 @@ public class FullscreenImageActivity extends AppCompatActivity implements View.O
 
         try {
             IOUtilities.readUserAudio(this);
-            IOUtilities.readUsageTimestamp(this);
+            IOUtilities.readReport(this);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -197,6 +231,7 @@ public class FullscreenImageActivity extends AppCompatActivity implements View.O
 
         try {
             IOUtilities.writeUserAudio(this);
+            IOUtilities.writeReport(this);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -208,7 +243,7 @@ public class FullscreenImageActivity extends AppCompatActivity implements View.O
 
         try {
             IOUtilities.writeUserAudio(this);
-            IOUtilities.writeUsageTimestamp(this);
+            IOUtilities.writeReport(this);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -219,7 +254,7 @@ public class FullscreenImageActivity extends AppCompatActivity implements View.O
         super.onDestroy();
         try {
             IOUtilities.writeUserAudio(this);
-            IOUtilities.writeUsageTimestamp(this);
+            IOUtilities.writeReport(this);
         } catch (IOException e) {
             e.printStackTrace();
         }

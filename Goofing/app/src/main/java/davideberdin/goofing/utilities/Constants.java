@@ -14,6 +14,7 @@ public class Constants {
     public static final String REGISTRATION_ACTIVITY = "RegistrationActivity";
     public static final String PRONUNCIATION_ACTIVITY = "PronunciationActivity";
     public static final String HISTORY_ACTIVITY = "HistoryActivity";
+    public static final String REPORT_ACTIVITY = "ReportActivity";
 
     // recognition CMU Sphinxs
     public static final String PHONE_SEARCH = "phones";
@@ -27,6 +28,7 @@ public class Constants {
     public static final String REGISTRATION_URL = "register/";
     public static final String HANDLE_RECORDING_URL = "pronunciation/";
     public static final String HANDLE_FETCH_HISTORY_URL = "history/";
+    public static final String REPORT_URL = "report/";
 
     // Network states
     public static final int NETWORKING_LOGIN_STATE = 0;
@@ -34,6 +36,7 @@ public class Constants {
     public static final int NETWORKING_HANDLE_RECORDED_VOICE = 2;
     public static final int NETWORKING_FETCH_HISTORY = 3;
     public static final int NETWORKING_FETCH_PHONEMES = 4;
+    public static final int NETWORKING_SEND_REPORT = 5;
 
     // POST strings
     public static final String SUCCESS_POST = "SUCCESS";
@@ -55,6 +58,7 @@ public class Constants {
     public static final String RECORDED_AUDIO_PATH = "recorded_audio";
     public static final String SHARED_PREFERENCES_RECORDED_AUDIO_NAME = "RecordedAudio";
     public static final String LOGIN_TIMESTAMP = "LoginTimestamp";
+    public static final String REPORT_SHARED_PREFERENCES = "ReportSharedPreferences";
 
     // Notification strings
     public static final String NOTIFICATION_TITLE = "Training time";
@@ -73,9 +77,6 @@ public class Constants {
     public static final String GET_VOWEL_HISTORY_ID = "ChartId";
     public static final String GET_VOWEL_HISTORY_DATE = "VowelsDate";
     public static final String GET_VOWEL_HISTORY = "VowelsImages";
-
-    public static final String GET_VOWEL_TREND_ID = "TrendChartId";
-    public static final String GET_VOWEL_TREND_LAST_DATE = "TrendLastEdit";
     public static final String GET_VOWEL_TREND = "TrendImages";
 
     public static final String GET_RESULT_PHONEMES_SERVICE = "Phonemes";

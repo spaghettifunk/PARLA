@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 import davideberdin.goofing.FullscreenImageActivity;
 import davideberdin.goofing.R;
+import davideberdin.goofing.utilities.Logger;
 
 
 public class HistoryCardsAdapter extends RecyclerView.Adapter<HistoryCardsAdapter.CardViewHolder> {
@@ -73,6 +74,9 @@ public class HistoryCardsAdapter extends RecyclerView.Adapter<HistoryCardsAdapte
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+                    Logger.WriteOnReport("HistoryActivity", "Clicked on vowels chart CARD");
+
                     // go full screen
                     Bitmap bm = image.getDrawingCache();
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();

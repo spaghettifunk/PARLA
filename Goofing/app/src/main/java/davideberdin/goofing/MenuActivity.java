@@ -5,12 +5,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,10 +23,11 @@ import java.util.List;
 
 import davideberdin.goofing.controllers.SentenceTuple;
 import davideberdin.goofing.controllers.Tuple;
-import davideberdin.goofing.fragments.NewWordsFragment;
+import davideberdin.goofing.fragments.ReportFragment;
 import davideberdin.goofing.fragments.TestPronunciationFragment;
 import davideberdin.goofing.utilities.Constants;
 import davideberdin.goofing.utilities.IOUtilities;
+import davideberdin.goofing.utilities.Logger;
 import davideberdin.goofing.utilities.UserLocalStore;
 
 public class MenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -70,7 +73,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onStart() {
         super.onStart();
-        if (authenticate() == false) {
+        if (!authenticate()) {
             Intent newIntent = new Intent(MenuActivity.this, LoginActivity.class);
             startActivity(newIntent);
         }
@@ -82,6 +85,9 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
+
+        Logger.WriteOnReport("MenuActivity", "Clicked on Back BUTTON");
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -103,13 +109,18 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.test_pronunciation) {
-            this.fragmentManager.beginTransaction().replace(R.id.content_menu, new TestPronunciationFragment()).commit();
+            Logger.WriteOnReport("MenuActivity", "Clicked on pronunciation BUTTON");
+            fragmentManager.beginTransaction().replace(R.id.content_menu, new TestPronunciationFragment()).commit();
         } else if (id == R.id.critical_listening) {
+            Logger.WriteOnReport("MenuActivity", "Clicked on critical listening BUTTON");
             Intent intent = new Intent(MenuActivity.this, Listening.class);
             startActivity(intent);
         } else if (id == R.id.new_words) {
-            this.fragmentManager.beginTransaction().replace(R.id.content_menu, new NewWordsFragment()).commit();
+            Logger.WriteOnReport("MenuActivity", "Clicked on send report BUTTON");
+            fragmentManager.beginTransaction().replace(R.id.content_menu, new ReportFragment()).commit();
         } else if (id == R.id.logout) {
+
+            Logger.WriteOnReport("MenuActivity", "Clicked on logout BUTTON");
 
             this.userLocalStore.clearUserData();
             this.userLocalStore.setUserLoggedIn(false);
@@ -132,6 +143,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Logger.WriteOnReport("MenuActivity", "Clicked on action settings BUTTON");
             return true;
         }
 
@@ -145,7 +157,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
 
         try {
             IOUtilities.readUserAudio(this);
-            IOUtilities.readUsageTimestamp(this);
+            IOUtilities.readReport(this);
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -159,7 +171,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
 
         try {
             IOUtilities.writeUserAudio(this);
-            IOUtilities.writeUsageTimestamp(this);
+            IOUtilities.writeReport(this);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -171,7 +183,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
 
         try {
             IOUtilities.writeUserAudio(this);
-            IOUtilities.writeUsageTimestamp(this);
+            IOUtilities.writeReport(this);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -182,9 +194,38 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         super.onDestroy();
         try {
             IOUtilities.writeUserAudio(this);
-            IOUtilities.writeUsageTimestamp(this);
+            IOUtilities.writeReport(this);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        int action = MotionEventCompat.getActionMasked(event);
+
+        switch (action) {
+            case (MotionEvent.ACTION_DOWN):
+                Logger.WriteOnReport("MenuActivity", "Action was DOWN");
+                return true;
+            case (MotionEvent.ACTION_MOVE):
+                Logger.WriteOnReport("MenuActivity", "Action was MOVE");
+                return true;
+            case (MotionEvent.ACTION_UP):
+                Logger.WriteOnReport("MenuActivity", "Action was UP");
+                return true;
+            case (MotionEvent.ACTION_CANCEL):
+                Logger.WriteOnReport("MenuActivity", "Action was CANCEL");
+                return true;
+            case (MotionEvent.ACTION_OUTSIDE):
+                Logger.WriteOnReport("MenuActivity", "Movement occurred outside bounds of current screen element");
+                return true;
+            case (MotionEvent.ACTION_SCROLL):
+                Logger.WriteOnReport("MenuActivity", "Action was SCROLL");
+                return true;
+            default:
+                return super.onTouchEvent(event);
         }
     }
     //endregion

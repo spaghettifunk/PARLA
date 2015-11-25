@@ -1,11 +1,14 @@
 package davideberdin.goofing;
 
+import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -17,6 +20,8 @@ import davideberdin.goofing.controllers.User;
 import davideberdin.goofing.networking.GetCallback;
 import davideberdin.goofing.networking.ServerRequest;
 import davideberdin.goofing.utilities.Constants;
+import davideberdin.goofing.utilities.IOUtilities;
+import davideberdin.goofing.utilities.Logger;
 import davideberdin.goofing.utilities.UserLocalStore;
 
 public class HistoryActivity extends AppCompatActivity {
@@ -110,6 +115,7 @@ public class HistoryActivity extends AppCompatActivity {
         switch (id) {
             case android.R.id.home:
                 // app icon in action bar clicked; goto parent activity.
+                Logger.WriteOnReport("HistoryActivity", "Clicked on back BUTTON");
                 onBackPressed();
                 return true;
             default:
@@ -133,4 +139,81 @@ public class HistoryActivity extends AppCompatActivity {
                 historyTrendAdapterList.add(hc);
         }
     }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+
+        int action = MotionEventCompat.getActionMasked(event);
+
+        switch (action) {
+            case (MotionEvent.ACTION_DOWN):
+                Logger.WriteOnReport("HistoryActivity", "Action was DOWN");
+                return true;
+            case (MotionEvent.ACTION_MOVE):
+                Logger.WriteOnReport("HistoryActivity", "Action was MOVE");
+                return true;
+            case (MotionEvent.ACTION_UP):
+                Logger.WriteOnReport("HistoryActivity", "Action was UP");
+                return true;
+            case (MotionEvent.ACTION_CANCEL):
+                Logger.WriteOnReport("HistoryActivity", "Action was CANCEL");
+                return true;
+            case (MotionEvent.ACTION_OUTSIDE):
+                Logger.WriteOnReport("HistoryActivity", "Movement occurred outside bounds of current screen element");
+                return true;
+            case (MotionEvent.ACTION_SCROLL):
+                Logger.WriteOnReport("HistoryActivity", "Action was SCROLL");
+                return true;
+            default:
+                return super.onTouchEvent(event);
+        }
+    }
+
+    //region APP EVENTS
+    @Override
+    public void onResume() {
+        super.onResume();
+        try {
+            IOUtilities.readUserAudio(this);
+            IOUtilities.readReport(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        try {
+            IOUtilities.writeUserAudio(this);
+            IOUtilities.writeReport(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        try {
+            IOUtilities.writeUserAudio(this);
+            IOUtilities.writeReport(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        try {
+            IOUtilities.writeUserAudio(this);
+            IOUtilities.writeReport(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    //endregion
 }

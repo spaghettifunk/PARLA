@@ -7,7 +7,7 @@
         <item android:id="@+id/critical_listening" android:icon="@android:drawable/ic_lock_silent_mode_off"
             android:title="Critical Listening" />
         <item android:id="@+id/new_words" android:icon="@android:drawable/ic_menu_send"
-            android:title="New Words" />
+            android:title="Send Report" />
     </group>
 
     <item android:title="Extra">
