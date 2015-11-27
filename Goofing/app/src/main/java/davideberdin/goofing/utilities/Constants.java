@@ -8,6 +8,10 @@ import davideberdin.goofing.controllers.SentenceTuple;
 import davideberdin.goofing.controllers.Tuple;
 
 public class Constants {
+
+    // Github
+    public static final String GITHUB_O2AUTH_TOKEN = "04b3b1f330ef5f610972fdb99875c8359ce59226";
+
     // Activities Name
     public static final String LOGIN_ACTIVITY = "LoginActivity";
     public static final String CONNECTION_ACTIVITY = "ConnectionActivity";

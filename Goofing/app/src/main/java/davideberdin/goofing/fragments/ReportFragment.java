@@ -46,7 +46,7 @@ public class ReportFragment extends Fragment {
                         if (!isOk) {
                             // something happened
                             // log and create an issue in case
-                            int x = 0;
+
                         }
                     }
                 });

@@ -2,31 +2,22 @@ package davideberdin.goofing.networking;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.IBinder;
-import android.support.annotation.Nullable;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.UUID;
 
 import davideberdin.goofing.R;
 import davideberdin.goofing.controllers.User;
-import davideberdin.goofing.fragments.TestPronunciationFragment;
 import davideberdin.goofing.utilities.Constants;
 import davideberdin.goofing.utilities.Debug;
 import davideberdin.goofing.utilities.IOUtilities;
 import davideberdin.goofing.utilities.Logger;
 import davideberdin.goofing.utilities.Recording;
-import edu.cmu.pocketsphinx.Decoder;
 
 public class ServerRequest {
     public boolean sendData = true;
