@@ -11,10 +11,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
-import davideberdin.goofing.R;
 import davideberdin.goofing.controllers.User;
 import davideberdin.goofing.utilities.Constants;
-import davideberdin.goofing.utilities.Debug;
 import davideberdin.goofing.utilities.IOUtilities;
 import davideberdin.goofing.utilities.Logger;
 import davideberdin.goofing.utilities.Recording;
@@ -83,25 +81,19 @@ public class ServerRequest {
         // add sentence when recording
         String sentenceTV = currentSentence.replace("_", " ");
         sentenceTV = Character.toString(sentenceTV.charAt(0)).toUpperCase() + sentenceTV.substring(1);
-        if (!IOUtilities.audioFiles.contains(sentenceTV))
-            IOUtilities.audioFiles.add(sentenceTV);
+        if (!IOUtilities.audioFilesName.contains(sentenceTV))
+            IOUtilities.audioFilesName.add(sentenceTV);
 
-        if (Debug.debugging) {
-            Recording.startRecording(context, audioFilename);
-        }
+        Recording.startRecording(context, audioFilename);
 
         this.progressDialog.setButton("Stop", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 try {
                     InputStream inStream;
-                    if (Debug.debugging) {
-                        Recording.stopRecording();
-                        inStream = context.openFileInput(audioFilename);
 
-                    } else {
-                        inStream = context.getResources().openRawResource(R.raw.test_audio);
-                    }
+                    Recording.stopRecording();
+                    inStream = context.openFileInput(audioFilename);
 
                     ByteArrayOutputStream out = new ByteArrayOutputStream();
                     BufferedInputStream in = new BufferedInputStream(inStream);
@@ -122,10 +114,10 @@ public class ServerRequest {
                         file.mkdir();
 
                     String filePath = file.getAbsolutePath() + File.separator + audioFilename + ".wav";
-                    FileOutputStream fileOutputStreamos = new FileOutputStream(filePath);
-                    fileOutputStreamos.write(recordedAudio);
-                    fileOutputStreamos.flush();
-                    fileOutputStreamos.close();
+                    FileOutputStream fileOutputStream = new FileOutputStream(filePath);
+                    fileOutputStream.write(recordedAudio);
+                    fileOutputStream.flush();
+                    fileOutputStream.close();
 
                     dismissProgress();
 
@@ -133,10 +125,8 @@ public class ServerRequest {
                 } catch (Exception e) {
                     Logger.Log(Constants.CONNECTION_ACTIVITY, "Error in recordingAudioIBackground()\n" + e.getMessage());
                 } finally {
-                    if (Debug.debugging) {
-                        File audioFile = context.getFileStreamPath(audioFilename);
-                        audioFile.delete();
-                    }
+                    File audioFile = context.getFileStreamPath(audioFilename);
+                    audioFile.delete();
                 }
             }
         });

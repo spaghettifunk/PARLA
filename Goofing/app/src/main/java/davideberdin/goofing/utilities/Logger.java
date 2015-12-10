@@ -1,5 +1,6 @@
 package davideberdin.goofing.utilities;
 
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import java.text.SimpleDateFormat;
@@ -31,6 +32,7 @@ public class Logger
     /**
      * @return dd-MM-yyyy HH:mm:ss format date as string
      */
+    @Nullable
     private static String getCurrentTimeStamp(){
         try {
 

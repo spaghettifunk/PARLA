@@ -25,7 +25,7 @@ public class ExtAudioRecorder
                     AudioFormat.CHANNEL_CONFIGURATION_MONO,
                     AudioFormat.ENCODING_PCM_16BIT);
         } else {
-            int i = 0;
+            int i = 2;
             do {
                 result = new ExtAudioRecorder(true,
                         AudioSource.MIC,

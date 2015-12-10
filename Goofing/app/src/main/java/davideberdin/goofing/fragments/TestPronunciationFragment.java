@@ -145,12 +145,10 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
                     @Override
                     public void done(Object... params) {
 
-                        // TODO: TESTING REQUIRED
                         //region ERROR
-                        if (params[0] instanceof String){
-                            String error = (String) params[0];
-
-                            if (error.equals(Constants.FAILED_POST)){
+                        if (params[0] instanceof String) {
+                            String result = (String) params[0];
+                            if (result.equals(Constants.FAILED_POST)) {
                                 recordingRequest.dismissProgress();
                                 AppWindowManager.showErrorMessage(getActivity(), Constants.FUNNY_ERROR_MESSAGE);
                                 return;
@@ -160,6 +158,8 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
 
                         if (recordingRequest.sendData) {
                             //region SEND DATA
+                            assert params[0] instanceof byte[];
+
                             final byte[] fileAudioByte = (byte[]) params[0];
                             final String currentSentence = loggedUser.GetCurrentSentence();
 
@@ -170,30 +170,24 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
                                 @Override
                                 public void done(Object... params) {
 
-                                    // TODO: TESTING REQUIRED
                                     //region ERROR
-                                    if (params[0] instanceof String){
-                                        String error = (String) params[0];
-
-                                        if (error.equals(Constants.FAILED_POST)){
-                                            recordingRequest.dismissProgress();
-                                            AppWindowManager.showErrorMessage(getActivity(), Constants.FUNNY_ERROR_MESSAGE);
-                                            return;
-                                        }
+                                    String result = (String) params[0];
+                                    if (result.equals(Constants.FAILED_POST)){
+                                        recordingRequest.dismissProgress();
+                                        AppWindowManager.showErrorMessage(getActivity(), Constants.FUNNY_ERROR_MESSAGE);
+                                        return;
                                     }
                                     //endregion
 
                                     // Django request
-                                    request.sendRecordedAudioToServer(loggedUser, fileAudioByte, (String) params[0], currentSentence, new GetCallback() {
+                                    request.sendRecordedAudioToServer(loggedUser, fileAudioByte, result, currentSentence, new GetCallback() {
                                         @Override
                                         public void done(Object... params) {
 
-                                            // TODO: TESTING REQUIRED
                                             //region ERROR
-                                            if (params[0] instanceof String){
+                                            if (params[0] instanceof String) {
                                                 String error = (String) params[0];
-
-                                                if (error.equals(Constants.FAILED_POST)){
+                                                if (error.equals(Constants.FAILED_POST)) {
                                                     recordingRequest.dismissProgress();
                                                     AppWindowManager.showErrorMessage(getActivity(), Constants.FUNNY_ERROR_MESSAGE);
                                                     return;

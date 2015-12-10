@@ -25,8 +25,11 @@ public class Constants {
 
     // Network stuff
     //public static final String SERVER_URL = "http://192.168.1.137:8000/goofy/";
-    public static final String SERVER_URL = "http://10.0.2.2:8000/goofy/";
-    public static final String PHONEME_SERVICE_URL = "http://10.0.2.2:9099/phonemes/transcription/";
+    //public static final String SERVER_URL = "http://10.0.2.2:8000/goofy/";
+    //public static final String PHONEME_SERVICE_URL = "http://10.0.2.2:9099/phonemes/transcription/";
+
+    public static final String SERVER_URL = "http://45.79.165.28:8000/goofy/";
+    public static final String PHONEME_SERVICE_URL = "http://45.79.165.28:8080/artifact/phonemes/transcription/";
 
     public static final String LOGIN_URL = "login/";
     public static final String REGISTRATION_URL = "register/";
@@ -61,6 +64,7 @@ public class Constants {
     public static final String FETCHING_HISTORY = "Fetching history...";
     public static final String RECORDED_AUDIO_PATH = "recorded_audio";
     public static final String SHARED_PREFERENCES_RECORDED_AUDIO_NAME = "RecordedAudio";
+    public static final String SHARED_PREFERENCES_RECORDED_AUDIO_NAME_LIST = "RecordedAudioNames";
     public static final String LOGIN_TIMESTAMP = "LoginTimestamp";
     public static final String REPORT_SHARED_PREFERENCES = "ReportSharedPreferences";
 

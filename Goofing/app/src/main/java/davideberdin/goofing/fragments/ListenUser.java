@@ -37,7 +37,7 @@ public class ListenUser extends Fragment {
         this.userLocalStore = new UserLocalStore(this.getActivity());
 
         // Fill list view user sentences
-        ArrayAdapter<String> userAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, IOUtilities.audioFiles);
+        ArrayAdapter<String> userAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, IOUtilities.audioFilesName);
         userAdapter.notifyDataSetChanged();
 
         userListView.setAdapter(userAdapter);

@@ -23,6 +23,7 @@ public class IOUtilities {
 
     public static TinyDB tinydb = null;
     public static ArrayList<String> audioFiles = new ArrayList<>();
+    public static ArrayList<String> audioFilesName = new ArrayList<>();
 
     public static byte[] convertStreamToByteArray(InputStream is) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -67,6 +68,7 @@ public class IOUtilities {
             tinydb = new TinyDB(context);
 
         tinydb.putListString(Constants.SHARED_PREFERENCES_RECORDED_AUDIO_NAME, audioFiles);
+        tinydb.putListString(Constants.SHARED_PREFERENCES_RECORDED_AUDIO_NAME_LIST, audioFilesName);
     }
 
     public static void readUserAudio(Context context) throws IOException, ClassNotFoundException {
@@ -74,6 +76,7 @@ public class IOUtilities {
             tinydb = new TinyDB(context);
 
         audioFiles = tinydb.getListString(Constants.SHARED_PREFERENCES_RECORDED_AUDIO_NAME);
+        audioFiles = tinydb.getListString(Constants.SHARED_PREFERENCES_RECORDED_AUDIO_NAME_LIST);
     }
 
     public static void writeReport(Context context) {
