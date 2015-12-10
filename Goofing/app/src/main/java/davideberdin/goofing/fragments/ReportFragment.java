@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import org.json.JSONException;
+
 import java.io.IOException;
 
 import davideberdin.goofing.R;
@@ -67,6 +69,8 @@ public class ReportFragment extends Fragment {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
             e.printStackTrace();
         }
     }

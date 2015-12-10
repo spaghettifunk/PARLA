@@ -23,6 +23,8 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import org.json.JSONException;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -162,6 +164,8 @@ public class Listening extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
             e.printStackTrace();
         }
     }

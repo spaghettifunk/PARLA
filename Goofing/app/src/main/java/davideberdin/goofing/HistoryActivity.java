@@ -8,6 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 
+import org.json.JSONException;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -179,6 +181,8 @@ public class HistoryActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
             e.printStackTrace();
         }
     }

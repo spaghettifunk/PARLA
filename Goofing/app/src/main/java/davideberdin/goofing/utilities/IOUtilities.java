@@ -1,6 +1,11 @@
 package davideberdin.goofing.utilities;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -21,76 +26,80 @@ import java.util.HashMap;
 
 public class IOUtilities {
 
-    public static TinyDB tinydb = null;
     public static ArrayList<String> audioFiles = new ArrayList<>();
     public static ArrayList<String> audioFilesName = new ArrayList<>();
 
-    public static byte[] convertStreamToByteArray(InputStream is) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        byte[] buff = new byte[10240];
-        int i = Integer.MAX_VALUE;
-        while ((i = is.read(buff, 0, buff.length)) > 0) {
-            baos.write(buff, 0, i);
-        }
-
-        return baos.toByteArray(); // be sure to close InputStream in calling function
-    }
-
-    public static InputStream convertByteToInputStream(byte[] buffer) {
-        try {
-            return new ByteArrayInputStream(buffer);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    public static byte[] ShortToByte_Twiddle_Method(short[] input) {
-        int short_index, byte_index;
-        int iterations = input.length;
-
-        byte[] buffer = new byte[input.length * 2];
-
-        short_index = byte_index = 0;
-
-        for (/*NOP*/; short_index != iterations; /*NOP*/) {
-            buffer[byte_index] = (byte) (input[short_index] & 0x00FF);
-            buffer[byte_index + 1] = (byte) ((input[short_index] & 0xFF00) >> 8);
-
-            ++short_index;
-            byte_index += 2;
-        }
-
-        return buffer;
-    }
+    private static SharedPreferences reportSP;
+    private static SharedPreferences audioFilesSP;
+    private static SharedPreferences audioFilesNameSP;
 
     public static void writeUserAudio(Context context) throws IOException {
-        if (tinydb == null)
-            tinydb = new TinyDB(context);
+        if (audioFilesSP == null)
+            audioFilesSP = context.getSharedPreferences(Constants.SHARED_PREFERENCES_RECORDED_AUDIO_NAME, 0);
 
-        tinydb.putListString(Constants.SHARED_PREFERENCES_RECORDED_AUDIO_NAME, audioFiles);
-        tinydb.putListString(Constants.SHARED_PREFERENCES_RECORDED_AUDIO_NAME_LIST, audioFilesName);
+        if (audioFilesNameSP == null)
+            audioFilesNameSP = context.getSharedPreferences(Constants.SHARED_PREFERENCES_RECORDED_AUDIO_NAME_LIST, 0);
+
+        if (audioFiles.size() == 0 || audioFilesName.size() == 0)
+            return;
+
+        JSONArray files = new JSONArray();
+        for (String val: audioFiles) {
+            files.put(val);
+        }
+
+        JSONArray names = new JSONArray();
+        for (String val: audioFilesName) {
+            names.put(val);
+        }
+
+        SharedPreferences.Editor filesEditor = audioFilesSP.edit();
+        filesEditor.putString("files", files.toString());
+
+        SharedPreferences.Editor namesEditor = audioFilesNameSP.edit();
+        namesEditor.putString("names", names.toString());
+
+        filesEditor.apply();
+        namesEditor.apply();
     }
 
-    public static void readUserAudio(Context context) throws IOException, ClassNotFoundException {
-        if (tinydb == null)
-            tinydb = new TinyDB(context);
+    public static void readUserAudio(Context context) throws IOException, ClassNotFoundException, JSONException {
+        if (audioFilesSP == null)
+            audioFilesSP = context.getSharedPreferences(Constants.SHARED_PREFERENCES_RECORDED_AUDIO_NAME, 0);
 
-        audioFiles = tinydb.getListString(Constants.SHARED_PREFERENCES_RECORDED_AUDIO_NAME);
-        audioFiles = tinydb.getListString(Constants.SHARED_PREFERENCES_RECORDED_AUDIO_NAME_LIST);
+        if (audioFilesNameSP == null)
+            audioFilesNameSP = context.getSharedPreferences(Constants.SHARED_PREFERENCES_RECORDED_AUDIO_NAME_LIST, 0);
+
+        String filesString = audioFilesSP.getString("files", "");
+        JSONArray files = new JSONArray(filesString);
+        for (int i = 0; i < files.length(); i++) {
+            if (!audioFiles.contains((String) files.get(i)))
+                audioFiles.add((String) files.get(i));
+        }
+
+        String namesString = audioFilesNameSP.getString("names", "");
+        JSONArray names = new JSONArray(namesString);
+        for (int i = 0; i < names.length(); i++) {
+            if (!audioFilesName.contains((String) names.get(i)))
+                audioFilesName.add((String) names.get(i));
+        }
     }
 
     public static void writeReport(Context context) {
-        if (tinydb == null)
-            tinydb = new TinyDB(context);
+        if (reportSP == null)
+            reportSP = context.getSharedPreferences(Constants.REPORT_SHARED_PREFERENCES, 0);
 
-        tinydb.putString(Constants.REPORT_SHARED_PREFERENCES, Logger.GetReport());
+        SharedPreferences.Editor reportEditor = reportSP.edit();
+        reportEditor.putString("report", Logger.GetReport());
+
+        reportEditor.apply();
     }
 
     public static void readReport(Context context) {
-        if (tinydb == null)
-            tinydb = new TinyDB(context);
+        if (reportSP == null)
+            reportSP = context.getSharedPreferences(Constants.REPORT_SHARED_PREFERENCES, 0);
 
-        String loadedReport = tinydb.getString(Constants.REPORT_SHARED_PREFERENCES);
+        String loadedReport = reportSP.getString("report", "");
         Logger.SetReport(loadedReport);
     }
 }

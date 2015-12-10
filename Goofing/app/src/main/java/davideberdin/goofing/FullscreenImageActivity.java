@@ -16,6 +16,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import org.json.JSONException;
+
 import java.io.IOException;
 
 import davideberdin.goofing.utilities.IOUtilities;
@@ -221,6 +223,8 @@ public class FullscreenImageActivity extends AppCompatActivity implements View.O
         } catch (IOException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
             e.printStackTrace();
         }
     }
