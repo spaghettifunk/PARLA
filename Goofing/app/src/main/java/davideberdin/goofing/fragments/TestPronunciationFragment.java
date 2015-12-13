@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -223,6 +224,7 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
                         }
                     }
                 });
+
                 break;
             case R.id.listenSentence:
 

@@ -25,7 +25,7 @@ public class Constants {
 
     // Network stuff
     //public static final String SERVER_URL = "http://192.168.1.137:8000/goofy/";
-    //public static final String SERVER_URL = "http://10.0.2.2:8000/goofy/";
+    // public static final String SERVER_URL = "http://10.0.2.2:8000/goofy/";
     //public static final String PHONEME_SERVICE_URL = "http://10.0.2.2:9099/phonemes/transcription/";
 
     public static final String SERVER_URL = "http://45.79.165.28:8000/goofy/";
