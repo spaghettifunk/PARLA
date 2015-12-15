@@ -16,7 +16,7 @@
         android:layout_width="160dp"
         android:layout_height="273dp"
         android:id="@+id/splashImageView"
-        android:src="@drawable/goofy"
+        android:src="@drawable/splash"
         android:layout_gravity="bottom|center_horizontal"
         android:contentDescription="splash screen image"
         android:layout_weight="0.18" />

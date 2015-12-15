@@ -27,6 +27,7 @@ import davideberdin.goofing.utilities.UserLocalStore;
 public class ListenNative extends Fragment
 {
     private View previouslyNativeSelectedItem = null;
+    private View previouslyUserSelectedItem = null;
 
     private UserLocalStore userLocalStore = null;
     private User loggedUser = null;
@@ -37,6 +38,8 @@ public class ListenNative extends Fragment
         View listenNativeFragment = inflater.inflate(R.layout.fragment_listen_native, container, false);
 
         ListView nativeListView = (ListView) listenNativeFragment.findViewById(R.id.nativeListView);
+
+        this.previouslyUserSelectedItem = inflater.inflate(R.layout.fragment_listen_user, container, false);
         this.userLocalStore = new UserLocalStore(this.getActivity());
 
         // Fill list view native sentences
@@ -48,6 +51,9 @@ public class ListenNative extends Fragment
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (previouslyNativeSelectedItem != null)
                     previouslyNativeSelectedItem.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+
+                if (previouslyUserSelectedItem != null)
+                    previouslyUserSelectedItem.setBackgroundColor(getResources().getColor(android.R.color.transparent));
 
                 view.setBackgroundColor(getResources().getColor(android.R.color.holo_blue_dark));
                 previouslyNativeSelectedItem = view;

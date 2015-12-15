@@ -167,9 +167,7 @@ public class NetworkingTask extends AsyncTask {
             if (!(result instanceof String)) throw new AssertionError();
 
             JSONObject jsonObject = new JSONObject((String) result);
-
-            String response = "";
-            response = jsonObject.getString("Response");
+            String response = jsonObject.getString("Response");
 
             if (response.equals(Constants.FAILED_POST) || response.isEmpty()) {
                 this.userCallback.done(jsonObject);

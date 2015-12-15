@@ -6,6 +6,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -38,6 +41,7 @@ import davideberdin.goofing.utilities.Logger;
 import davideberdin.goofing.utilities.UserLocalStore;
 
 public class TestPronunciationFragment extends Fragment implements View.OnClickListener, View.OnTouchListener {
+
     //region VARIABLES
     private ServerRequest recordingRequest = null;
 
@@ -49,7 +53,9 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
     private TextView tvSentence = null;
     private TextView tvPhonemes = null;
 
-    private UserLocalStore userLocalStore = null;
+    private Button prevWordButton = null;
+    private Button nextWordButton = null;
+
     private User loggedUser = null;
     //endregion
 
@@ -62,14 +68,21 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
         this.testPronunciationView = inflater.inflate(R.layout.test_pronunciation_layout, container, false);
 
         this.startButton = (FloatingActionButton) testPronunciationView.findViewById(R.id.fabStartRecording);
+        this.startButton.setBackgroundTintList(ColorStateList.valueOf(Color.argb(255, 28, 134, 238)));
+
         this.listenSentence = (ImageButton) testPronunciationView.findViewById(R.id.listenSentence);
+
+        this.prevWordButton = (Button) testPronunciationView.findViewById(R.id.prevWordButton);
+        this.nextWordButton = (Button) testPronunciationView.findViewById(R.id.nextWordButton);
 
         // register listener
         this.startButton.setOnClickListener(this);
         this.listenSentence.setOnClickListener(this);
+        this.prevWordButton.setOnClickListener(this);
+        this.nextWordButton.setOnClickListener(this);
 
-        this.userLocalStore = new UserLocalStore(this.getActivity());
-        this.loggedUser = this.userLocalStore.getLoggedUser();
+        UserLocalStore userLocalStore = new UserLocalStore(this.getActivity());
+        this.loggedUser = userLocalStore.getLoggedUser();
 
         this.tvSentence = (TextView) testPronunciationView.findViewById(R.id.tpSentence);
         String sentence = this.loggedUser.GetCurrentSentence();
@@ -142,7 +155,7 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
 
         switch (v.getId()) {
             case R.id.fabStartRecording:
-
+                //region Record sentence
                 Logger.WriteOnReport("TestPronunciationActivity", "Clicked on test BUTTON");
 
                 String currentSentence = ((loggedUser.GetCurrentSentence()).toLowerCase()).replace(" ", "_");
@@ -177,7 +190,7 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
 
                                     //region ERROR
                                     String result = (String) params[0];
-                                    if (result.equals(Constants.FAILED_POST)){
+                                    if (result.equals(Constants.FAILED_POST)) {
                                         recordingRequest.dismissProgress();
                                         AppWindowManager.showErrorMessage(getActivity(), Constants.FUNNY_ERROR_MESSAGE);
                                         return;
@@ -224,10 +237,10 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
                         }
                     }
                 });
-
                 break;
+            //endregion
             case R.id.listenSentence:
-
+                //region Listen Sentence
                 Logger.WriteOnReport("TestPronunciationActivity", "Clicked on listen sentence BUTTON");
 
                 // play audio
@@ -245,6 +258,45 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
                     e.printStackTrace();
                 }
                 break;
+            //endregion
+            case R.id.prevWordButton:
+                //region Previous Word
+                String sentence = this.loggedUser.GetCurrentSentence();
+                int index = Constants.getSentenceIndex(sentence);
+
+                // simulate a linked-list
+                if (index == 0) {
+                    index = (Constants.nativeSentences.length - 1);
+                } else {
+                    index--;
+                }
+
+                this.tvSentence.setText(Constants.nativeSentences[index]);
+                this.tvPhonemes.setText(Constants.nativePhonetics[index]);
+                this.loggedUser.SetCurrentSentence(Constants.nativeSentences[index]);
+                this.loggedUser.SetCurrentPhonetic(Constants.nativePhonetics[index]);
+
+                break;
+            //endregion
+            case R.id.nextWordButton:
+                //region Next Word
+                String s = this.loggedUser.GetCurrentSentence();
+                int ind = Constants.getSentenceIndex(s);
+
+                // simulate a linked-list
+                if (ind == Constants.nativeSentences.length - 1) {
+                    ind = 0;
+                } else {
+                    ind++;
+                }
+
+                this.tvSentence.setText(Constants.nativeSentences[ind]);
+                this.tvPhonemes.setText(Constants.nativePhonetics[ind]);
+                this.loggedUser.SetCurrentSentence(Constants.nativeSentences[ind]);
+                this.loggedUser.SetCurrentPhonetic(Constants.nativePhonetics[ind]);
+
+                break;
+            //endregion
         }
     }
 

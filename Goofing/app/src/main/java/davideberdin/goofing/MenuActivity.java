@@ -110,10 +110,12 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.test_pronunciation) {
-            Logger.WriteOnReport("MenuActivity", "Clicked on pronunciation BUTTON");
-            fragmentManager.beginTransaction().replace(R.id.content_menu, new TestPronunciationFragment()).commit();
-        } else if (id == R.id.critical_listening) {
+//         if (id == R.id.test_pronunciation) {
+//            Logger.WriteOnReport("MenuActivity", "Clicked on pronunciation BUTTON");
+//            fragmentManager.beginTransaction().replace(R.id.content_menu, new TestPronunciationFragment()).commit();
+//        } else
+
+        if (id == R.id.critical_listening) {
             Logger.WriteOnReport("MenuActivity", "Clicked on critical listening BUTTON");
             Intent intent = new Intent(MenuActivity.this, Listening.class);
             startActivity(intent);
@@ -141,14 +143,6 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            Logger.WriteOnReport("MenuActivity", "Clicked on action settings BUTTON");
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 

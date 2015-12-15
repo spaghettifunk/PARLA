@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -56,7 +57,7 @@ public class ServerRequest {
         progressDialog.dismiss();
     }
 
-    public void fetchUserDataInBackgroud(User user, GetCallback callback) {
+    public void fetchUserDataInBackground(User user, GetCallback callback) {
         this.progressDialog.show();
         NetworkingTask networkingTask = new NetworkingTask(user, callback, progressDialog);
         networkingTask.execute(Constants.NETWORKING_LOGIN_STATE, user);
@@ -76,20 +77,25 @@ public class ServerRequest {
 
     @SuppressWarnings("deprecation")
     public void recordingAudioInBackground(final Context context, String currentSentence, final GetCallback callback) {
-        final String audioFilename = "recorded_" + currentSentence; // overwrite the file for each sentence
 
-        // add sentence when recording
-        String sentenceTV = currentSentence.replace("_", " ");
-        sentenceTV = Character.toString(sentenceTV.charAt(0)).toUpperCase() + sentenceTV.substring(1);
-        if (!IOUtilities.audioFilesName.contains(sentenceTV))
-            IOUtilities.audioFilesName.add(sentenceTV);
+        this.progressDialog.setCancelable(true);
+        this.progressDialog.setCanceledOnTouchOutside(true);
+
+        final String audioFilename = "recorded_" + currentSentence; // overwrite the file for each sentence
+        final String sentenceTV = currentSentence.replace("_", " ");
 
         Recording.startRecording(context, audioFilename);
 
-        this.progressDialog.setButton("Stop", new DialogInterface.OnClickListener() {
+        // accept current recording
+        this.progressDialog.setButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 try {
+                    // add sentence when the user accept it
+                    String sentence = Character.toString(sentenceTV.charAt(0)).toUpperCase() + sentenceTV.substring(1);
+                    if (!IOUtilities.audioFilesName.contains(sentence))
+                        IOUtilities.audioFilesName.add(sentence);
+
                     InputStream inStream;
 
                     Recording.stopRecording();
@@ -124,15 +130,23 @@ public class ServerRequest {
                     callback.done(recordedAudio);
                 } catch (Exception e) {
                     Logger.Log(Constants.CONNECTION_ACTIVITY, "Error in recordingAudioIBackground()\n" + e.getMessage());
-                } finally {
-                    File audioFile = context.getFileStreamPath(audioFilename);
-                    audioFile.delete();
                 }
+//                  finally {
+//                    File audioFile = context.getFileStreamPath(audioFilename);
+//                    audioFile.delete();
+//                }
             }
         });
 
-        this.progressDialog.setCancelable(false);
-        this.progressDialog.setCanceledOnTouchOutside(false);
+        this.progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                File audioFile = context.getFileStreamPath(audioFilename);
+                audioFile.delete();
+
+                dismissProgress();
+            }
+        });
 
         // Start Recording here
         this.progressDialog.show();

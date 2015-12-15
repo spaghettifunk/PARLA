@@ -34,6 +34,7 @@ import davideberdin.goofing.fragments.ListenNative;
 import davideberdin.goofing.fragments.ListenUser;
 import davideberdin.goofing.libraries.FloatingActionButton;
 import davideberdin.goofing.libraries.FloatingActionsMenu;
+import davideberdin.goofing.utilities.AppWindowManager;
 import davideberdin.goofing.utilities.Constants;
 import davideberdin.goofing.utilities.IOUtilities;
 import davideberdin.goofing.utilities.Logger;
@@ -121,7 +122,31 @@ public class Listening extends AppCompatActivity {
             }
         });
 
+        FloatingActionButton fabHistory = new FloatingActionButton(getBaseContext());
+        fabHistory.setImageResource(android.R.drawable.ic_menu_recent_history);
+        fabHistory.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Logger.WriteOnReport("ListeningActivity", "Clicked on history pronunciation BUTTON");
+
+                userLocalStore = new UserLocalStore(v.getContext());
+                loggedUser = userLocalStore.getLoggedUser();
+
+                String fileAudio = ((loggedUser.GetCurrentSentence()).toLowerCase()).replace(" ", "_");
+                fileAudio = "recorded_" + fileAudio;
+
+                if (!IOUtilities.audioFiles.contains(fileAudio)){
+                    AppWindowManager.showInfoDialog(Listening.this, "History not available", Constants.CANNOT_RETRIEVE_HISTORY);
+                    return;
+                }
+
+                Intent intent = new Intent(Listening.this, HistoryActivity.class);
+                startActivity(intent);
+            }
+        });
+
         final FloatingActionsMenu menuMultipleActions = (FloatingActionsMenu) findViewById(R.id.fabMenu);
+        menuMultipleActions.addButton(fabHistory);
         menuMultipleActions.addButton(fabListening);
         menuMultipleActions.addButton(fabTest);
 

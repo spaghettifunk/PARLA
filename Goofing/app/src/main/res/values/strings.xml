@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">Goofing</string>
+    <string name="app_name">Parla</string>
     <string name="etUsername">Username</string>
     <string name="etPassword">Password</string>
     <string name="loginButton">Login</string>
     <string name="registerButton"><u>Register</u></string>
-    <string name="title_activity_registration">RegistrationActivity</string>
+    <string name="title_activity_registration">Parla</string>
     <string name="tvUsername">Username</string>
     <string name="tvOccupation">Occupation</string>
     <string name="registerButtonReg">Register</string>
@@ -18,20 +18,13 @@
         <item>Male</item>
         <item>Female</item>
     </string-array>
-    <string-array name="spNationality">
-        <item>Italian</item>
-        <item>Spanish</item>
-        <item>German</item>
-        <item>Chinese</item>
-        <item>Indian</item>
-    </string-array>
     <string-array name="spOccupation">
         <item>Student</item>
         <item>Researcher</item>
         <item>Teacher</item>
         <item>Nurse</item>
     </string-array>
-    <string name="title_activity_menu">MenuActivity</string>
+    <string name="title_activity_menu">Parla</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -44,7 +37,6 @@
     <string name="listenYourselfButton">Listen to yourself</string>
     <string name="listenNSButton">Listen to Native Speaker</string>
     <string name="title_activity_listen_ns">ListenNSActivity</string>
-    <string name="section_format">Hello World from section: %1$d</string>
     <string name="title_activity_listen_native">Listen Native Speaker</string>
     <string name="title_activity_listening_native_speaker">Listen to Native Speaker</string>
     <string name="title_activity_listening_user">Listening to Yourself</string>
@@ -52,11 +44,11 @@
     <string name="listenNativePhonetic">Phonetic</string>
     <string name="listenNativeStressTextView">Stress</string>
     <string name="descriptionNativeTextView">A lot of things related to Stress or whatever we want</string>
-    <string name="pressAndSpeakTextView">Press and Speak</string>
+    <string name="pressAndSpeakTextView">Touch to talk</string>
     <string name="listenSentenceImageButton">Listen native speaker sentence button</string>
     <string name="title_activity_listening">Listening</string>
     <string name="vowelChartImageView">Vowel chart feedback from server</string>
-    <string name="stressTextView">FEEDBACKS</string>
+    <string name="stressTextView">FEEDBACK</string>
 
     <string name="title_activity_fullscreen_image">FullscreenImageActivity</string>
     <string name="fullscreenImageView">Full screen vowel chart image</string>
@@ -65,8 +57,7 @@
     <string name="pictureMenuDrawer">Picture menu drawer</string>
     <string name="userDef">You:</string>
     <string name="nativeDef">Native:</string>
-    <string name="infoFeedbacks">button for describing the given feedbacks</string>
-    <string name="infoText">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</string>
+    <string name="infoFeedbacks">button for describing the given feedback</string>
     <string name="title_activity_maps">Map</string>
     <string name="infoMeaningTextView">Meaning</string>
     <string name="infoExampleTextView">Example</string>
@@ -75,4 +66,6 @@
     <string name="reportNameTextView">Report Page</string>
     <string name="thank_you_image">thank you image</string>
     <string name="reportButton">Send Report</string>
+    <string name="previous_word">Previous word</string>
+    <string name="next_word">Next word</string>
 </resources>

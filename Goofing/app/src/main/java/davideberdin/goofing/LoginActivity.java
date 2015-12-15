@@ -15,15 +15,11 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-
 import davideberdin.goofing.controllers.User;
 import davideberdin.goofing.networking.GetCallback;
 import davideberdin.goofing.networking.ServerRequest;
 import davideberdin.goofing.utilities.AppWindowManager;
 import davideberdin.goofing.utilities.Constants;
-import davideberdin.goofing.utilities.Debug;
-import davideberdin.goofing.utilities.GithubHandler;
 import davideberdin.goofing.utilities.Logger;
 import davideberdin.goofing.utilities.UserLocalStore;
 
@@ -95,7 +91,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 // Networking stuff here
                 User user = new User(username, password);
                 ServerRequest request = new ServerRequest(this);
-                request.fetchUserDataInBackgroud(user, new GetCallback() {
+                request.fetchUserDataInBackground(user, new GetCallback() {
                     @Override
                     public void done(Object... params) {
                         if (params[0] instanceof JSONObject) {

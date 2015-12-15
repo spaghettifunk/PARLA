@@ -75,6 +75,7 @@ public class Constants {
 
     // Error messages
     public static final String FUNNY_ERROR_MESSAGE = "Something went wrong. A squad of well-trained sloth have been sent to fix the problem! Try later";
+    public static final String CANNOT_RETRIEVE_HISTORY = "There is no history for this sentence. Test your pronunciation first";
 
     // Username json keys
     public static final String GET_USERNAME_POST = "Username";
@@ -169,5 +170,15 @@ public class Constants {
             meaningExampleMap.put(sentence, new Tuple(sentenceMeaning[index], sentencesExample[index]));
             index++;
         }
+    }
+
+    public static int getSentenceIndex(String sentence){
+        int index = 0;
+        for (String s : nativeSentences){
+            if (sentence.equals(s))
+                return index;
+            index++;
+        }
+        return index;
     }
 }
