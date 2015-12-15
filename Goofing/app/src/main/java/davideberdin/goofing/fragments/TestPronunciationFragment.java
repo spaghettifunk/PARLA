@@ -162,7 +162,6 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
                 recordingRequest.recordingAudioInBackground(testPronunciationView.getContext(), currentSentence, new GetCallback() {
                     @Override
                     public void done(Object... params) {
-
                         //region ERROR
                         if (params[0] instanceof String) {
                             String result = (String) params[0];
@@ -173,7 +172,6 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
                             }
                         }
                         //endregion
-
                         if (recordingRequest.sendData) {
                             //region SEND DATA
                             assert params[0] instanceof byte[];
@@ -181,7 +179,7 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
                             final byte[] fileAudioByte = (byte[]) params[0];
                             final String currentSentence = loggedUser.GetCurrentSentence();
 
-                            final ServerRequest request = new ServerRequest(getActivity(), "Analyzing audio", "Please wait...");
+                            final ServerRequest request = new ServerRequest(getActivity(), "Analyzing audio", "Recognizing phonemes...");
 
                             // Java Service
                             request.fetchPhonemesInBackground(loggedUser, fileAudioByte, new GetCallback() {
@@ -196,6 +194,8 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
                                         return;
                                     }
                                     //endregion
+
+                                    request.setProgressMessage("Building up feedback page...");
 
                                     // Django request
                                     request.sendRecordedAudioToServer(loggedUser, fileAudioByte, result, currentSentence, new GetCallback() {
@@ -212,6 +212,8 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
                                                 }
                                             }
                                             //endregion
+
+                                            request.setProgressMessage("Finishing up...");
 
                                             ArrayList<String> phonemes = (ArrayList<String>) params[0];
                                             ArrayList<ArrayList<String>> vowelStress = (ArrayList<ArrayList<String>>) params[1];

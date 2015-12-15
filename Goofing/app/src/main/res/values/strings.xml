@@ -24,6 +24,12 @@
         <item>Teacher</item>
         <item>Nurse</item>
     </string-array>
+    <integer-array name="progressColor">
+        <item>28</item>
+        <item>134</item>
+        <item>238</item>
+        <item>255</item>
+    </integer-array>
     <string name="title_activity_menu">Parla</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -68,4 +74,6 @@
     <string name="reportButton">Send Report</string>
     <string name="previous_word">Previous word</string>
     <string name="next_word">Next word</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
 </resources>

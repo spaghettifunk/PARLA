@@ -26,9 +26,11 @@ android {
     }
 }
 
-
-
-
+repositories {
+    maven {
+        url "https://oss.sonatype.org/content/repositories/snapshots/"
+    }
+}
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
@@ -39,4 +41,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile 'com.android.support:design:22.2.1'
     compile 'com.android.support:support-v4:22.2.1'
+    compile 'com.hannesdorfmann.smoothprogressbar:library:1.0.0'
 }

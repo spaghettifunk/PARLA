@@ -2,6 +2,8 @@ package davideberdin.goofing;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -54,10 +56,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         this.etUsername = (EditText) findViewById(R.id.etUsername);
         this.etPassword = (EditText) findViewById(R.id.etPassword);
 
+        this.etUsername.getBackground().setColorFilter(getResources().getColor(R.color.colorPrimaryDark), PorterDuff.Mode.SRC_ATOP);
+        this.etPassword.getBackground().setColorFilter(getResources().getColor(R.color.colorPrimaryDark), PorterDuff.Mode.SRC_ATOP);
+
         this.loginButton = (Button) findViewById(R.id.loginButton);
         this.registerButton = (TextView) findViewById(R.id.registerButton);
 
-        saveLoginCheckBox = (CheckBox)findViewById(R.id.rememberMeCheckBox);
+        this.saveLoginCheckBox = (CheckBox)findViewById(R.id.rememberMeCheckBox);
+
         loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
         loginPrefsEditor = loginPreferences.edit();
 

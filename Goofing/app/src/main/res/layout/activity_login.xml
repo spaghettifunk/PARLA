@@ -29,7 +29,7 @@
                 android:ems="10"
                 android:id="@+id/etUsername"
                 android:inputType="text"
-                android:hint="Username"
+                android:hint="@string/username"
                 android:layout_marginBottom="20dp" />
 
             <EditText
@@ -38,7 +38,7 @@
                 android:inputType="textPassword"
                 android:ems="10"
                 android:id="@+id/etPassword"
-                android:hint="Password"
+                android:hint="@string/password"
                 android:password="true"
                 android:layout_marginBottom="20dp" />
 
@@ -47,6 +47,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/rememberMeCheckbox"
                 android:id="@+id/rememberMeCheckBox"
+                android:buttonTint="@color/colorPrimaryDark"
                 android:checked="false" />
 
             <Button

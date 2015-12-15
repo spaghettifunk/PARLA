@@ -4,7 +4,8 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.drawable.Drawable;
+import android.graphics.Color;
+import android.view.animation.DecelerateInterpolator;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -17,12 +18,12 @@ import davideberdin.goofing.utilities.Constants;
 import davideberdin.goofing.utilities.IOUtilities;
 import davideberdin.goofing.utilities.Logger;
 import davideberdin.goofing.utilities.Recording;
+import fr.castorflex.android.smoothprogressbar.SmoothProgressDrawable;
 
 public class ServerRequest {
     public boolean sendData = true;
 
     private ProgressDialog progressDialog;
-    private Activity currentActivity;
 
     /**
      * Server request - Params in this order: params[0] = Title, params[1] = Message
@@ -31,9 +32,23 @@ public class ServerRequest {
      * @param params
      */
     public ServerRequest(Activity activity, String... params) {
-        this.currentActivity = activity;
+        Activity currentActivity = activity;
 
         this.progressDialog = new ProgressDialog(currentActivity);
+        this.progressDialog.setIndeterminateDrawable(new SmoothProgressDrawable.Builder(activity.getApplicationContext())
+                .color(Color.BLUE)
+                .interpolator(new DecelerateInterpolator())
+                .sectionsCount(4)
+                .separatorLength(8) //You should use Resources#getDimensionPixelSize
+                .strokeWidth(8f)    //You should use Resources#getDimension
+                .speed(2f)  //2 times faster
+                .progressiveStartSpeed(2)
+                .progressiveStopSpeed(3.4f)
+                .reversed(false)
+                .mirrorMode(false)
+                .progressiveStart(true)
+                .build());
+
         this.progressDialog.setIndeterminate(true);
 
         // For recording part
@@ -55,6 +70,10 @@ public class ServerRequest {
     public void dismissProgress() {
         progressDialog.cancel();    // GRAZIE DI ESISTERE!!!!!!!!
         progressDialog.dismiss();
+    }
+
+    public void setProgressMessage(String message){
+        this.progressDialog.setMessage(message);
     }
 
     public void fetchUserDataInBackground(User user, GetCallback callback) {
@@ -86,7 +105,7 @@ public class ServerRequest {
 
         Recording.startRecording(context, audioFilename);
 
-        // accept current recording
+        //region recording - accept current recording
         this.progressDialog.setButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -137,6 +156,7 @@ public class ServerRequest {
 //                }
             }
         });
+        //endregion
 
         this.progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
