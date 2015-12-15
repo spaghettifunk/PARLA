@@ -76,7 +76,7 @@ public class Listening extends AppCompatActivity {
         tabLayout.setupWithViewPager(mViewPager);
 
         FloatingActionButton fabListening = new FloatingActionButton(getBaseContext());
-        fabListening.setImageResource(android.R.drawable.ic_lock_silent_mode_off);
+        fabListening.setIcon(android.R.drawable.ic_lock_silent_mode_off);
         fabListening.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,7 +111,7 @@ public class Listening extends AppCompatActivity {
         });
 
         FloatingActionButton fabTest = new FloatingActionButton(getBaseContext());
-        fabTest.setImageResource(android.R.drawable.ic_btn_speak_now);
+        fabTest.setIcon(android.R.drawable.ic_btn_speak_now);
         fabTest.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,7 +123,7 @@ public class Listening extends AppCompatActivity {
         });
 
         FloatingActionButton fabHistory = new FloatingActionButton(getBaseContext());
-        fabHistory.setImageResource(android.R.drawable.ic_menu_recent_history);
+        fabHistory.setIcon(android.R.drawable.ic_menu_recent_history);
         fabHistory.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

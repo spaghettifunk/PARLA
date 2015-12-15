@@ -14,6 +14,6 @@
         android:layout_height="fill_parent"
         android:adjustViewBounds="true"
         android:id="@+id/fullscreen_image"
-        android:contentDescription="@string/imageviewFullscreen" />
+        android:contentDescription="@string/imageViewFullscreen" />
 
 </RelativeLayout>

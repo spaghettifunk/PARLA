@@ -221,13 +221,17 @@ public class NetworkingTask extends AsyncTask {
 
                         String resultWER = (String) responseObject.get(Constants.GET_WER_POST);
 
-                        String pitchChart = (String) responseObject.get(Constants.GET_PITCH_CHART_POST);
-                        byte[] pitchChartByte = Base64.decode(pitchChart, Base64.DEFAULT);
+                        ArrayList<String> YValuesNative = (ArrayList<String>) responseObject.get("YValuesNative");
+                        ArrayList<String> YValuesUser = (ArrayList<String>) responseObject.get("YValuesUser");
+
+                        //String pitchChart = (String) responseObject.get(Constants.GET_PITCH_CHART_POST);
+                        //byte[] pitchChartByte = Base64.decode(pitchChart, Base64.DEFAULT);
 
                         String vowelChart = (String) responseObject.get(Constants.GET_VOWEL_CHART_POST);
                         byte[] vowelChartByte = Base64.decode(vowelChart, Base64.DEFAULT);
 
-                        userCallback.done(phonemes, vowelStress, resultWER, pitchChartByte, vowelChartByte);
+                        //userCallback.done(phonemes, vowelStress, resultWER, pitchChartByte, vowelChartByte);
+                        userCallback.done(phonemes, vowelStress, resultWER, YValuesNative, YValuesUser, vowelChartByte);
                         break;
                     //endregion
                     case Constants.NETWORKING_FETCH_HISTORY:

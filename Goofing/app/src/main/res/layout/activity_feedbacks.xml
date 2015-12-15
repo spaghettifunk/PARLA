@@ -14,7 +14,7 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
         android:paddingBottom="@dimen/activity_vertical_margin"
-        tools:context="davideberdin.goofing.FeedbacksActivity"
+        tools:context=".FeedbackActivity"
         android:id="@+id/feedbacksRelativeLayout">
 
         <LinearLayout
@@ -34,7 +34,7 @@
                     android:background="@drawable/fab_background"
                     android:backgroundTint="@color/switch_thumb_normal_material_dark"
                     android:id="@+id/infoImageButton"
-                    android:contentDescription="@string/infoFeedbacks" />
+                    android:contentDescription="@string/infoFeedback" />
 
                 <TextView
                     android:layout_width="fill_parent"
@@ -147,14 +147,30 @@
                 android:layout_width="fill_parent"
                 android:layout_height="30dp" />
 
-            <ImageView
+            <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:scaleType="fitXY"
-                android:adjustViewBounds="true"
-                android:id="@+id/pitchChartImageView"
-                android:contentDescription="@string/vowelChartImageView"
-                android:cropToPadding="false" />
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="User trend shape should be similar to Native"
+                android:id="@+id/textView4"
+                android:lines="1"
+                android:textStyle="bold"
+                android:textAlignment="center" />
+
+            <com.github.mikephil.charting.charts.ScatterChart
+                android:id="@+id/pitchScatterChart"
+                android:layout_height="300dp"
+                android:layout_width="match_parent"
+                android:layout_weight="1" />
+
+            <!--<ImageView-->
+                <!--android:layout_width="fill_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:scaleType="fitXY"-->
+                <!--android:adjustViewBounds="true"-->
+                <!--android:id="@+id/pitchChartImageView"-->
+                <!--android:contentDescription="@string/vowelChartImageView"-->
+                <!--android:cropToPadding="false" />-->
 
             <Space
                 android:layout_width="fill_parent"

@@ -5,7 +5,6 @@ import android.app.Fragment;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.media.MediaPlayer;
@@ -25,10 +24,9 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.GregorianCalendar;
 
-import davideberdin.goofing.FeedbacksActivity;
+import davideberdin.goofing.FeedbackActivity;
 import davideberdin.goofing.R;
 import davideberdin.goofing.controllers.AlertReceiver;
 import davideberdin.goofing.controllers.User;
@@ -220,15 +218,22 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
 
                                             String resultWER = (String) params[2];
 
-                                            byte[] pitch_chart_byte = (byte[]) params[3];
-                                            byte[] vowel_chart_byte = (byte[]) params[4];
+                                            //byte[] pitch_chart_byte = (byte[]) params[3];
+                                            ArrayList<String> pitchChartYValuesNative = (ArrayList<String>) params[3];
+                                            ArrayList<String> pitchChartYValuesUser = (ArrayList<String>) params[4];
 
-                                            Intent intent = new Intent(getActivity(), FeedbacksActivity.class);
+                                            byte[] vowel_chart_byte = (byte[]) params[5];
+
+                                            Intent intent = new Intent(getActivity(), FeedbackActivity.class);
                                             intent.putExtra(Constants.GET_PHONEMES_POST, phonemes);
                                             intent.putExtra(Constants.GET_VOWEL_STRESS_POST, vowelStress);
                                             intent.putExtra(Constants.GET_WER_POST, resultWER);
-                                            intent.putExtra(Constants.GET_PITCH_CHART_POST, pitch_chart_byte);
+                                            //intent.putExtra(Constants.GET_PITCH_CHART_POST, pitch_chart_byte);
                                             intent.putExtra(Constants.GET_VOWEL_CHART_POST, vowel_chart_byte);
+
+                                            // interactive chart
+                                            intent.putExtra("YValuesNative", pitchChartYValuesNative);
+                                            intent.putExtra("YValuesUser", pitchChartYValuesUser);
 
                                             startActivity(intent);
                                         }

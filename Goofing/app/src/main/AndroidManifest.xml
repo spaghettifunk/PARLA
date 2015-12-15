@@ -55,7 +55,7 @@
             android:screenOrientation="portrait">
         </activity>
         <activity
-            android:name=".FeedbacksActivity"
+            android:name=".FeedbackActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
