@@ -176,6 +176,16 @@
                 android:layout_width="fill_parent"
                 android:layout_height="30dp" />
 
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="The red cross should be inside the circle"
+                android:id="@+id/textView4"
+                android:lines="1"
+                android:textStyle="bold"
+                android:textAlignment="center" />
+
             <ImageView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"

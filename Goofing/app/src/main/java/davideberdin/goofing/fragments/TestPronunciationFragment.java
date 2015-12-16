@@ -268,6 +268,8 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
             //endregion
             case R.id.prevWordButton:
                 //region Previous Word
+                Logger.WriteOnReport("TestPronunciationActivity", "Clicked on previous word BUTTON");
+
                 String sentence = this.loggedUser.GetCurrentSentence();
                 int index = Constants.getSentenceIndex(sentence);
 
@@ -287,6 +289,8 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
             //endregion
             case R.id.nextWordButton:
                 //region Next Word
+                Logger.WriteOnReport("TestPronunciationActivity", "Clicked on next word BUTTON");
+
                 String s = this.loggedUser.GetCurrentSentence();
                 int ind = Constants.getSentenceIndex(s);
 
