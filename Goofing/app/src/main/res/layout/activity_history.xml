@@ -18,6 +18,16 @@
 
         </android.support.v7.widget.RecyclerView>
 
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/lower_is_better"
+            android:id="@+id/trendHistoryTV"
+            android:layout_marginBottom="5dp"
+            android:textStyle="bold"
+            android:textAlignment="center" />
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/cardListTrend"
             android:layout_width="match_parent"

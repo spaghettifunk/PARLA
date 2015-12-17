@@ -1,16 +1,10 @@
 package davideberdin.goofing.utilities;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.StringTokenizer;
 
-import davideberdin.goofing.controllers.SentenceTuple;
 import davideberdin.goofing.controllers.Tuple;
 
 public class Constants {
-
-    // Github
-    public static final String GITHUB_O2AUTH_TOKEN = "04b3b1f330ef5f610972fdb99875c8359ce59226";
 
     // Activities Name
     public static final String LOGIN_ACTIVITY = "LoginActivity";
@@ -65,7 +59,6 @@ public class Constants {
     public static final String RECORDED_AUDIO_PATH = "recorded_audio";
     public static final String SHARED_PREFERENCES_RECORDED_AUDIO_NAME = "RecordedAudio";
     public static final String SHARED_PREFERENCES_RECORDED_AUDIO_NAME_LIST = "RecordedAudioNames";
-    public static final String LOGIN_TIMESTAMP = "LoginTimestamp";
     public static final String REPORT_SHARED_PREFERENCES = "ReportSharedPreferences";
 
     // Notification strings
@@ -89,9 +82,6 @@ public class Constants {
     public static final String GET_VOWEL_TREND = "TrendImages";
 
     public static final String GET_RESULT_PHONEMES_SERVICE = "Phonemes";
-
-    // sentences - KEEP THE SAME ORDER
-    public static HashMap<String, SentenceTuple<String, String, ArrayList<Tuple>>> nativeSentenceInfo = new HashMap<>();
 
     public static String[] nativeSentences = {"A piece of cake", "Blow a fuse", "Catch some zs", "Down to the wire",
             "Eager beaver", "Fair and square", "Get cold feet", "Mellow out",

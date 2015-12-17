@@ -54,6 +54,7 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
     private Button prevWordButton = null;
     private Button nextWordButton = null;
 
+    private UserLocalStore userLocalStore = null;
     private User loggedUser = null;
     //endregion
 
@@ -79,7 +80,7 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
         this.prevWordButton.setOnClickListener(this);
         this.nextWordButton.setOnClickListener(this);
 
-        UserLocalStore userLocalStore = new UserLocalStore(this.getActivity());
+        this.userLocalStore = new UserLocalStore(this.getActivity());
         this.loggedUser = userLocalStore.getLoggedUser();
 
         this.tvSentence = (TextView) testPronunciationView.findViewById(R.id.tpSentence);
@@ -285,6 +286,9 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
                 this.loggedUser.SetCurrentSentence(Constants.nativeSentences[index]);
                 this.loggedUser.SetCurrentPhonetic(Constants.nativePhonetics[index]);
 
+                // save data
+                this.userLocalStore.storeUserData(this.loggedUser);
+
                 break;
             //endregion
             case R.id.nextWordButton:
@@ -305,6 +309,9 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
                 this.tvPhonemes.setText(Constants.nativePhonetics[ind]);
                 this.loggedUser.SetCurrentSentence(Constants.nativeSentences[ind]);
                 this.loggedUser.SetCurrentPhonetic(Constants.nativePhonetics[ind]);
+
+                // save data
+                this.userLocalStore.storeUserData(this.loggedUser);
 
                 break;
             //endregion

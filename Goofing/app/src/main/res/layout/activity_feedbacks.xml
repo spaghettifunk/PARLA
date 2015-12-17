@@ -20,7 +20,8 @@
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:clickable="true">
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -163,14 +164,16 @@
                 android:layout_width="match_parent"
                 android:layout_weight="1" />
 
-            <!--<ImageView-->
-                <!--android:layout_width="fill_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:scaleType="fitXY"-->
-                <!--android:adjustViewBounds="true"-->
-                <!--android:id="@+id/pitchChartImageView"-->
-                <!--android:contentDescription="@string/vowelChartImageView"-->
-                <!--android:cropToPadding="false" />-->
+            <ImageButton
+                android:layout_width="29dp"
+                android:layout_height="29dp"
+                android:id="@+id/fullScreenButton"
+                android:layout_gravity="right"
+                style="@style/Widget.Design.FloatingActionButton"
+                android:background="@drawable/fullscreen"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="10dp"
+                android:contentDescription="@string/fullscreen_button" />
 
             <Space
                 android:layout_width="fill_parent"
@@ -180,7 +183,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="The red cross should be inside the circle"
+                android:text="The red cross should be within the circle"
                 android:id="@+id/textView4"
                 android:lines="1"
                 android:textStyle="bold"

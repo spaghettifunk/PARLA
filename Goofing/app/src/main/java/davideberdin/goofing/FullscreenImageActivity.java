@@ -16,14 +16,23 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import com.github.mikephil.charting.charts.ScatterChart;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.ScatterData;
+import com.github.mikephil.charting.data.ScatterDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
+
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
+import davideberdin.goofing.controllers.MyMarkerView;
 import davideberdin.goofing.utilities.IOUtilities;
 import davideberdin.goofing.utilities.Logger;
 
 public class FullscreenImageActivity extends AppCompatActivity implements View.OnTouchListener {
+
     private static final String TAG = "Touch";
     @SuppressWarnings("unused")
     private static final float MIN_ZOOM = 1f, MAX_ZOOM = 1f;
@@ -56,19 +65,89 @@ public class FullscreenImageActivity extends AppCompatActivity implements View.O
 
         Bundle b = getIntent().getExtras();
 
-        byte[] chartByte = null;
-        if (b.getBoolean("isPitch"))
-            chartByte = b.getByteArray("pitchchart");
-        else
-            chartByte = b.getByteArray("vowelchart");
+        if (b.getBoolean("isPitch")) {
+            ArrayList<String> YValuesNative = b.getStringArrayList("YValuesNative");
+            ArrayList<String> YValuesUser = b.getStringArrayList("YValuesUser");
 
-        // Build feedbacks image
-        this.chart = (ImageView) findViewById(R.id.fullscreen_image);
-        Bitmap bmp = BitmapFactory.decodeByteArray(chartByte, 0, chartByte.length);
-        this.chart.setImageBitmap(bmp);
-        this.chart.setOnTouchListener(this);
+            this.generatePitchChart(YValuesNative, YValuesUser);
+        }
+        else {
+
+            byte[] chartByte = b.getByteArray("vowelchart");
+
+            // Build feedbacks image
+            this.chart = (ImageView) findViewById(R.id.fullscreen_image);
+            Bitmap bmp = BitmapFactory.decodeByteArray(chartByte, 0, chartByte.length);
+            this.chart.setImageBitmap(bmp);
+            this.chart.setOnTouchListener(this);
+            this.chart.setVisibility(View.VISIBLE);
+        }
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    private void generatePitchChart(ArrayList<String> YValuesNative, ArrayList<String> YValuesUser) {
+
+        // Y values Native
+        int index = 0;
+        ArrayList<ScatterDataSet> sets = new ArrayList<>();
+
+        ArrayList<Entry> entriesNative = new ArrayList<>();
+        for (Object yval : YValuesNative) {
+            Double val = Double.parseDouble(yval.toString());
+            Entry e = new Entry(val.floatValue(), index++);
+            entriesNative.add(e);
+        }
+
+        ScatterDataSet setNative = new ScatterDataSet(entriesNative, "Native");
+        setNative.setColor(ColorTemplate.JOYFUL_COLORS[0]);
+        setNative.setScatterShape(ScatterChart.ScatterShape.CIRCLE);
+        setNative.setScatterShapeSize(5.0f);
+        setNative.setDrawValues(false);
+
+        ArrayList<String> XLabels = new ArrayList<String>();
+        for (int i = 0; i < YValuesNative.size(); i++) {
+            XLabels.add("");
+        }
+
+        // Y values User
+        index = 0;
+        ArrayList<Entry> entriesUser = new ArrayList<>();
+        for (Object yval : YValuesUser) {
+            Double val = Double.parseDouble(yval.toString());
+            Entry e = new Entry(val.floatValue(), index++);
+            entriesUser.add(e);
+        }
+
+        ScatterDataSet setUser = new ScatterDataSet(entriesUser, "User");
+        setUser.setColor(ColorTemplate.JOYFUL_COLORS[1]);
+        setUser.setScatterShape(ScatterChart.ScatterShape.CIRCLE);
+        setUser.setScatterShapeSize(5.0f);
+        setUser.setDrawValues(false);
+
+        // add datasets
+        sets.add(setNative);
+        sets.add(setUser);
+
+        ScatterData scatterData = new ScatterData(XLabels, sets);
+
+        ScatterChart chart = (ScatterChart) findViewById(R.id.pitchChartFS);
+        MyMarkerView mv = new MyMarkerView(this.getApplicationContext(), R.layout.my_marker_layout);
+
+        // chart settings
+        chart.setMarkerView(mv);
+        chart.setDescription("");   // empty description -> use an external TextView
+        chart.setAutoScaleMinMaxEnabled(true);
+
+        chart.getAxisLeft().setDrawGridLines(false);
+        chart.getAxisRight().setDrawGridLines(false);
+        chart.getXAxis().setDrawGridLines(false);
+        chart.setData(scatterData);
+
+        chart.notifyDataSetChanged();   // notify that the dataset is changed
+        chart.invalidate(); // refresh the chart
+
+        chart.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -78,18 +157,20 @@ public class FullscreenImageActivity extends AppCompatActivity implements View.O
         Matrix matrix = new Matrix();
 
         // Checks the orientation of the screen
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            this.chart.setScaleType(ImageView.ScaleType.MATRIX);   //required
-            matrix.postRotate(90f, this.chart.getDrawable().getBounds().width() / 2, this.chart.getDrawable().getBounds().height() / 2);
-            this.chart.setImageMatrix(matrix);
+        if (this.chart != null && this.chart.getVisibility() == View.VISIBLE) {
+            if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                this.chart.setScaleType(ImageView.ScaleType.MATRIX);   //required
+                matrix.postRotate(90f, this.chart.getDrawable().getBounds().width() / 2, this.chart.getDrawable().getBounds().height() / 2);
+                this.chart.setImageMatrix(matrix);
 
-            // Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show();
-        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            // Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(this, "landscape", Toast.LENGTH_SHORT).show();
+            } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                // Toast.makeText(this, "portrait", Toast.LENGTH_SHORT).show();
 
-            this.chart.setScaleType(ImageView.ScaleType.MATRIX);   //required
-            matrix.postRotate(-90f, this.chart.getDrawable().getBounds().width() / 2, this.chart.getDrawable().getBounds().height() / 2);
-            this.chart.setImageMatrix(matrix);
+                this.chart.setScaleType(ImageView.ScaleType.MATRIX);   //required
+                matrix.postRotate(-90f, this.chart.getDrawable().getBounds().width() / 2, this.chart.getDrawable().getBounds().height() / 2);
+                this.chart.setImageMatrix(matrix);
+            }
         }
     }
 

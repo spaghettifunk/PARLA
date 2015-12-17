@@ -41,10 +41,6 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
-        // Init structs
-        if (Constants.nativeSentenceInfo.isEmpty())
-            fillSentencesMap();
-
         // fill dictionary sentence-meaning-example
         if (Constants.meaningExampleMap.isEmpty())
             Constants.createMeaningExampleDictionary();
@@ -227,24 +223,4 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         }
     }
     //endregion
-
-    public static void fillSentencesMap() {
-        for (int i = 0; i < Constants.nativeSentences.length; i++) {
-
-            String stressPhonemes = Constants.nativeStressPhonemes[i];
-            String stressPosition = Constants.nativeStressPosition[i];
-
-            List<String> phonemes = Arrays.asList(stressPhonemes.split("\\s*,\\s*"));
-            List<String> positions = Arrays.asList(stressPosition.split("\\s*,\\s*"));
-
-            ArrayList<Tuple> stressNative = new ArrayList<Tuple>();
-            for (int j = 0; j < phonemes.size(); j++) {
-                Tuple stress = new Tuple(phonemes.get(j), positions.get(j));
-                stressNative.add(stress);
-            }
-
-            SentenceTuple<String, String, ArrayList<Tuple>> tuple = new SentenceTuple<>(Constants.nativePhonetics[i], Constants.nativePhonemes[i], stressNative);
-            Constants.nativeSentenceInfo.put(Constants.nativeSentences[i], tuple);
-        }
-    }
 }

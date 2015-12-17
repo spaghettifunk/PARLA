@@ -49,10 +49,7 @@ public class UserLocalStore
     }
 
     public boolean getUserLoggedIn(){
-        if (userLocalDatabase.getBoolean("LoggedIn", false) == true)
-            return true;
-        else
-            return false;
+        return userLocalDatabase.getBoolean("LoggedIn", false);
     }
 
     public void clearUserData(){

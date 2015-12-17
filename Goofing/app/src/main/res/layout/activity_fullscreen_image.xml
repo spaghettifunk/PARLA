@@ -5,6 +5,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
+    android:orientation="horizontal"
     android:configChanges="orientation|keyboardHidden"
     tools:context="davideberdin.goofing.FullscreenImageActivity"
     android:background="#ffffff">
@@ -14,6 +15,14 @@
         android:layout_height="fill_parent"
         android:adjustViewBounds="true"
         android:id="@+id/fullscreen_image"
-        android:contentDescription="@string/imageViewFullscreen" />
+        android:contentDescription="@string/imageViewFullscreen"
+        android:visibility="invisible" />
+
+    <com.github.mikephil.charting.charts.ScatterChart
+        android:id="@+id/pitchChartFS"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentTop="true"
+        android:visibility="invisible" />
 
 </RelativeLayout>

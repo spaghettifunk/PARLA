@@ -12,6 +12,7 @@
     <string name="tvGender">Gender</string>
     <string name="etPasswordReg">Password</string>
     <string name="emptyFields">One or more fields are empty</string>
+    <string name="passwordsDoNotMatch">Passwords do not match</string>
     <string name="errorDialogTitle">Error in Registration</string>
     <string name="okText">OK</string>
     <string-array name="spGender">
@@ -22,7 +23,21 @@
         <item>Student</item>
         <item>Researcher</item>
         <item>Teacher</item>
-        <item>Nurse</item>
+        <item>Management</item>
+        <item>Business and Financial Operations</item>
+        <item>Computer and Mathematical</item>
+        <item>Architecture and Engineering</item>
+        <item>Life, Physical, and Social Science</item>
+        <item>Community and Social Service</item>
+        <item>Legal</item>
+        <item>Education, Training, and Library</item>
+        <item>Arts, Design, Entertainment, Sports, and Media</item>
+        <item>Healthcare Practitioners and Technical</item>
+        <item>Healthcare Support</item>
+        <item>Protective Service</item>
+        <item>Personal Care and Service</item>
+        <item>Sales and Related</item>
+        <item>Office and Administrative Support</item>
     </string-array>
     <integer-array name="progressColor">
         <item>28</item>
@@ -76,4 +91,7 @@
     <string name="next_word">Next word</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
+    <string name="usernameEditTextRegistration">Username</string>
+    <string name="fullscreen_button">fullscreen button</string>
+    <string name="lower_is_better">On Y axis, lower is better</string>
 </resources>

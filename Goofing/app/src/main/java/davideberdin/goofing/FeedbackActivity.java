@@ -1,6 +1,5 @@
 package davideberdin.goofing;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,14 +16,11 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.ScatterChart;
-import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.ScatterData;
 import com.github.mikephil.charting.data.ScatterDataSet;
-import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import org.json.JSONException;
@@ -32,8 +28,10 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
+import davideberdin.goofing.controllers.MyMarkerView;
 import davideberdin.goofing.controllers.SentenceTuple;
 import davideberdin.goofing.controllers.Tuple;
 import davideberdin.goofing.controllers.User;
@@ -45,10 +43,15 @@ import davideberdin.goofing.utilities.Logger;
 import davideberdin.goofing.utilities.UserLocalStore;
 
 public class FeedbackActivity extends AppCompatActivity implements View.OnClickListener {
+
     //region VARIABLES
     private ArrayList<String> phonemes;
     private ArrayList<Tuple> vowelStress;
-    private byte[] pitchChartByte;
+
+    // interactive chart
+    private ArrayList<String> YValuesNative;
+    private ArrayList<String> YValuesUser;
+
     private byte[] vowelChartByte;
 
     private AutoResizeTextView nativeFeedback;
@@ -74,11 +77,10 @@ public class FeedbackActivity extends AppCompatActivity implements View.OnClickL
         String resultWER = b.getString(Constants.GET_WER_POST);
         this.phonemes = b.getStringArrayList(Constants.GET_PHONEMES_POST);
         this.vowelStress = b.getParcelableArrayList(Constants.GET_VOWEL_STRESS_POST);
-        //this.pitchChartByte = b.getByteArray(Constants.GET_PITCH_CHART_POST);
         this.vowelChartByte = b.getByteArray(Constants.GET_VOWEL_CHART_POST);
 
-        ArrayList<String> YValuesNative = b.getStringArrayList("YValuesNative");
-        ArrayList<String> YValuesUser = b.getStringArrayList("YValuesUser");
+        this.YValuesNative = b.getStringArrayList("YValuesNative");
+        this.YValuesUser = b.getStringArrayList("YValuesUser");
 
         UserLocalStore userLocalStore = new UserLocalStore(this);
         this.loggedUser = userLocalStore.getLoggedUser();
@@ -86,6 +88,9 @@ public class FeedbackActivity extends AppCompatActivity implements View.OnClickL
         // Feedback
         ImageButton infoFeedbackButton = (ImageButton) findViewById(R.id.infoImageButton);
         infoFeedbackButton.setOnClickListener(this);
+
+        ImageButton fullscreenButton = (ImageButton) findViewById(R.id.fullScreenButton);
+        fullscreenButton.setOnClickListener(this);
 
         this.nativeFeedback = (AutoResizeTextView) findViewById(R.id.feedbacksNative);
         this.nativeFeedback.setMaxLines(1);
@@ -113,13 +118,7 @@ public class FeedbackActivity extends AppCompatActivity implements View.OnClickL
         // create interactive chart here
         generatePitchChart(YValuesNative, YValuesUser);
 
-        // make pitch chart image
-//        this.pitchChart = (ImageView) findViewById(R.id.pitchChartImageView);
-//        Bitmap pitchBitmap = BitmapFactory.decodeByteArray(this.pitchChartByte, 0, this.pitchChartByte.length);
-//        this.pitchChart.setImageBitmap(pitchBitmap);
-//        this.pitchChart.setOnClickListener(this);
-
-        // Build feedbacks image
+        // Build feedback image
         ImageView vowelChart = (ImageView) findViewById(R.id.vowelChartImageView);
         Bitmap vowelBitmap = BitmapFactory.decodeByteArray(this.vowelChartByte, 0, this.vowelChartByte.length);
         vowelChart.setImageBitmap(vowelBitmap);
@@ -197,34 +196,35 @@ public class FeedbackActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-//            case R.id.pitchChartImageView:
-//
-//                Logger.WriteOnReport("FeedbackActivity", "Clicked on pitch chart BUTTON");
-//
-//                Intent pitchIntent = new Intent(FeedbackActivity.this, FullscreenImageActivity.class);
-//                pitchIntent.putExtra("isPitch", true);
-//                pitchIntent.putExtra("pitchchart", this.pitchChartByte);
-//                startActivity(pitchIntent);
-//                break;
 
-            case R.id.vowelChartImageView:
+            case R.id.fullScreenButton: {
+                Logger.WriteOnReport("FeedbackActivity", "Clicked on pitch CHART");
 
+                Intent pitchIntent = new Intent(FeedbackActivity.this, FullscreenImageActivity.class);
+                pitchIntent.putExtra("isPitch", true);
+                pitchIntent.putExtra("YValuesNative", this.YValuesNative);
+                pitchIntent.putExtra("YValuesUser", this.YValuesUser);
+                startActivity(pitchIntent);
+
+                break;
+            }
+            case R.id.vowelChartImageView: {
                 Logger.WriteOnReport("FeedbackActivity", "Clicked on vocal chart BUTTON");
 
                 Intent vowelIntent = new Intent(FeedbackActivity.this, FullscreenImageActivity.class);
                 vowelIntent.putExtra("isPitch", false);
                 vowelIntent.putExtra("vowelchart", this.vowelChartByte);
                 startActivity(vowelIntent);
+
                 break;
-
-            case R.id.infoImageButton:
-
+            }
+            case R.id.infoImageButton: {
                 Logger.WriteOnReport("FeedbackActivity", "Clicked on info BUTTON");
                 AppWindowManager.showInfoFeedbacksDialog(this, this.loggedUser.GetCurrentSentence());
 
                 break;
-            case R.id.historyButton:
-
+            }
+            case R.id.historyButton: {
                 Logger.WriteOnReport("FeedbackActivity", "Clicked on history BUTTON");
 
                 Intent historyIntent = new Intent(FeedbackActivity.this, HistoryActivity.class);
@@ -232,6 +232,7 @@ public class FeedbackActivity extends AppCompatActivity implements View.OnClickL
                 startActivity(historyIntent);
 
                 break;
+            }
             default:
                 break;
         }
@@ -346,20 +347,21 @@ public class FeedbackActivity extends AppCompatActivity implements View.OnClickL
 
     private void fillNativeFeedback() {
         String currentSentence = this.loggedUser.GetCurrentSentence();
-        SentenceTuple<String, String, ArrayList<Tuple>> sentenceNativeFeedbacks = Constants.nativeSentenceInfo.get(currentSentence);
+        SentenceTuple<String, String, ArrayList<Tuple>> sentenceNativeFeedback = this.loggedUser.getNativeSentenceInfo().get(currentSentence);
 
-        this.nativeFeedback.setText(sentenceNativeFeedbacks.getPhonemes());
+        this.nativeFeedback.setText("");
+        this.nativeFeedback.setText(sentenceNativeFeedback.getPhonemes());
 
         // change color based on stress position
-        String currentSentenceNoDigits = sentenceNativeFeedbacks.getPhonemes().replaceAll("\\d", "");
+        String currentSentenceNoDigits = sentenceNativeFeedback.getPhonemes().replaceAll("\\d", "");
 
         List<String> allPhonemes = Arrays.asList(currentSentenceNoDigits.split("\\s+"));
-        ArrayList<Tuple> stress = sentenceNativeFeedbacks.getStress();
+        ArrayList<Tuple> stress = sentenceNativeFeedback.getStress();
 
         String pronunciationRepresentation = "";
         for (String p : allPhonemes) {
             boolean changed = false;
-            for (Tuple st : new ArrayList<Tuple>(stress)) {
+            for (Tuple st : new ArrayList<>(stress)) {
                 if (p.contains(st.getFirst()) && st.getSecond().equals("1")) {
                     stress.remove(st);
 
@@ -391,6 +393,8 @@ public class FeedbackActivity extends AppCompatActivity implements View.OnClickL
         for (String p : phonemes)
             userPhonemes += p.replace(" ", "") + " ";
         userPhonemes = userPhonemes.replaceAll("\\d", "");
+
+        this.userFeedback.setText("");
         this.userFeedback.setText(userPhonemes);
 
         // change color based on stress position
@@ -400,7 +404,7 @@ public class FeedbackActivity extends AppCompatActivity implements View.OnClickL
         String pronunciationRepresentation = "";
         for (String p : allPhonemes) {
             boolean changed = false;
-            for (Tuple st : new ArrayList<Tuple>(stress)) {
+            for (Tuple st : new ArrayList<>(stress)) {
                 if (p.contains(st.getFirst()) && st.getSecond().equals("1")) {
                     stress.remove(st);
 
@@ -418,41 +422,11 @@ public class FeedbackActivity extends AppCompatActivity implements View.OnClickL
                     break;
                 }
             }
-            if (changed == false)
+            if (!changed)
                 pronunciationRepresentation += "<u>" + p + "</u>&#160";
         }
 
         this.userFeedback.setText(Html.fromHtml(pronunciationRepresentation));
         this.userFeedbackSentence.setText(currentSentence);
-    }
-
-    private class MyMarkerView extends MarkerView {
-
-        private TextView tvContent;
-
-        public MyMarkerView(Context context, int layoutResource) {
-            super(context, layoutResource);
-            // this markerview only displays a TextView
-            tvContent = (TextView) findViewById(R.id.tvContent);
-        }
-
-        // callbacks every time the MarkerView is redrawn, can be used to update the
-        // content (user-interface)
-        @Override
-        public void refreshContent(Entry e, Highlight highlight) {
-            tvContent.setText(e.getVal() + ""); // set the entry-value as the display text
-        }
-
-        @Override
-        public int getXOffset(float xpos) {
-            // this will center the marker-view horizontally
-            return -(getWidth() / 2);
-        }
-
-        @Override
-        public int getYOffset(float ypos) {
-            // this will cause the marker-view to be above the selected value
-            return -getHeight();
-        }
     }
 }
