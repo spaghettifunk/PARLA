@@ -255,6 +255,7 @@ public class NetworkingTask extends AsyncTask {
 
                         //region Trend
                         ArrayList<TrendTuple> trend = new ArrayList<>();
+                        ArrayList<String> trendChartsTitle = (ArrayList<String>) responseObject.get(Constants.GET_VOWEL_TREND_TITLES);
                         ArrayList<String> trendCharts = (ArrayList<String>) responseObject.get(Constants.GET_VOWEL_TREND);
                         ArrayList<String> trendChartsDates = (ArrayList<String>) responseObject.get(Constants.GET_VOWEL_TREND_DATES);
 
@@ -280,7 +281,10 @@ public class NetworkingTask extends AsyncTask {
                             x_array = x_array.replace("\"", "");
                             String[] x_split = x_array.split(",");
 
-                            trend.add(new TrendTuple(tempChart, x_split));
+                            // get title
+                            String title = trendChartsTitle.get(i);
+
+                            trend.add(new TrendTuple(tempChart, x_split, title));
                         }
                         //endregion
 

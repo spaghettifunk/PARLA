@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -14,7 +13,6 @@ import android.widget.ListView;
 import org.json.JSONException;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import davideberdin.goofing.Listening;
 import davideberdin.goofing.R;

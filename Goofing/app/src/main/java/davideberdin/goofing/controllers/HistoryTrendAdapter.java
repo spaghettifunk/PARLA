@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -16,6 +17,7 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import java.util.ArrayList;
 
 import davideberdin.goofing.R;
+import davideberdin.goofing.utilities.AutoResizeTextView;
 
 public class HistoryTrendAdapter extends RecyclerView.Adapter<HistoryTrendAdapter.TrendViewHolder> {
 
@@ -39,6 +41,9 @@ public class HistoryTrendAdapter extends RecyclerView.Adapter<HistoryTrendAdapte
 
         LineData data = new LineData(getXAxisValues(time), getDataSet(imageFloat));
 
+        cardViewHolder.chartTitle.setText(cl.getImageTitle() + " - (lower is better)");  // title
+
+        // chart parameters
         cardViewHolder.lineChart.setMarkerView(new MyMarkerView(cardViewHolder.context, R.layout.my_marker_layout));
         cardViewHolder.lineChart.setAutoScaleMinMaxEnabled(true);
 
@@ -102,10 +107,14 @@ public class HistoryTrendAdapter extends RecyclerView.Adapter<HistoryTrendAdapte
 
         protected LineChart lineChart;
         protected Context context;
+        protected AutoResizeTextView chartTitle;
 
         public TrendViewHolder(View v) {
             super(v);
             lineChart = (LineChart) v.findViewById(R.id.trend_card_chart);
+            chartTitle = (AutoResizeTextView) v.findViewById(R.id.trendChartTitle);
+            chartTitle.setSingleLine(true);
+
             context = v.getContext();
         }
     }

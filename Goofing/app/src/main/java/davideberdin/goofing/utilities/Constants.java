@@ -79,6 +79,7 @@ public class Constants {
     public static final String GET_VOWEL_HISTORY_ID = "ChartId";
     public static final String GET_VOWEL_HISTORY_DATE = "VowelsDate";
     public static final String GET_VOWEL_HISTORY = "VowelsImages";
+    public static final String GET_VOWEL_TREND_TITLES = "TrendImagesTitle";
     public static final String GET_VOWEL_TREND = "TrendImages";
     public static final String GET_VOWEL_TREND_DATES = "TrendImagesTime";
 

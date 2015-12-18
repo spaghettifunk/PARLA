@@ -93,5 +93,5 @@
     <string name="password">Password</string>
     <string name="usernameEditTextRegistration">Username</string>
     <string name="fullscreen_button">fullscreen button</string>
-    <string name="lower_is_better">On Y axis, lower is better</string>
+    <string name="lower_is_better">How close the vowel pronunciation was to Native</string>
 </resources>

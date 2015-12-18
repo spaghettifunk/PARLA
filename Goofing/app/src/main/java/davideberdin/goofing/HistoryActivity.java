@@ -149,6 +149,7 @@ public class HistoryActivity extends AppCompatActivity {
 
             hc.setImageFloatArray(data.getImageYValues());
             hc.setImageTimeArray(data.getImageXValues());
+            hc.setImageTitle(data.getTitle());
 
             historyTrendAdapterList.add(hc);
         }

@@ -22,6 +22,13 @@
             android:orientation="vertical"
             tools:ignore="UseCompoundDrawables">
 
+            <davideberdin.goofing.utilities.AutoResizeTextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/trendChartTitle"
+                android:textAlignment="center"
+                android:textStyle="normal" />
+
             <com.github.mikephil.charting.charts.LineChart
                 android:id="@+id/trend_card_chart"
                 android:layout_width="match_parent"
