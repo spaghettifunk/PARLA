@@ -27,6 +27,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 // My imports
 import davideberdin.goofing.controllers.CardTuple;
+import davideberdin.goofing.controllers.TrendTuple;
 import davideberdin.goofing.controllers.Tuple;
 import davideberdin.goofing.controllers.User;
 import davideberdin.goofing.utilities.Constants;
@@ -253,17 +254,33 @@ public class NetworkingTask extends AsyncTask {
                         //endregion
 
                         //region Trend
-                        ArrayList<CardTuple> trend = new ArrayList<CardTuple>();
+                        ArrayList<TrendTuple> trend = new ArrayList<>();
                         ArrayList<String> trendCharts = (ArrayList<String>) responseObject.get(Constants.GET_VOWEL_TREND);
+                        ArrayList<String> trendChartsDates = (ArrayList<String>) responseObject.get(Constants.GET_VOWEL_TREND_DATES);
 
-                        index = 0;
-                        for (String chart : trendCharts) {
-                            String tempId = "-1";
-                            String tempDate = new Date().toString();
-                            byte[] tempChart = Base64.decode(chart, Base64.DEFAULT);
+                        for (int i = 0; i < trendCharts.size(); i++) {
 
-                            trend.add(new CardTuple(tempId, tempDate, tempChart));
-                            index++;
+                            // distance from centroid values
+                            String y_values = trendCharts.get(i);
+                            String y_array = y_values.replace("[", "");
+                            y_array = y_array.replace("]", "");
+
+                            String[] y_split = y_array.split(",");
+                            float[] tempChart = new float[y_split.length];
+                            int index_y = 0;
+                            for (String s : y_split) {
+                                String val = s.replaceAll("\"", "");
+                                tempChart[index_y++] = Float.parseFloat(val);
+                            }
+
+                            // time values
+                            String x_values = trendChartsDates.get(i);
+                            String x_array = x_values.replace("[", "");
+                            x_array = x_array.replace("]", "");
+                            x_array = x_array.replace("\"", "");
+                            String[] x_split = x_array.split(",");
+
+                            trend.add(new TrendTuple(tempChart, x_split));
                         }
                         //endregion
 

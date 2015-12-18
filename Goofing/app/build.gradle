@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 22
-    buildToolsVersion "22.0.1"
+    buildToolsVersion '23.0.2'
     packagingOptions {
         exclude 'META-INF/NOTICE.txt'
         exclude 'META-INF/LICENSE.txt'
@@ -15,6 +15,9 @@ android {
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
+    }
+    lintOptions {
+        checkReleaseBuilds false
     }
     buildTypes {
         release {

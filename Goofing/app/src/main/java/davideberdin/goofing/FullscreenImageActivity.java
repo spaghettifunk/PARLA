@@ -37,7 +37,7 @@ public class FullscreenImageActivity extends AppCompatActivity implements View.O
     @SuppressWarnings("unused")
     private static final float MIN_ZOOM = 1f, MAX_ZOOM = 1f;
 
-    // These matrices will be used to scale points of the image
+    // These matrices will be used to scale points of the lineChart
     private Matrix matrix = new Matrix();
     private Matrix savedMatrix = new Matrix();
 
@@ -75,7 +75,7 @@ public class FullscreenImageActivity extends AppCompatActivity implements View.O
 
             byte[] chartByte = b.getByteArray("vowelchart");
 
-            // Build feedbacks image
+            // Build feedbacks lineChart
             this.chart = (ImageView) findViewById(R.id.fullscreen_image);
             Bitmap bmp = BitmapFactory.decodeByteArray(chartByte, 0, chartByte.length);
             this.chart.setImageBitmap(bmp);

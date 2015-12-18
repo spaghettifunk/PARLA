@@ -118,7 +118,7 @@ public class FeedbackActivity extends AppCompatActivity implements View.OnClickL
         // create interactive chart here
         generatePitchChart(YValuesNative, YValuesUser);
 
-        // Build feedback image
+        // Build feedback lineChart
         ImageView vowelChart = (ImageView) findViewById(R.id.vowelChartImageView);
         Bitmap vowelBitmap = BitmapFactory.decodeByteArray(this.vowelChartByte, 0, this.vowelChartByte.length);
         vowelChart.setImageBitmap(vowelBitmap);

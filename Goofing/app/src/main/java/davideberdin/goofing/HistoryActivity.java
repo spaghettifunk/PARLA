@@ -18,6 +18,8 @@ import davideberdin.goofing.controllers.CardTuple;
 import davideberdin.goofing.controllers.HistoryCard;
 import davideberdin.goofing.controllers.HistoryCardsAdapter;
 import davideberdin.goofing.controllers.HistoryTrendAdapter;
+import davideberdin.goofing.controllers.TrendCard;
+import davideberdin.goofing.controllers.TrendTuple;
 import davideberdin.goofing.controllers.User;
 import davideberdin.goofing.networking.GetCallback;
 import davideberdin.goofing.networking.ServerRequest;
@@ -34,7 +36,7 @@ public class HistoryActivity extends AppCompatActivity {
     private RecyclerView recCardsList;
 
     // vowels trend
-    private ArrayList<HistoryCard> historyTrendAdapterList;
+    private ArrayList<TrendCard> historyTrendAdapterList;
     private HistoryTrendAdapter historyTrendAdapter;
     private RecyclerView recTrendList;
 
@@ -87,17 +89,17 @@ public class HistoryActivity extends AppCompatActivity {
                             historyCards.add(ct);
 
                         // create listener for cards history
-                        createList(historyCards, false);
+                        createList(historyCards);
                         historyCardsAdapter.notifyDataSetChanged();
                         //endregion
                         //region vowels trend here
-                        ArrayList<CardTuple> tempTrend = (ArrayList<CardTuple>) params[1];
-                        ArrayList<CardTuple> historyTrendCards = new ArrayList<CardTuple>();
-                        for (CardTuple ct : tempTrend)
-                            historyTrendCards.add(ct);
+                        ArrayList<TrendTuple> tempTrend = (ArrayList<TrendTuple>) params[1];
+                        ArrayList<TrendTuple> historyTrend = new ArrayList<TrendTuple>();
+                        for (TrendTuple tc : tempTrend)
+                            historyTrend.add(tc);
 
                         // create listener for cards trend
-                        createList(historyTrendCards, true);
+                        createListTrend(historyTrend);
                         historyTrendAdapter.notifyDataSetChanged();
                         //endregion
                     }
@@ -126,7 +128,7 @@ public class HistoryActivity extends AppCompatActivity {
     }
 
     @SuppressWarnings("deprecation")
-    private void createList(ArrayList<CardTuple> historyData, boolean isTrend) {
+    private void createList(ArrayList<CardTuple> historyData) {
 
         for (CardTuple data : historyData) {
             HistoryCard hc = new HistoryCard();
@@ -135,10 +137,20 @@ public class HistoryActivity extends AppCompatActivity {
             hc.setCardDate(data.getDate());
             hc.setImageByteArray(data.getImage());
 
-            if (!isTrend)
-                historyCardsAdapterList.add(hc);
-            else
-                historyTrendAdapterList.add(hc);
+            historyCardsAdapterList.add(hc);
+        }
+    }
+
+    @SuppressWarnings("deprecation")
+    private void createListTrend(ArrayList<TrendTuple> historyData) {
+
+        for (TrendTuple data : historyData) {
+            TrendCard hc = new TrendCard();
+
+            hc.setImageFloatArray(data.getImageYValues());
+            hc.setImageTimeArray(data.getImageXValues());
+
+            historyTrendAdapterList.add(hc);
         }
     }
 

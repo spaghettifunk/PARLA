@@ -23,7 +23,7 @@ public class MyMarkerView extends MarkerView {
     // content (user-interface)
     @Override
     public void refreshContent(Entry e, Highlight highlight) {
-        tvContent.setText(e.getVal() + ""); // set the entry-value as the display text
+        tvContent.setText(String.format("%.1f", e.getVal())); // set the entry-value as the display text
     }
 
     @Override

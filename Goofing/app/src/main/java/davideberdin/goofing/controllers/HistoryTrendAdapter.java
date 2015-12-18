@@ -1,28 +1,27 @@
 package davideberdin.goofing.controllers;
 
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import java.io.ByteArrayOutputStream;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.utils.ColorTemplate;
+
 import java.util.ArrayList;
 
-import davideberdin.goofing.FullscreenImageActivity;
 import davideberdin.goofing.R;
-import davideberdin.goofing.utilities.Logger;
 
+public class HistoryTrendAdapter extends RecyclerView.Adapter<HistoryTrendAdapter.TrendViewHolder> {
 
-public class HistoryTrendAdapter extends RecyclerView.Adapter<HistoryTrendAdapter.CardViewHolder> {
+    private ArrayList<TrendCard> cardsList;
 
-    private ArrayList<HistoryCard> cardsList;
-
-    public HistoryTrendAdapter(ArrayList<HistoryCard> contactList) {
+    public HistoryTrendAdapter(ArrayList<TrendCard> contactList) {
         this.cardsList = contactList;
     }
 
@@ -32,14 +31,57 @@ public class HistoryTrendAdapter extends RecyclerView.Adapter<HistoryTrendAdapte
     }
 
     @Override
-    public void onBindViewHolder(CardViewHolder cardViewHolder, int i) {
-        HistoryCard cl = cardsList.get(i);
-        cardViewHolder.cardId.setText(cl.getCardId());
-        cardViewHolder.cardDate.setText(cl.getCardDate());
+    public void onBindViewHolder(TrendViewHolder cardViewHolder, int i) {
+        TrendCard cl = cardsList.get(i);
 
-        byte[] imageByte = cl.getImageByteArray();
-        Bitmap cardBitmap = BitmapFactory.decodeByteArray(imageByte, 0, imageByte.length);
-        cardViewHolder.image.setImageBitmap(cardBitmap);
+        float[] imageFloat = cl.getImageFloatArray();
+        String[] time = cl.getImageTimeArray();
+
+        LineData data = new LineData(getXAxisValues(time), getDataSet(imageFloat));
+
+        cardViewHolder.lineChart.setMarkerView(new MyMarkerView(cardViewHolder.context, R.layout.my_marker_layout));
+        cardViewHolder.lineChart.setAutoScaleMinMaxEnabled(true);
+
+        cardViewHolder.lineChart.getAxisLeft().setDrawGridLines(false);
+        cardViewHolder.lineChart.getAxisRight().setDrawGridLines(false);
+        cardViewHolder.lineChart.getXAxis().setDrawGridLines(false);
+        cardViewHolder.lineChart.getXAxis().setDrawAxisLine(true);
+        cardViewHolder.lineChart.setDrawBorders(true);
+        cardViewHolder.lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        cardViewHolder.lineChart.getXAxis().setAvoidFirstLastClipping(true);
+
+        cardViewHolder.lineChart.getLegend().setEnabled(false);   // Hide the legend
+
+        cardViewHolder.lineChart.setDescription("");
+        cardViewHolder.lineChart.setData(data);
+        cardViewHolder.lineChart.animateXY(1000, 1000);
+        cardViewHolder.lineChart.invalidate();
+    }
+
+    private LineDataSet getDataSet(float[] imageFloat) {
+        ArrayList<Entry> values = new ArrayList<>();
+
+        int index = 0;
+        for (float val : imageFloat) {
+            Entry e = new Entry(val, index++);
+            values.add(e);
+        }
+
+        LineDataSet dataSet = new LineDataSet(values, "");
+        dataSet.setColor(ColorTemplate.LIBERTY_COLORS[2]);
+        dataSet.setFillColor(ColorTemplate.LIBERTY_COLORS[4]);
+        dataSet.setDrawFilled(true);
+        dataSet.setDrawValues(false);
+
+        return dataSet;
+    }
+
+    private ArrayList<String> getXAxisValues(String[] time) {
+        ArrayList<String> xAxis = new ArrayList<>();
+        for (String t: time)
+            xAxis.add(t);
+
+        return xAxis;
     }
 
     @Override
@@ -48,48 +90,23 @@ public class HistoryTrendAdapter extends RecyclerView.Adapter<HistoryTrendAdapte
     }
 
     @Override
-    public CardViewHolder onCreateViewHolder(ViewGroup parent, int i) {
+    public TrendViewHolder onCreateViewHolder(ViewGroup parent, int i) {
 
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.history_card, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.trend_card, parent, false);
         itemView.setMinimumWidth(parent.getMeasuredWidth());
 
-        return new CardViewHolder(itemView);
+        return new TrendViewHolder(itemView);
     }
 
-    public static class CardViewHolder extends RecyclerView.ViewHolder {
+    public static class TrendViewHolder extends RecyclerView.ViewHolder {
 
-        protected TextView cardId;
-        protected TextView cardDate;
-        protected ImageView image;
+        protected LineChart lineChart;
+        protected Context context;
 
-        public CardViewHolder(View v) {
+        public TrendViewHolder(View v) {
             super(v);
-            cardId = (TextView) v.findViewById(R.id.cardId);
-            cardDate = (TextView) v.findViewById(R.id.cardDate);
-            image = (ImageView) v.findViewById(R.id.cardImage);
-
-            image.setDrawingCacheEnabled(true);
-            image.buildDrawingCache();
-
-            v.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    Logger.WriteOnReport("HistoryActivity", "Clicked on trend chart CARD");
-
-                    // go full screen
-                    Bitmap bm = image.getDrawingCache();
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    bm.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                    byte[] byteArray = stream.toByteArray();
-
-                    Intent fullscreen = new Intent(v.getContext(), FullscreenImageActivity.class);
-                    fullscreen.putExtra("isPitch", false);
-                    fullscreen.putExtra("vowelchart", byteArray);
-
-                    v.getContext().startActivity(fullscreen);
-                }
-            });
+            lineChart = (LineChart) v.findViewById(R.id.trend_card_chart);
+            context = v.getContext();
         }
     }
 }
