@@ -87,7 +87,7 @@
         -->
         <receiver
             android:name="com.google.android.gms.analytics.AnalyticsReceiver"
-            android:enabled="true">
+            android:enabled="true" >
             <intent-filter>
                 <action android:name="com.google.android.gms.analytics.ANALYTICS_DISPATCH" />
             </intent-filter>
@@ -104,7 +104,7 @@
         -->
         <receiver
             android:name="com.google.android.gms.analytics.CampaignTrackingReceiver"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="com.android.vending.INSTALL_REFERRER" />
             </intent-filter>
