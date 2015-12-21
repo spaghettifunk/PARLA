@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
 import davideberdin.goofing.FeedbackActivity;
+import davideberdin.goofing.ParlaApplication;
 import davideberdin.goofing.R;
 import davideberdin.goofing.controllers.AlertReceiver;
 import davideberdin.goofing.controllers.User;
@@ -106,10 +107,13 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
             IOUtilities.readUserAudio(getActivity());
             IOUtilities.readReport(getActivity());
         } catch (IOException e) {
+            ParlaApplication.getInstance().trackException(e);
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
+            ParlaApplication.getInstance().trackException(e);
             e.printStackTrace();
         } catch (JSONException e) {
+            ParlaApplication.getInstance().trackException(e);
             e.printStackTrace();
         }
     }
@@ -121,6 +125,7 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
             IOUtilities.writeUserAudio(getActivity());
             IOUtilities.writeReport(getActivity());
         } catch (IOException e) {
+            ParlaApplication.getInstance().trackException(e);
             e.printStackTrace();
         }
     }
@@ -132,6 +137,7 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
             IOUtilities.writeUserAudio(getActivity());
             IOUtilities.writeReport(getActivity());
         } catch (IOException e) {
+            ParlaApplication.getInstance().trackException(e);
             e.printStackTrace();
         }
     }
@@ -143,6 +149,7 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
             IOUtilities.writeUserAudio(getActivity());
             IOUtilities.writeReport(getActivity());
         } catch (IOException e) {
+            ParlaApplication.getInstance().trackException(e);
             e.printStackTrace();
         }
     }
@@ -167,6 +174,7 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
                             if (result.equals(Constants.FAILED_POST)) {
                                 recordingRequest.dismissProgress();
                                 AppWindowManager.showErrorMessage(getActivity(), Constants.FUNNY_ERROR_MESSAGE);
+                                ParlaApplication.getInstance().trackException(new Exception("Recording in background failed"));
                                 return;
                             }
                         }
@@ -190,6 +198,7 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
                                     if (result.equals(Constants.FAILED_POST)) {
                                         recordingRequest.dismissProgress();
                                         AppWindowManager.showErrorMessage(getActivity(), Constants.FUNNY_ERROR_MESSAGE);
+                                        ParlaApplication.getInstance().trackException(new Exception("Fetching phonemes failed"));
                                         return;
                                     }
                                     //endregion
@@ -207,6 +216,7 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
                                                 if (error.equals(Constants.FAILED_POST)) {
                                                     recordingRequest.dismissProgress();
                                                     AppWindowManager.showErrorMessage(getActivity(), Constants.FUNNY_ERROR_MESSAGE);
+                                                    ParlaApplication.getInstance().trackException(new Exception("Building the feedback page failed"));
                                                     return;
                                                 }
                                             }
@@ -263,6 +273,7 @@ public class TestPronunciationFragment extends Fragment implements View.OnClickL
                     MediaPlayer mediaPlayer = MediaPlayer.create(getActivity().getApplicationContext(), resID);
                     mediaPlayer.start();
                 } catch (Exception e) {
+                    ParlaApplication.getInstance().trackException(e);
                     e.printStackTrace();
                 }
                 break;

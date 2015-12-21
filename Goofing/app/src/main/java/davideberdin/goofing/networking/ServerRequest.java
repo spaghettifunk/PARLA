@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
+import davideberdin.goofing.ParlaApplication;
 import davideberdin.goofing.controllers.User;
 import davideberdin.goofing.utilities.Constants;
 import davideberdin.goofing.utilities.IOUtilities;
@@ -149,11 +150,8 @@ public class ServerRequest {
                     callback.done(recordedAudio);
                 } catch (Exception e) {
                     Logger.Log(Constants.CONNECTION_ACTIVITY, "Error in recordingAudioIBackground()\n" + e.getMessage());
+                    ParlaApplication.getInstance().trackException(e);
                 }
-//                  finally {
-//                    File audioFile = context.getFileStreamPath(audioFilename);
-//                    audioFile.delete();
-//                }
             }
         });
         //endregion

@@ -13,18 +13,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import org.json.JSONException;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
-import davideberdin.goofing.controllers.SentenceTuple;
-import davideberdin.goofing.controllers.Tuple;
 import davideberdin.goofing.fragments.ReportFragment;
 import davideberdin.goofing.fragments.TestPronunciationFragment;
 import davideberdin.goofing.utilities.Constants;
@@ -33,6 +26,7 @@ import davideberdin.goofing.utilities.Logger;
 import davideberdin.goofing.utilities.UserLocalStore;
 
 public class MenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
     public static FragmentManager fragmentManager;
     private UserLocalStore userLocalStore = null;
 
@@ -58,11 +52,9 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
 
         this.userLocalStore = new UserLocalStore(this);
 
-        TextView usernameMenuDrawer = (TextView) findViewById(R.id.usernameMenuDrawer);
-        usernameMenuDrawer.setText("Hi " + this.userLocalStore.getLoggedUser().GetUsername());
-
-        ImageView avatar = (ImageView) findViewById(R.id.avatarImageView);
-        avatar.setImageResource(R.drawable.avatar);
+        // for some reasons it is always null now!
+        //TextView usernameMenuDrawer = (TextView) findViewById(R.id.usernameMenuDrawer);
+        //usernameMenuDrawer.setText("Hi " + this.userLocalStore.getLoggedUser().GetUsername());
 
         fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_menu, new TestPronunciationFragment()).commit();
@@ -106,12 +98,10 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-//         if (id == R.id.test_pronunciation) {
-//            Logger.WriteOnReport("MenuActivity", "Clicked on pronunciation BUTTON");
-//            fragmentManager.beginTransaction().replace(R.id.content_menu, new TestPronunciationFragment()).commit();
-//        } else
-
-        if (id == R.id.critical_listening) {
+         if (id == R.id.test_pronunciation) {
+            Logger.WriteOnReport("MenuActivity", "Clicked on pronunciation BUTTON");
+            fragmentManager.beginTransaction().replace(R.id.content_menu, new TestPronunciationFragment()).commit();
+        } else if (id == R.id.critical_listening) {
             Logger.WriteOnReport("MenuActivity", "Clicked on critical listening BUTTON");
             Intent intent = new Intent(MenuActivity.this, Listening.class);
             startActivity(intent);
@@ -151,10 +141,13 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
             IOUtilities.readUserAudio(this);
             IOUtilities.readReport(this);
         } catch (IOException e) {
+            ParlaApplication.getInstance().trackException(e);
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
+            ParlaApplication.getInstance().trackException(e);
             e.printStackTrace();
         } catch (JSONException e) {
+            ParlaApplication.getInstance().trackException(e);
             e.printStackTrace();
         }
     }
@@ -167,6 +160,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
             IOUtilities.writeUserAudio(this);
             IOUtilities.writeReport(this);
         } catch (IOException e) {
+            ParlaApplication.getInstance().trackException(e);
             e.printStackTrace();
         }
     }
@@ -179,6 +173,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
             IOUtilities.writeUserAudio(this);
             IOUtilities.writeReport(this);
         } catch (IOException e) {
+            ParlaApplication.getInstance().trackException(e);
             e.printStackTrace();
         }
     }
@@ -190,6 +185,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
             IOUtilities.writeUserAudio(this);
             IOUtilities.writeReport(this);
         } catch (IOException e) {
+            ParlaApplication.getInstance().trackException(e);
             e.printStackTrace();
         }
     }

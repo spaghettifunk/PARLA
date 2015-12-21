@@ -26,6 +26,7 @@ import java.util.Map;
 import javax.net.ssl.HttpsURLConnection;
 
 // My imports
+import davideberdin.goofing.ParlaApplication;
 import davideberdin.goofing.controllers.CardTuple;
 import davideberdin.goofing.controllers.TrendTuple;
 import davideberdin.goofing.controllers.Tuple;
@@ -154,8 +155,9 @@ public class NetworkingTask extends AsyncTask {
                     Logger.Log(Constants.CONNECTION_ACTIVITY, Constants.GENERAL_ERROR_REQUEST);
                     return null;
             }
-        } catch (Exception ex) {
+        } catch (Exception e) {
             Logger.Log(Constants.CONNECTION_ACTIVITY, "Error in NETWORKING!");
+            ParlaApplication.getInstance().trackException(e);
             return null;
         }
     }
@@ -314,6 +316,7 @@ public class NetworkingTask extends AsyncTask {
             }
         } catch (JSONException e) {
             e.printStackTrace();
+            ParlaApplication.getInstance().trackException(e);
             userCallback.done(Constants.FAILED_POST);
         }
     }
@@ -360,6 +363,7 @@ public class NetworkingTask extends AsyncTask {
             }
         } catch (Exception e) {
             Logger.Log(Constants.CONNECTION_ACTIVITY, e.getMessage());
+            ParlaApplication.getInstance().trackException(e);
             return "{ \"Response\" : \"FAILED\", \"Reason\" : " + e.getMessage() + "\" }";
         }
 
@@ -373,6 +377,7 @@ public class NetworkingTask extends AsyncTask {
             try {
                 obj.put(entry.getKey(), entry.getValue());
             } catch (JSONException e) {
+                ParlaApplication.getInstance().trackException(e);
                 Logger.Log(Constants.CONNECTION_ACTIVITY, e.getMessage());
             }
         }

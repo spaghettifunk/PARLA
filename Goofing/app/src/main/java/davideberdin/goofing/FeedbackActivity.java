@@ -89,8 +89,8 @@ public class FeedbackActivity extends AppCompatActivity implements View.OnClickL
         ImageButton infoFeedbackButton = (ImageButton) findViewById(R.id.infoImageButton);
         infoFeedbackButton.setOnClickListener(this);
 
-        ImageButton fullscreenButton = (ImageButton) findViewById(R.id.fullScreenButton);
-        fullscreenButton.setOnClickListener(this);
+//        ImageButton fullscreenButton = (ImageButton) findViewById(R.id.fullScreenButton);
+//        fullscreenButton.setOnClickListener(this);
 
         this.nativeFeedback = (AutoResizeTextView) findViewById(R.id.feedbacksNative);
         this.nativeFeedback.setMaxLines(1);
@@ -145,7 +145,7 @@ public class FeedbackActivity extends AppCompatActivity implements View.OnClickL
         }
 
         ScatterDataSet setNative = new ScatterDataSet(entriesNative, "Native");
-        setNative.setColor(ColorTemplate.JOYFUL_COLORS[0]);
+        setNative.setColor(ColorTemplate.LIBERTY_COLORS[3]);
         setNative.setScatterShape(ScatterChart.ScatterShape.CIRCLE);
         setNative.setScatterShapeSize(5.0f);
         setNative.setDrawValues(false);
@@ -165,7 +165,7 @@ public class FeedbackActivity extends AppCompatActivity implements View.OnClickL
         }
 
         ScatterDataSet setUser = new ScatterDataSet(entriesUser, "User");
-        setUser.setColor(ColorTemplate.JOYFUL_COLORS[1]);
+        setUser.setColor(ColorTemplate.LIBERTY_COLORS[4]);
         setUser.setScatterShape(ScatterChart.ScatterShape.CIRCLE);
         setUser.setScatterShapeSize(5.0f);
         setUser.setDrawValues(false);
@@ -197,17 +197,17 @@ public class FeedbackActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View v) {
         switch (v.getId()) {
 
-            case R.id.fullScreenButton: {
-                Logger.WriteOnReport("FeedbackActivity", "Clicked on pitch CHART");
-
-                Intent pitchIntent = new Intent(FeedbackActivity.this, FullscreenImageActivity.class);
-                pitchIntent.putExtra("isPitch", true);
-                pitchIntent.putExtra("YValuesNative", this.YValuesNative);
-                pitchIntent.putExtra("YValuesUser", this.YValuesUser);
-                startActivity(pitchIntent);
-
-                break;
-            }
+//            case R.id.fullScreenButton: {
+//                Logger.WriteOnReport("FeedbackActivity", "Clicked on pitch CHART");
+//
+//                Intent pitchIntent = new Intent(FeedbackActivity.this, FullscreenImageActivity.class);
+//                pitchIntent.putExtra("isPitch", true);
+//                pitchIntent.putExtra("YValuesNative", this.YValuesNative);
+//                pitchIntent.putExtra("YValuesUser", this.YValuesUser);
+//                startActivity(pitchIntent);
+//
+//                break;
+//            }
             case R.id.vowelChartImageView: {
                 Logger.WriteOnReport("FeedbackActivity", "Clicked on vocal chart BUTTON");
 
@@ -272,10 +272,13 @@ public class FeedbackActivity extends AppCompatActivity implements View.OnClickL
             IOUtilities.readUserAudio(this);
             IOUtilities.readReport(this);
         } catch (IOException e) {
+            ParlaApplication.getInstance().trackException(e);
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
+            ParlaApplication.getInstance().trackException(e);
             e.printStackTrace();
         } catch (JSONException e) {
+            ParlaApplication.getInstance().trackException(e);
             e.printStackTrace();
         }
     }
@@ -288,6 +291,7 @@ public class FeedbackActivity extends AppCompatActivity implements View.OnClickL
             IOUtilities.writeUserAudio(this);
             IOUtilities.writeReport(this);
         } catch (IOException e) {
+            ParlaApplication.getInstance().trackException(e);
             e.printStackTrace();
         }
     }
@@ -300,6 +304,7 @@ public class FeedbackActivity extends AppCompatActivity implements View.OnClickL
             IOUtilities.writeUserAudio(this);
             IOUtilities.writeReport(this);
         } catch (IOException e) {
+            ParlaApplication.getInstance().trackException(e);
             e.printStackTrace();
         }
     }
@@ -311,6 +316,7 @@ public class FeedbackActivity extends AppCompatActivity implements View.OnClickL
             IOUtilities.writeUserAudio(this);
             IOUtilities.writeReport(this);
         } catch (IOException e) {
+            ParlaApplication.getInstance().trackException(e);
             e.printStackTrace();
         }
     }

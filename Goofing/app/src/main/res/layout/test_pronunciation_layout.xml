@@ -22,9 +22,7 @@
                 android:id="@+id/listenSentence"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
-                android:src="@drawable/speaker_icon"
-                android:background="@drawable/fab_background"
-                android:backgroundTint="@color/abc_search_url_text_pressed"
+                android:background="@drawable/speaker_icon"
                 android:contentDescription="@string/listenSentenceImageButton"
                 android:onClick="onClick" />
 

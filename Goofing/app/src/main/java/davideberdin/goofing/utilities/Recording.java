@@ -7,6 +7,8 @@ import android.media.MediaRecorder;
 import java.io.File;
 import java.io.IOException;
 
+import davideberdin.goofing.ParlaApplication;
+
 public class Recording
 {
     private static File currentFile = null;
@@ -30,6 +32,7 @@ public class Recording
             audioRecorder.start();
 
         } catch (IllegalStateException e) {
+            ParlaApplication.getInstance().trackException(e);
             // start:it is called before prepare()
             // prepare: it is called after start() or before setOutputFormat()
             e.printStackTrace();
@@ -43,6 +46,7 @@ public class Recording
             audioRecorder.release();
 
         } catch (IllegalStateException e) {
+            ParlaApplication.getInstance().trackException(e);
             //  it is called before start()
             e.printStackTrace();
         }

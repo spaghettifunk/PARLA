@@ -6,12 +6,14 @@ import android.util.Log;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import davideberdin.goofing.ParlaApplication;
+
 public class Logger
 {
     private static String Report = "";
 
     // Easy logger on terminal
-    public static void Log(String activityName, String message){
+    public static void Log(String activityName, String message) {
         Log.d("Goofing", activityName + ": " + message);
     }
 
@@ -41,8 +43,8 @@ public class Logger
 
             return currentTimeStamp;
         } catch (Exception e) {
+            ParlaApplication.getInstance().trackException(e);
             e.printStackTrace();
-
             return null;
         }
     }

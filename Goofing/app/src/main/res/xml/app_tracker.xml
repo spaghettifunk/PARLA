@@ -7,7 +7,12 @@
     <bool name="ga_autoActivityTracking">true</bool>
 
     <!--  The property id associated with this analytics tracker -->
-    <string name="ga_trackingId">UA-19462639-1</string>
+    <!--<string name="ga_trackingId">UA-19462639-1</string>-->
+    <string name="ga_trackingId">UA-71658401-1</string>
+
+    <string name="ga_sampleFrequency">100.0</string>
+
+    <bool name="ga_reportUncaughtExceptions">true</bool>
 
     <!--
       See Project Structure -> Analytics -> Google Analytics -> Learn More

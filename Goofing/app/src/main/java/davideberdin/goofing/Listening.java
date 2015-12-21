@@ -103,6 +103,7 @@ public class Listening extends AppCompatActivity {
 
                     mediaPlayer.start();
                 } catch (Exception e) {
+                    ParlaApplication.getInstance().trackException(e);
                     e.printStackTrace();
                 }
             }
@@ -185,10 +186,13 @@ public class Listening extends AppCompatActivity {
             IOUtilities.readUserAudio(this);
             IOUtilities.readReport(this);
         } catch (IOException e) {
+            ParlaApplication.getInstance().trackException(e);
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
+            ParlaApplication.getInstance().trackException(e);
             e.printStackTrace();
         } catch (JSONException e) {
+            ParlaApplication.getInstance().trackException(e);
             e.printStackTrace();
         }
     }
@@ -201,6 +205,7 @@ public class Listening extends AppCompatActivity {
             IOUtilities.writeUserAudio(this);
             IOUtilities.writeReport(this);
         } catch (IOException e) {
+            ParlaApplication.getInstance().trackException(e);
             e.printStackTrace();
         }
     }
@@ -213,6 +218,7 @@ public class Listening extends AppCompatActivity {
             IOUtilities.writeUserAudio(this);
             IOUtilities.writeReport(this);
         } catch (IOException e) {
+            ParlaApplication.getInstance().trackException(e);
             e.printStackTrace();
         }
     }
@@ -224,6 +230,7 @@ public class Listening extends AppCompatActivity {
             IOUtilities.writeUserAudio(this);
             IOUtilities.writeReport(this);
         } catch (IOException e) {
+            ParlaApplication.getInstance().trackException(e);
             e.printStackTrace();
         }
     }

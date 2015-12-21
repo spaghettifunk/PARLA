@@ -2,8 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
-        <!--<item android:id="@+id/test_pronunciation" android:icon="@android:drawable/ic_btn_speak_now"-->
-            <!--android:title="Test Pronunciation" />-->
+        <item android:id="@+id/test_pronunciation" android:icon="@android:drawable/ic_btn_speak_now"
+            android:title="Test Pronunciation" />
         <item android:id="@+id/critical_listening" android:icon="@android:drawable/ic_lock_silent_mode_off"
             android:title="Critical Listening" />
         <item android:id="@+id/new_words" android:icon="@android:drawable/ic_menu_send"

@@ -15,6 +15,7 @@ import org.json.JSONException;
 import java.io.IOException;
 
 import davideberdin.goofing.Listening;
+import davideberdin.goofing.ParlaApplication;
 import davideberdin.goofing.R;
 import davideberdin.goofing.controllers.User;
 import davideberdin.goofing.utilities.Constants;
@@ -70,10 +71,13 @@ public class ListenUser extends Fragment {
             IOUtilities.readUserAudio(getActivity());
             IOUtilities.readReport(getActivity());
         } catch (IOException e) {
+            ParlaApplication.getInstance().trackException(e);
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
+            ParlaApplication.getInstance().trackException(e);
             e.printStackTrace();
         } catch (JSONException e) {
+            ParlaApplication.getInstance().trackException(e);
             e.printStackTrace();
         }
     }
@@ -85,6 +89,7 @@ public class ListenUser extends Fragment {
             IOUtilities.writeUserAudio(getActivity());
             IOUtilities.writeReport(getActivity());
         } catch (IOException e) {
+            ParlaApplication.getInstance().trackException(e);
             e.printStackTrace();
         }
     }
@@ -96,6 +101,7 @@ public class ListenUser extends Fragment {
             IOUtilities.writeUserAudio(getActivity());
             IOUtilities.writeReport(getActivity());
         } catch (IOException e) {
+            ParlaApplication.getInstance().trackException(e);
             e.printStackTrace();
         }
     }
@@ -107,6 +113,7 @@ public class ListenUser extends Fragment {
             IOUtilities.writeUserAudio(getActivity());
             IOUtilities.writeReport(getActivity());
         } catch (IOException e) {
+            ParlaApplication.getInstance().trackException(e);
             e.printStackTrace();
         }
     }

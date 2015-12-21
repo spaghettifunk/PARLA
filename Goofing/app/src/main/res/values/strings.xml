@@ -94,4 +94,7 @@
     <string name="usernameEditTextRegistration">Username</string>
     <string name="fullscreen_button">fullscreen button</string>
     <string name="lower_is_better">How close the vowel pronunciation was to Native</string>
+    <string name="user_trend_shape_should_be_similar_to_native">User trend shape should be similar to Native</string>
+    <string name="the_red_cross_should_be_within_the_circle">The red cross should be within the circle</string>
+    <string name="see_history">See History</string>
 </resources>

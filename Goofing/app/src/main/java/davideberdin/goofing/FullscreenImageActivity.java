@@ -302,10 +302,13 @@ public class FullscreenImageActivity extends AppCompatActivity implements View.O
             IOUtilities.readUserAudio(this);
             IOUtilities.readReport(this);
         } catch (IOException e) {
+            ParlaApplication.getInstance().trackException(e);
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
+            ParlaApplication.getInstance().trackException(e);
             e.printStackTrace();
         } catch (JSONException e) {
+            ParlaApplication.getInstance().trackException(e);
             e.printStackTrace();
         }
     }
@@ -318,6 +321,7 @@ public class FullscreenImageActivity extends AppCompatActivity implements View.O
             IOUtilities.writeUserAudio(this);
             IOUtilities.writeReport(this);
         } catch (IOException e) {
+            ParlaApplication.getInstance().trackException(e);
             e.printStackTrace();
         }
     }
@@ -330,6 +334,7 @@ public class FullscreenImageActivity extends AppCompatActivity implements View.O
             IOUtilities.writeUserAudio(this);
             IOUtilities.writeReport(this);
         } catch (IOException e) {
+            ParlaApplication.getInstance().trackException(e);
             e.printStackTrace();
         }
     }
@@ -341,6 +346,7 @@ public class FullscreenImageActivity extends AppCompatActivity implements View.O
             IOUtilities.writeUserAudio(this);
             IOUtilities.writeReport(this);
         } catch (IOException e) {
+            ParlaApplication.getInstance().trackException(e);
             e.printStackTrace();
         }
     }

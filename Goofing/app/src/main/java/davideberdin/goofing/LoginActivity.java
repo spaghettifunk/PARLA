@@ -105,6 +105,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             try {
                                 AppWindowManager.showErrorMessage(LoginActivity.this, obj.getString("Reason"));
                             } catch (JSONException e) {
+                                ParlaApplication.getInstance().trackException(e);
                                 e.printStackTrace();
                             }
                         } else {

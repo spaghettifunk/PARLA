@@ -31,8 +31,7 @@
                 <ImageButton
                     android:layout_width="45dp"
                     android:layout_height="45dp"
-                    android:src="@drawable/information"
-                    android:background="@drawable/fab_background"
+                    android:background="@drawable/information"
                     android:backgroundTint="@color/switch_thumb_normal_material_dark"
                     android:id="@+id/infoImageButton"
                     android:contentDescription="@string/infoFeedback" />
@@ -47,8 +46,6 @@
                     android:textColor="#e61818"
                     android:textStyle="bold"
                     android:singleLine="false"
-                    android:phoneNumber="false"
-                    android:password="false"
                     android:layout_gravity="center_vertical" />
             </LinearLayout>
 
@@ -152,8 +149,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="User trend shape should be similar to Native"
-                android:id="@+id/textView4"
+                android:text="@string/user_trend_shape_should_be_similar_to_native"
                 android:lines="1"
                 android:textStyle="bold"
                 android:textAlignment="center" />
@@ -164,16 +160,16 @@
                 android:layout_width="match_parent"
                 android:layout_weight="1" />
 
-            <ImageButton
-                android:layout_width="29dp"
-                android:layout_height="29dp"
-                android:id="@+id/fullScreenButton"
-                android:layout_gravity="right"
-                style="@style/Widget.Design.FloatingActionButton"
-                android:background="@drawable/fullscreen"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="10dp"
-                android:contentDescription="@string/fullscreen_button" />
+            <!--<ImageButton-->
+                <!--android:layout_width="29dp"-->
+                <!--android:layout_height="29dp"-->
+                <!--android:id="@+id/fullScreenButton"-->
+                <!--android:layout_gravity="right"-->
+                <!--style="@style/Widget.Design.FloatingActionButton"-->
+                <!--android:background="@drawable/fullscreen"-->
+                <!--android:layout_marginTop="5dp"-->
+                <!--android:layout_marginRight="10dp"-->
+                <!--android:contentDescription="@string/fullscreen_button" />-->
 
             <Space
                 android:layout_width="fill_parent"
@@ -183,8 +179,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="The red cross should be within the circle"
-                android:id="@+id/textView4"
+                android:text="@string/the_red_cross_should_be_within_the_circle"
+                android:id="@+id/gmmTextView"
                 android:lines="1"
                 android:textStyle="bold"
                 android:textAlignment="center" />
@@ -205,7 +201,7 @@
             <Button
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="See History"
+                android:text="@string/see_history"
                 android:id="@+id/historyButton" />
 
         </LinearLayout>
