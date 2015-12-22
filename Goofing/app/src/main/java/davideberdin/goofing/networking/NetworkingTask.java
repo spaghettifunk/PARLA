@@ -361,13 +361,14 @@ public class NetworkingTask extends AsyncTask {
             } else {
                 return "{ \"Response\" : \"FAILED\", \"Reason\" : Error: " + resultConnection + "\" }";
             }
+
+            return response;
+
         } catch (Exception e) {
             Logger.Log(Constants.CONNECTION_ACTIVITY, e.getMessage());
             ParlaApplication.getInstance().trackException(e);
             return "{ \"Response\" : \"FAILED\", \"Reason\" : " + e.getMessage() + "\" }";
         }
-
-        return response;
     }
 
     //region JSON Methods

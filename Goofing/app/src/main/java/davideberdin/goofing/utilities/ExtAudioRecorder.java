@@ -12,7 +12,7 @@ import android.util.Log;
 
 public class ExtAudioRecorder
 {
-    private final static int[] sampleRates = {44100, 22050, 11025, 8000};
+    private final static int[] sampleRates = {44100, 22050, 16000, 11025, 8000};
 
     @SuppressWarnings("deprecation")
     public static ExtAudioRecorder getInstanse(Boolean recordingCompressed) {
